@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">@color/md_indigo_500</color>
+    <color name="primaryDark">@color/md_indigo_700</color>
+    <color name="background">@color/white</color>
+    <color name="accent">@color/md_pink_500</color>
+    <color name="controlHighlight">@color/md_pink_A400</color>
+
+    <color name="white">#ffffffff</color>
+
+
+</resources>

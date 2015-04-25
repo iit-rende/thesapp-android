@@ -1,0 +1,94 @@
+<resources
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <color name="black_87">#de000000</color>
+    <color name="black_54">#8a000000</color>
+    <color name="white_87">#deffffff</color>
+    <color name="white_54">#8affffff</color>
+
+    <style name="display_4">
+        <item name="android:textColor">@color/black_54</item>
+        <item name="android:textSize">112sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="typeface">roboto_light</item>
+    </style>
+
+    <style name="display_3">
+        <item name="android:textColor">@color/black_54</item>
+        <item name="android:textSize">56sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="typeface">roboto_regular</item>
+    </style>
+
+    <style name="display_2">
+        <item name="android:textColor">@color/black_54</item>
+        <item name="android:textSize">45sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="typeface">roboto_regular</item>
+    </style>
+
+    <style name="display_1">
+        <item name="android:textColor">@color/black_54</item>
+        <item name="android:textSize">34sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="typeface">roboto_regular</item>
+    </style>
+
+    <style name="headline">
+        <item name="android:textColor">@color/black_87</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="typeface">roboto_regular</item>
+    </style>
+
+    <style name="title">
+        <item name="android:textColor">@color/black_87</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="typeface">roboto_medium</item>
+    </style>
+
+    <style name="subhead">
+        <item name="android:textColor">@color/black_87</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="typeface">roboto_regular</item>
+    </style>
+
+    <style name="body_2">
+        <item name="android:textColor">@color/black_87</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="typeface">roboto_medium</item>
+    </style>
+
+    <style name="body_1">
+        <item name="android:textColor">@color/black_87</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="typeface">roboto_regular</item>
+    </style>
+
+    <style name="caption">
+        <item name="android:textColor">@color/black_54</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="typeface">roboto_regular</item>
+    </style>
+
+    <style name="menu">
+        <item name="android:textColor">@color/black_87</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="typeface">roboto_medium</item>
+    </style>
+
+    <style name="button">
+        <item name="android:textColor">@color/black_87</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="typeface">roboto_medium</item>
+    </style>
+
+</resources>
