@@ -1,0 +1,5 @@
+<resources>
+	<!-- 7" devices in portrait (~600dp). -->
+	<dimen name="activity_horizontal_margin">48dp</dimen>
+	<item name="pager_page_width" format="float" type="dimen">1.0</item>
+</resources>

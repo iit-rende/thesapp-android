@@ -17,7 +17,8 @@ import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.fragments.WordFragment;
 import it.cnr.iit.thesapp.model.Word;
 
-public class WordExplorerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener,
+public class WordExplorerAdapter extends FragmentPagerAdapter implements ViewPager
+																				 .OnPageChangeListener,
 																		 WordFragment
 																				 .PageListener {
 
@@ -35,7 +36,8 @@ public class WordExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 		else this.words = new ArrayList<>();
 		TypedValue outValue = new TypedValue();
 		context.getResources().getValue(R.dimen.pager_page_width, outValue, true);
-		pageWidth = outValue.getFloat();
+		//pageWidth = outValue.getFloat();
+		pageWidth = 1f;
 		this.pager = pager;
 		pager.setOnPageChangeListener(this);
 	}

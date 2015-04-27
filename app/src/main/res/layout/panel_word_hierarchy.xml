@@ -1,0 +1,78 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_weight="1"
+	android:orientation="vertical">
+
+
+	<com.devspark.robototextview.widget.RobotoTextView
+		style="@style/caption"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingBottom="8dp"
+		android:paddingLeft="16dp"
+		android:paddingRight="16dp"
+		android:paddingTop="8dp"
+		android:text="Sinonimi"
+		android:textColor="@color/accent"
+		/>
+
+	<org.apmem.tools.layouts.FlowLayout
+		android:id="@+id/word_synonyms"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="16dp"/>
+
+	<com.devspark.robototextview.widget.RobotoTextView
+		style="@style/caption"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingBottom="8dp"
+		android:paddingLeft="16dp"
+		android:paddingRight="16dp"
+		android:paddingTop="8dp"
+		android:text="Correlati"
+
+		android:textColor="@color/accent"/>
+
+	<org.apmem.tools.layouts.FlowLayout
+		android:id="@+id/word_related"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="16dp"/>
+
+	<com.devspark.robototextview.widget.RobotoTextView
+		style="@style/caption"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingBottom="8dp"
+		android:paddingLeft="16dp"
+		android:paddingRight="16dp"
+		android:paddingTop="8dp"
+		android:text="Più generici"
+		android:textColor="@color/accent"/>
+
+	<org.apmem.tools.layouts.FlowLayout
+		android:id="@+id/word_more_generic"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="16dp"/>
+
+	<com.devspark.robototextview.widget.RobotoTextView
+		style="@style/caption"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingBottom="8dp"
+		android:paddingLeft="16dp"
+		android:paddingRight="16dp"
+		android:paddingTop="8dp"
+		android:text="Più specifici"
+		android:textColor="@color/accent"/>
+
+	<org.apmem.tools.layouts.FlowLayout
+		android:id="@+id/word_more_specific"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="16dp"/>
+</LinearLayout>

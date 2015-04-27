@@ -36,7 +36,6 @@
 				android:layout_toStartOf="@+id/action_button"
 				android:background="@null"
 				android:hint="@string/search_hint"
-				android:min_width="300dp"
 				android:padding="8dp"/>
 
 			<ImageButton
