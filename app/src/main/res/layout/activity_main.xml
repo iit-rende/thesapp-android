@@ -1,30 +1,31 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".MainActivity">
+				xmlns:tools="http://schemas.android.com/tools"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				tools:context=".MainActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/activity_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="@color/primary"
-        android:minHeight="?attr/android:actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+	<android.support.v7.widget.Toolbar
+		android:id="@+id/activity_toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"
+		android:background="@color/primary"
+		android:minHeight="?attr/android:actionBarSize"
+		android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <com.devspark.robototextview.widget.RobotoAutoCompleteTextView
-        android:id="@+id/search_text"
-        android:layout_width="match_parent"
+	<com.devspark.robototextview.widget.RobotoAutoCompleteTextView
+		android:id="@+id/search_text"
+		android:layout_width="match_parent"
 
-        android:layout_height="wrap_content"
-        android:layout_below="@id/activity_toolbar"/>
+		android:layout_height="wrap_content"
+		android:layout_below="@id/activity_toolbar"/>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/search_text"
-        />
+
+	<android.support.v4.view.ViewPager
+		android:id="@+id/pager"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@id/search_text"
+		/>
 </RelativeLayout>

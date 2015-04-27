@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements WordFragment.Word
 				R.id.activity_toolbar));
 		pager = (ViewPager) findViewById(R.id.pager);
 		mAdapter = new WordExplorerAdapter(this, getSupportFragmentManager(), null, pager);
-
+		pager.setOffscreenPageLimit(5);
 		pager.setAdapter(mAdapter);
 
 		RobotoAutoCompleteTextView searchText = (RobotoAutoCompleteTextView) findViewById(

@@ -1,10 +1,13 @@
 package it.cnr.iit.thesapp.fragments;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.util.Property;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +24,19 @@ import it.cnr.iit.thesapp.model.Word;
 
 public class WordFragment extends Fragment {
 	private static final String ARG_WORD_ID = "word_id";
+	Property<CardView, Float> cardElevationProperty = new Property<CardView, Float>(Float.class,
+			"cardElevation") {
+		@Override
+		public Float get(CardView object) {
+			return object.getCardElevation();
+		}
 
-	private long wordId;
-
+		@Override
+		public void set(CardView object, Float value) {
+			object.setCardElevation(value);
+		}
+	};
+	private long                  wordId;
 	private WordFragmentCallbacks mListener;
 	private RobotoTextView        wordTitle;
 	private RobotoTextView        wordDescription;
@@ -33,6 +46,8 @@ public class WordFragment extends Fragment {
 	private FlowLayout            moreSpecificContainer;
 	private ScrollView            scrollView;
 	private CardView              cardView;
+	private PageListener          pageListener;
+	private int                   page;
 
 	public WordFragment() {
 		// Required empty public constructor
@@ -84,7 +99,17 @@ public class WordFragment extends Fragment {
 		moreSpecificContainer = (FlowLayout) view.findViewById(R.id.word_more_specific);
 
 		scrollView = (ScrollView) view.findViewById(R.id.scrollView);
+		scrollView.setVerticalScrollBarEnabled(false);
+		scrollView.setHorizontalScrollBarEnabled(false);
+
 		cardView = (CardView) view.findViewById(R.id.cardView);
+		cardView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.d("CardView", "Card Clicked, position " + page);
+				if (pageListener != null) pageListener.onPageClicked(page);
+			}
+		});
 	}
 
 	@Override
@@ -153,15 +178,30 @@ public class WordFragment extends Fragment {
 		}
 	}
 
-
 	public void scrollToTop() {
-		scrollView.pageScroll(View.FOCUS_UP);
+		scrollView.fullScroll(View.FOCUS_UP);
+		//if (scrollView.getScrollY() > 0) scrollToTop();
 	}
 
 	public void elevate(boolean up) {
 		float cardElevation = up ? getResources().getDimensionPixelSize(R.dimen.elevation_high) :
 							  0f;
-		cardView.setCardElevation(cardElevation);
+		ObjectAnimator anim = ObjectAnimator.ofFloat(cardView, cardElevationProperty,
+				cardElevation);
+		anim.start();
+	}
+
+	public void setPageListener(PageListener pageListener, int page) {
+		this.page = page;
+		this.pageListener = pageListener;
+	}
+
+	public void setPage(int page) {
+
+	}
+
+	public interface PageListener {
+		void onPageClicked(int position);
 	}
 
 	public interface WordFragmentCallbacks {

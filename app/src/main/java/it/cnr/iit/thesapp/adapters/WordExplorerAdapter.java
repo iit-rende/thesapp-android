@@ -17,10 +17,14 @@ import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.fragments.WordFragment;
 import it.cnr.iit.thesapp.model.Word;
 
-public class WordExplorerAdapter extends FragmentPagerAdapter implements ViewPager
-																				 .OnPageChangeListener {
+public class WordExplorerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener,
+																		 WordFragment
+																				 .PageListener {
+
+
 	private final List<Word> words;
 	private final float      pageWidth;
+	private final ViewPager pager;
 	SparseArray<WordFragment> registeredFragments = new SparseArray<WordFragment>();
 	private int count = -1;
 
@@ -32,6 +36,7 @@ public class WordExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 		TypedValue outValue = new TypedValue();
 		context.getResources().getValue(R.dimen.pager_page_width, outValue, true);
 		pageWidth = outValue.getFloat();
+		this.pager = pager;
 		pager.setOnPageChangeListener(this);
 	}
 
@@ -81,8 +86,10 @@ public class WordExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 	}
 
 	@Override
-	public Fragment getItem(int i) {
-		return WordFragment.newInstance(words.get(i).getId());
+	public Fragment getItem(int position) {
+		final WordFragment wordFragment = WordFragment.newInstance(words.get(position).getId());
+		wordFragment.setPageListener(this, position);
+		return wordFragment;
 	}
 
 	@Override
@@ -137,4 +144,9 @@ public class WordExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 
 	@Override
 	public void onPageScrollStateChanged(int i) {}
+
+	@Override
+	public void onPageClicked(int position) {
+		pager.setCurrentItem(position);
+	}
 }
