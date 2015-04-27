@@ -1,0 +1,5 @@
+<resources>
+	<!--  10" devices in landscape (~1280dp). -->
+	<dimen name="activity_horizontal_margin">64dp</dimen>
+	<item name="pager_page_width" format="float" type="dimen">0.33</item>
+</resources>
