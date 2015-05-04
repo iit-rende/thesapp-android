@@ -11,16 +11,16 @@ import android.widget.AdapterView;
 
 import com.devspark.robototextview.widget.RobotoAutoCompleteTextView;
 
-import it.cnr.iit.thesapp.adapters.WordExplorerAdapter;
-import it.cnr.iit.thesapp.adapters.WordSearchAdapter;
-import it.cnr.iit.thesapp.fragments.WordFragment;
-import it.cnr.iit.thesapp.model.Word;
+import it.cnr.iit.thesapp.adapters.TermExplorerAdapter;
+import it.cnr.iit.thesapp.adapters.TermSearchAdapter;
+import it.cnr.iit.thesapp.fragments.TermFragment;
+import it.cnr.iit.thesapp.model.Term;
 
 
-public class MainActivity extends AppCompatActivity implements WordFragment.WordFragmentCallbacks {
+public class MainActivity extends AppCompatActivity implements TermFragment.WordFragmentCallbacks {
 
-	private WordExplorerAdapter mAdapter;
-	private WordSearchAdapter   wordSearchAdapter;
+	private TermExplorerAdapter termExplorerAdapter;
+	private TermSearchAdapter   termSearchAdapter;
 	private ViewPager           pager;
 
 	@Override
@@ -30,18 +30,20 @@ public class MainActivity extends AppCompatActivity implements WordFragment.Word
 		setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(
 				R.id.activity_toolbar));
 		pager = (ViewPager) findViewById(R.id.pager);
-		mAdapter = new WordExplorerAdapter(this, getSupportFragmentManager(), null, pager);
+		termExplorerAdapter = new TermExplorerAdapter(this, getSupportFragmentManager(), null,
+				pager);
 		pager.setOffscreenPageLimit(5);
-		pager.setAdapter(mAdapter);
+		pager.setAdapter(termExplorerAdapter);
 
 		RobotoAutoCompleteTextView searchText = (RobotoAutoCompleteTextView) findViewById(
 				R.id.search_text);
-		wordSearchAdapter = new WordSearchAdapter(this, App.getThesaurus());
-		searchText.setAdapter(wordSearchAdapter);
+		termSearchAdapter = new TermSearchAdapter(this, App.getThesaurus());
+		searchText.setAdapter(termSearchAdapter);
 		searchText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View view, int pos, long id) {
-				onWordSelected(id);
+				final Term term = termExplorerAdapter.getTerm(pos);
+				onWordSelected(term.getDescriptor(), term.getDomain(), term.getLanguage());
 			}
 		});
 	}
@@ -68,22 +70,22 @@ public class MainActivity extends AppCompatActivity implements WordFragment.Word
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void onWordSelected(long wordId) {
-		int pos = mAdapter.addWord(App.getWord(wordId));
-		Log.d("Pager", "Positon for word " + wordId + ": " + pos);
+	public void onWordSelected(String termDescriptor, String termDomain, String termLanguage) {
+		int pos = termExplorerAdapter.addTerm(termDescriptor, termDomain, termLanguage);
+		Log.d("Pager", "Positon for word " + termDescriptor + ": " + pos);
 		if (pos != -1) {
 			pager.setCurrentItem(pos, true);
 		}
 	}
 
 	@Override
-	public Word getWord(long wordId) {
-		return mAdapter.getWord(wordId);
+	public Term getTerm(String termDescriptor, String termDomain, String termLanguage) {
+		return termExplorerAdapter.getTerm(termDescriptor, termDomain, termLanguage);
 	}
 
 	@Override
-	public void onWordClicked(long wordId) {
-		onWordSelected(wordId);
+	public void onWordClicked(String termDescriptor, String termDomain, String termLanguage) {
+		onWordSelected(termDescriptor, termDomain, termLanguage);
 	}
 
 	@Override

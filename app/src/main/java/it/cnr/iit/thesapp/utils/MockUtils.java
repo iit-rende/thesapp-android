@@ -19,7 +19,7 @@ public class MockUtils {
         Log.d("Thesaurus", "Mock thesaurus created with " + thesaurus.size() + " words");
 
         for (Word thesauru : thesaurus) {
-            //  Log.d("Thesaurus", thesauru.getId() + " " + thesauru.getWord());
+            //  Log.d("Thesaurus", thesauru.getId() + " " + thesauru.getTerm());
         }
         return thesaurus;
     }

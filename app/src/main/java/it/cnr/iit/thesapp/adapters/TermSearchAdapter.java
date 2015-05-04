@@ -16,13 +16,13 @@ import it.cnr.iit.thesapp.App;
 import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.model.Word;
 
-public class WordSearchAdapter extends ArrayAdapter<Word> implements Filterable {
+public class TermSearchAdapter extends ArrayAdapter<Word> implements Filterable {
 
     private final LayoutInflater inflater;
     private       List<Word>     words;
     private int count = -1;
 
-    public WordSearchAdapter(Context context, List<Word> objects) {
+    public TermSearchAdapter(Context context, List<Word> objects) {
         super(context, android.R.layout.simple_dropdown_item_1line, objects);
         this.words = objects;
         inflater =
