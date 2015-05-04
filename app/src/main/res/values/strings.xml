@@ -4,6 +4,6 @@
 	<string name="hello_world">Hello world!</string>
 	<string name="action_settings">Settings</string>
 
-	<string name="search_hint">Cerca un termine</string>
+	<string name="search_hint">Cerca un termine...</string>
 	<string name="error_searching">Problemi con la ricerca</string>
 </resources>

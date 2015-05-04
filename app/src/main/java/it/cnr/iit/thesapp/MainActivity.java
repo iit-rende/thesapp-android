@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements TermFragment.Word
 		pager = (ViewPager) findViewById(R.id.pager);
 		termExplorerAdapter = new TermExplorerAdapter(this, getSupportFragmentManager(), null,
 				pager);
-		pager.setOffscreenPageLimit(5);
+		pager.setOffscreenPageLimit(3);
 		pager.setAdapter(termExplorerAdapter);
 
 		DelayAutoCompleteTextView searchText = (DelayAutoCompleteTextView) findViewById(

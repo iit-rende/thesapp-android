@@ -26,7 +26,8 @@
 			android:id="@+id/search_text"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:imeOptions="flagNoExtractUi|actionSearch"
+			android:hint="@string/search_hint"
+			android:imeOptions="flagNoExtractUi|flagNoFullscreen|actionSearch"
 			android:inputType="textCapSentences"
 			android:paddingEnd="8dp"
 			android:paddingRight="8dp"/>
