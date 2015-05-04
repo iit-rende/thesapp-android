@@ -47,6 +47,10 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 		return pageWidth;
 	}
 
+	public void onTermFetched(Term term) {
+		terms.get(getPositionForTerm(term)).copy(term);
+	}
+
 	public int addTerm(String termDescriptor, String termDomain, String termLanguage) {
 		Term term = new Term(termDescriptor, termDomain, termLanguage);
 		return addTerm(term);

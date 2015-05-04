@@ -57,6 +57,20 @@ public class Term {
 		return result;
 	}
 
+	public void copy(Term term) {
+		setDescriptor(term.getDescriptor());
+		setScopeNote(term.getScopeNote());
+		setDomain(term.getDomain());
+		setLanguage(term.getLanguage());
+		setCategories(term.getCategories());
+		setRelatedTerms(term.getRelatedTerms());
+		setNarrowerTerms(term.getNarrowerTerms());
+		setBroaderTerms(term.getBroaderTerms());
+		setUseFor(term.getUseFor());
+		setUsedFor(term.getUsedFor());
+		setLocalizations(term.getLocalizations());
+	}
+
 	/**
 	 * @return The descriptor
 	 */

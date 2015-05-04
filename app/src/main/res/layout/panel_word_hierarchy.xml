@@ -37,7 +37,7 @@
 		android:textColor="@color/accent"/>
 
 	<org.apmem.tools.layouts.FlowLayout
-		android:id="@+id/word_related"
+		android:id="@+id/term_related"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:padding="16dp"/>
@@ -54,7 +54,7 @@
 		android:textColor="@color/accent"/>
 
 	<org.apmem.tools.layouts.FlowLayout
-		android:id="@+id/word_more_generic"
+		android:id="@+id/term_broader"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:padding="16dp"/>
@@ -71,7 +71,7 @@
 		android:textColor="@color/accent"/>
 
 	<org.apmem.tools.layouts.FlowLayout
-		android:id="@+id/word_more_specific"
+		android:id="@+id/term_narrower"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:padding="16dp"/>

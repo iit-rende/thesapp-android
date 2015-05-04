@@ -44,21 +44,22 @@ public class TermFragment extends Fragment {
 		}
 	};
 	private WordFragmentCallbacks mListener;
-	private RobotoTextView        wordTitle;
-	private RobotoTextView        wordDescription;
+	private RobotoTextView termTitle;
+	private RobotoTextView termDescription;
 	private FlowLayout            relatedContainer;
 	private FlowLayout            synonymsContainer;
-	private FlowLayout            moreGenericContainer;
-	private FlowLayout            moreSpecificContainer;
+	private FlowLayout     broaderContainer;
+	private FlowLayout     narrowerContainer;
 	private ScrollView            scrollView;
 	private CardView              cardView;
 	private PageListener          pageListener;
 	private int                   page;
-	private String      termDescriptor;
-	private String      termDomain;
-	private String      termLanguage;
-	private ProgressBar progressBar;
-	private View        termContent;
+	private String         termDescriptor;
+	private String         termDomain;
+	private String         termLanguage;
+	private ProgressBar    progressBar;
+	private View           termContent;
+	private RobotoTextView termSubtitle;
 
 	public TermFragment() {
 		// Required empty public constructor
@@ -88,7 +89,7 @@ public class TermFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_word, container, false);
+		return inflater.inflate(R.layout.fragment_term, container, false);
 	}
 
 	@Override
@@ -107,13 +108,15 @@ public class TermFragment extends Fragment {
 		});
 		progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 		termContent = view.findViewById(R.id.term_content);
-		wordTitle = (RobotoTextView) view.findViewById(R.id.word_word);
-		wordDescription = (RobotoTextView) view.findViewById(R.id.word_description);
 
-		relatedContainer = (FlowLayout) view.findViewById(R.id.word_related);
+		termTitle = (RobotoTextView) view.findViewById(R.id.term_title);
+		termSubtitle = (RobotoTextView) view.findViewById(R.id.term_subtitle);
+		termDescription = (RobotoTextView) view.findViewById(R.id.term_description);
+
+		relatedContainer = (FlowLayout) view.findViewById(R.id.term_related);
 		synonymsContainer = (FlowLayout) view.findViewById(R.id.word_synonyms);
-		moreGenericContainer = (FlowLayout) view.findViewById(R.id.word_more_generic);
-		moreSpecificContainer = (FlowLayout) view.findViewById(R.id.word_more_specific);
+		broaderContainer = (FlowLayout) view.findViewById(R.id.term_broader);
+		narrowerContainer = (FlowLayout) view.findViewById(R.id.term_narrower);
 
 		scrollView = (ScrollView) view.findViewById(R.id.scrollView);
 		scrollView.setVerticalScrollBarEnabled(false);
@@ -149,10 +152,10 @@ public class TermFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		loadWord();
+		loadTerm();
 	}
 
-	private void loadWord() {
+	private void loadTerm() {
 		if (mListener != null) {
 			final Term word = mListener.getTerm(termDescriptor, termDomain, termLanguage);
 			if (word != null) {
@@ -194,17 +197,23 @@ public class TermFragment extends Fragment {
 	}
 
 	private void persistTerm(Term term) {
-		//TODO
+		if (mListener != null) mListener.onTermFetched(term);
 	}
 
-	private void reloadUi(Term word) {
-		wordTitle.setText(word.getDescriptor());
-		wordDescription.setText(word.getScopeNote());
+	private void reloadUi(Term term) {
+		termTitle.setText(term.getDescriptor());
+		if (term.getUsedFor() != null) {
+			termSubtitle.setVisibility(View.VISIBLE);
+			termSubtitle.setText(term.getUsedFor().getDescriptor());
+		} else {
+			termSubtitle.setVisibility(View.GONE);
+		}
+		termDescription.setText(term.getScopeNote());
 
-		addWordsToContainer(relatedContainer, word.getRelatedTerms());
-		addWordsToContainer(synonymsContainer, word.getCategories());
-		addWordsToContainer(moreGenericContainer, word.getBroaderTerms());
-		addWordsToContainer(moreSpecificContainer, word.getNarrowerTerms());
+		addWordsToContainer(relatedContainer, term.getRelatedTerms());
+		addWordsToContainer(synonymsContainer, term.getCategories());
+		addWordsToContainer(broaderContainer, term.getBroaderTerms());
+		addWordsToContainer(narrowerContainer, term.getNarrowerTerms());
 	}
 
 	private void addWordsToContainer(FlowLayout container, List<Term> terms) {
@@ -226,7 +235,7 @@ public class TermFragment extends Fragment {
 			tv.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if (mListener != null) mListener.onWordClicked(term.getDescriptor(),
+					if (mListener != null) mListener.onTermClicked(term.getDescriptor(),
 							term.getDomain(), term.getLanguage());
 				}
 			});
@@ -263,7 +272,9 @@ public class TermFragment extends Fragment {
 	public interface WordFragmentCallbacks {
 		Term getTerm(String termDescriptor, String termDomain, String termLanguage);
 
-		void onWordClicked(String termDescriptor, String termDomain, String termLanguage);
+		void onTermClicked(String termDescriptor, String termDomain, String termLanguage);
+
+		void onTermFetched(Term term);
 
 		void onUpPressed();
 	}

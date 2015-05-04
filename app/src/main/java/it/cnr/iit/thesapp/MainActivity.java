@@ -84,8 +84,13 @@ public class MainActivity extends AppCompatActivity implements TermFragment.Word
 	}
 
 	@Override
-	public void onWordClicked(String termDescriptor, String termDomain, String termLanguage) {
+	public void onTermClicked(String termDescriptor, String termDomain, String termLanguage) {
 		onWordSelected(termDescriptor, termDomain, termLanguage);
+	}
+
+	@Override
+	public void onTermFetched(Term term) {
+		termExplorerAdapter.onTermFetched(term);
 	}
 
 	@Override

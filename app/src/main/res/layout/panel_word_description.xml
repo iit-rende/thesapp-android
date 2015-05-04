@@ -6,7 +6,7 @@
 			  android:orientation="vertical">
 
 	<com.devspark.robototextview.widget.RobotoTextView
-		android:id="@+id/word_description"
+		android:id="@+id/term_description"
 		style="@style/body_2"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
