@@ -1,15 +1,20 @@
 package it.cnr.iit.thesapp.model;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class Domain {
 
+	@SerializedName("descriptor")
 	@Expose
 	private String descriptor;
+	@SerializedName("localization")
 	@Expose
 	private String localization;
+	@SerializedName("icon")
 	@Expose
 	private String icon;
+	@SerializedName("color")
 	@Expose
 	private String color;
 

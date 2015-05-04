@@ -11,7 +11,7 @@ import retrofit.http.Header;
 import retrofit.http.Query;
 
 public class Api {
-	public static final String ENDPOINT = "http://nsapi.e-lios.eu/App/API/";
+	public static final String ENDPOINT = "http://146.48.65.88";
 	private final ThesAppService service;
 
 	public Api() {

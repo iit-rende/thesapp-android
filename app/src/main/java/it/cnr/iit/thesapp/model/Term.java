@@ -1,32 +1,47 @@
 package it.cnr.iit.thesapp.model;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Term {
 
+	@SerializedName("descriptor")
 	@Expose
-	private String descriptor;
+	private String  descriptor;
+	@SerializedName("scopeNote")
 	@Expose
-	private String scopeNote;
+	private String  scopeNote;
+	@SerializedName("domain")
 	@Expose
-	private String domain;
+	private String  domain;
+	@SerializedName("language")
 	@Expose
-	private String language;
+	private String  language;
+	@SerializedName("semantic")
+	@Expose
+	private boolean semantic;
+	@SerializedName("categories")
 	@Expose
 	private List<Term> categories    = new ArrayList<Term>();
+	@SerializedName("relatedTerms")
 	@Expose
 	private List<Term> relatedTerms  = new ArrayList<Term>();
+	@SerializedName("narrowerTerms")
 	@Expose
 	private List<Term> narrowerTerms = new ArrayList<Term>();
+	@SerializedName("broaderTerms")
 	@Expose
 	private List<Term> broaderTerms  = new ArrayList<Term>();
+	@SerializedName("useFor")
 	@Expose
 	private List<Term> useFor        = new ArrayList<Term>();
+	@SerializedName("usedFor")
 	@Expose
 	private Term usedFor;
+	@SerializedName("localizations")
 	@Expose
 	private List<Term> localizations = new ArrayList<Term>();
 
@@ -223,5 +238,13 @@ public class Term {
 	 */
 	public void setLocalizations(List<Term> localizations) {
 		this.localizations = localizations;
+	}
+
+	public boolean isSemantic() {
+		return semantic;
+	}
+
+	public void setSemantic(boolean semantic) {
+		this.semantic = semantic;
 	}
 }

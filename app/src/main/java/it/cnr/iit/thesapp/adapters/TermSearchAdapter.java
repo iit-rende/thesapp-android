@@ -16,6 +16,7 @@ import it.cnr.iit.thesapp.App;
 import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.model.Term;
 import it.cnr.iit.thesapp.model.TermSearch;
+import it.cnr.iit.thesapp.utils.Logs;
 
 public class TermSearchAdapter extends ArrayAdapter<Term> implements Filterable {
 
@@ -83,16 +84,32 @@ public class TermSearchAdapter extends ArrayAdapter<Term> implements Filterable 
 
 	@Override
 	public Filter getFilter() {
-		Filter myFilter = new Filter() {
+		return new Filter() {
 			@Override
 			protected FilterResults performFiltering(final CharSequence constraint) {
-				TermSearch search = App.getApi().getService().query(constraint.toString(),
-						"Turismo", "it");
-
 				final FilterResults filterResults = new FilterResults();
-				filterResults.values = search.getSuggestions();
-				filterResults.count = search.getSuggestions().size();
+				if (constraint != null) {
+					try {
+						TermSearch search = App.getApi().getService().query(constraint.toString(),
+								"Turismo", "it");
 
+						if (search != null) {
+							Logs.retrofit("Suggestion received for " + search.getQuery() + ": " +
+										  search.getSuggestions().size());
+							filterResults.values = search.getSuggestions();
+							filterResults.count = search.getSuggestions().size();
+						} else {
+							Logs.retrofit("Suggestion search for " + constraint + " failed");
+							filterResults.values = null;
+							filterResults.count = -1;
+						}
+					} catch (Exception e) {
+						Logs.retrofit("Suggestion search for " + constraint + " failed");
+						e.printStackTrace();
+						filterResults.values = null;
+						filterResults.count = -1;
+					}
+				}
 				return filterResults;
 			}
 
@@ -108,7 +125,6 @@ public class TermSearchAdapter extends ArrayAdapter<Term> implements Filterable 
 				return resultValue == null ? "" : ((Term) resultValue).getDescriptor();
 			}
 		};
-		return myFilter;
 	}
 
 	// somewhere else in your class definition
