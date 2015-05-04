@@ -1,9 +1,9 @@
 package it.cnr.iit.thesapp.api;
 
 
-import java.util.List;
-
+import it.cnr.iit.thesapp.model.DomainSearch;
 import it.cnr.iit.thesapp.model.Term;
+import it.cnr.iit.thesapp.model.TermSearch;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.http.GET;
@@ -27,10 +27,17 @@ public class Api {
 	public interface ThesAppService {
 		@GET("/search")
 		void query(@Query("query") String queryString, @Query("domain") String domain,
-				   @Header("Accept-Language") String language, Callback<List<Term>> callback);
+				   @Header("Accept-Language") String language, Callback<TermSearch> callback);
+
+		@GET("/search")
+		TermSearch query(@Query("query") String queryString, @Query("domain") String domain,
+						 @Header("Accept-Language") String language);
 
 		@GET("/terms")
 		void term(@Query("descriptor") String descriptor, @Query("domain") String domain,
 				  @Header("Accept-Language") String language, Callback<Term> callback);
+
+		@GET("/domains")
+		void domains(@Header("Accept-Language") String language, Callback<DomainSearch> callback);
 	}
 }
