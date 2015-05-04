@@ -16,7 +16,6 @@ import it.cnr.iit.thesapp.App;
 import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.model.Term;
 import it.cnr.iit.thesapp.model.TermSearch;
-import it.cnr.iit.thesapp.model.Word;
 
 public class TermSearchAdapter extends ArrayAdapter<Term> implements Filterable {
 
@@ -106,7 +105,7 @@ public class TermSearchAdapter extends ArrayAdapter<Term> implements Filterable 
 
 			@Override
 			public CharSequence convertResultToString(final Object resultValue) {
-				return resultValue == null ? "" : ((Word) resultValue).getWord();
+				return resultValue == null ? "" : ((Term) resultValue).getDescriptor();
 			}
 		};
 		return myFilter;

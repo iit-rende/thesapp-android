@@ -9,12 +9,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.devspark.robototextview.widget.RobotoAutoCompleteTextView;
-
 import it.cnr.iit.thesapp.adapters.TermExplorerAdapter;
 import it.cnr.iit.thesapp.adapters.TermSearchAdapter;
 import it.cnr.iit.thesapp.fragments.TermFragment;
 import it.cnr.iit.thesapp.model.Term;
+import it.cnr.iit.thesapp.views.DelayAutoCompleteTextView;
 
 
 public class MainActivity extends AppCompatActivity implements TermFragment.WordFragmentCallbacks {
@@ -35,14 +34,16 @@ public class MainActivity extends AppCompatActivity implements TermFragment.Word
 		pager.setOffscreenPageLimit(5);
 		pager.setAdapter(termExplorerAdapter);
 
-		RobotoAutoCompleteTextView searchText = (RobotoAutoCompleteTextView) findViewById(
+		DelayAutoCompleteTextView searchText = (DelayAutoCompleteTextView) findViewById(
 				R.id.search_text);
-		termSearchAdapter = new TermSearchAdapter(this, App.getThesaurus());
+		searchText.setLoadingIndicator((android.widget.ProgressBar) findViewById(
+				R.id.pb_loading_indicator));
+		termSearchAdapter = new TermSearchAdapter(this, null);
 		searchText.setAdapter(termSearchAdapter);
 		searchText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View view, int pos, long id) {
-				final Term term = termExplorerAdapter.getTerm(pos);
+				final Term term = termSearchAdapter.getItem(pos);
 				onWordSelected(term.getDescriptor(), term.getDomain(), term.getLanguage());
 			}
 		});
