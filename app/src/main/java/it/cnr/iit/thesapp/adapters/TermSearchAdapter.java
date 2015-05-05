@@ -14,6 +14,7 @@ import java.util.List;
 
 import it.cnr.iit.thesapp.App;
 import it.cnr.iit.thesapp.R;
+import it.cnr.iit.thesapp.model.Domain;
 import it.cnr.iit.thesapp.model.Term;
 import it.cnr.iit.thesapp.model.TermSearch;
 import it.cnr.iit.thesapp.utils.Logs;
@@ -23,6 +24,8 @@ public class TermSearchAdapter extends ArrayAdapter<Term> implements Filterable 
 	private final LayoutInflater inflater;
 	private       List<Term>     words;
 	private int count = -1;
+	private Domain domain;
+	private String language;
 
 	public TermSearchAdapter(Context context, List<Term> objects) {
 		super(context, android.R.layout.simple_dropdown_item_1line, objects);
@@ -91,7 +94,7 @@ public class TermSearchAdapter extends ArrayAdapter<Term> implements Filterable 
 				if (constraint != null) {
 					try {
 						TermSearch search = App.getApi().getService().query(constraint.toString(),
-								"Turismo", "it");
+								domain.getDescriptor(), language);
 
 						if (search != null) {
 							Logs.retrofit("Suggestion received for " + search.getQuery() + ": " +
@@ -125,6 +128,14 @@ public class TermSearchAdapter extends ArrayAdapter<Term> implements Filterable 
 				return resultValue == null ? "" : ((Term) resultValue).getDescriptor();
 			}
 		};
+	}
+
+	public void setDomain(Domain domain) {
+		this.domain = domain;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 	// somewhere else in your class definition

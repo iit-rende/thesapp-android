@@ -55,6 +55,7 @@ public class DelayedAutoCompleteTextView extends RobotoAutoCompleteTextView {
 		super.onFilterComplete(count);
 	}
 
+
 	public static class DelayHandler extends Handler {
 
 		public WeakReference<DelayedAutoCompleteTextView> delayedAutoCompleteTextViewWeakReference;
