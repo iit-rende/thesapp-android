@@ -4,10 +4,13 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.adapters.DomainSpinnerAdapter;
@@ -72,6 +75,15 @@ public class SearchBox extends FrameLayout {
 						term.getDomain(), term.getLanguage());
 			}
 		});
+		searchTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView textView, int arg, KeyEvent keyEvent) {
+				if (arg == EditorInfo.IME_ACTION_SEARCH) {
+					openSearchDropdown();
+				}
+				return false;
+			}
+		});
 
 		setTermSearchAdapter(new TermSearchAdapter(getContext(), null));
 
@@ -87,6 +99,10 @@ public class SearchBox extends FrameLayout {
 
 			}
 		});
+	}
+
+	private void openSearchDropdown() {
+		searchTextView.showDropDown();
 	}
 
 	public void setTermSearchAdapter(TermSearchAdapter termSearchAdapter) {
