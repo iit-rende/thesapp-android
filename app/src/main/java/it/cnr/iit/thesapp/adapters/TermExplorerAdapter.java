@@ -16,6 +16,7 @@ import java.util.List;
 import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.fragments.TermFragment;
 import it.cnr.iit.thesapp.model.Term;
+import it.cnr.iit.thesapp.utils.Logs;
 
 public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPager
 																				 .OnPageChangeListener,
@@ -48,6 +49,7 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 	}
 
 	public void onTermFetched(Term term) {
+		term.setCompletelyFetched(true);
 		terms.get(getPositionForTerm(term)).copy(term);
 	}
 
@@ -90,9 +92,10 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 	}
 
 	public Term getTerm(String termDescriptor, String termDomain, String termLanguage) {
-		for (Term word : terms) {
-			if (word.getDescriptor().equals(termDescriptor) && word.getDomain().equals(
-					termDomain) && word.getLanguage().equals(termLanguage)) return word;
+		for (Term term : terms) {
+			Logs.cache(term.toString());
+			if (term.getDescriptor().equals(termDescriptor) && term.getDomain().equals(
+					termDomain) && term.getLanguage().equals(termLanguage)) return term;
 		}
 		return null;
 	}

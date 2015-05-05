@@ -43,12 +43,22 @@ public class Term {
 	private Term usedFor;
 	@SerializedName("localizations")
 	@Expose
-	private List<Term> localizations = new ArrayList<Term>();
+	private List<Term> localizations     = new ArrayList<Term>();
+	private boolean    completelyFetched = false;
 
 	public Term(String termDescriptor, String termDomain, String termLanguage) {
 		this.descriptor = termDescriptor;
 		this.domain = termDomain;
 		this.language = termLanguage;
+	}
+
+	@Override
+	public String toString() {
+		return "Term{" +
+			   "descriptor='" + descriptor + '\'' +
+			   ", domain='" + domain + '\'' +
+			   ", language='" + language + '\'' +
+			   '}';
 	}
 
 	@Override
@@ -246,5 +256,13 @@ public class Term {
 
 	public void setSemantic(boolean semantic) {
 		this.semantic = semantic;
+	}
+
+	public boolean isCompletelyFetched() {
+		return completelyFetched;
+	}
+
+	public void setCompletelyFetched(boolean completelyFetched) {
+		this.completelyFetched = completelyFetched;
 	}
 }

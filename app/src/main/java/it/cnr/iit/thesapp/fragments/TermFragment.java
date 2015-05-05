@@ -23,6 +23,7 @@ import java.util.List;
 import it.cnr.iit.thesapp.App;
 import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.model.Term;
+import it.cnr.iit.thesapp.utils.Logs;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -69,8 +70,8 @@ public class TermFragment extends Fragment {
 		TermFragment fragment = new TermFragment();
 		Bundle args = new Bundle();
 		args.putString(ARG_WORD_DESCRIPTOR, term.getDescriptor());
-		args.putString(ARG_WORD_DOMAIN, term.getDescriptor());
-		args.putString(ARG_WORD_LANGUAGE, term.getDescriptor());
+		args.putString(ARG_WORD_DOMAIN, term.getDomain());
+		args.putString(ARG_WORD_LANGUAGE, term.getLanguage());
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -157,9 +158,9 @@ public class TermFragment extends Fragment {
 
 	private void loadTerm() {
 		if (mListener != null) {
-			final Term word = mListener.getTerm(termDescriptor, termDomain, termLanguage);
-			if (word != null) {
-				reloadUi(word);
+			final Term term = mListener.getTerm(termDescriptor, termDomain, termLanguage);
+			if (term != null && term.isCompletelyFetched()) {
+				reloadUi(term);
 			} else {
 				fetchTerm();
 			}
@@ -168,17 +169,20 @@ public class TermFragment extends Fragment {
 
 	private void fetchTerm() {
 		setUiLoading(true);
+		Logs.retrofit(
+				"Fetching term: " + termDescriptor + " in " + termDomain + " (" + termLanguage +
+				")");
 		App.getApi().getService().term(termDescriptor, termDomain, termLanguage,
 				new Callback<Term>() {
 					@Override
 					public void success(Term term, Response response) {
 						if (response.getStatus() == 200 && term != null) {
+							Logs.retrofit("Term fetched: " + term.getDescriptor());
 							reloadUi(term);
 							persistTerm(term);
 						} else {
-							Log.d("Retrofit",
-									"Error fetching term: " + response.getStatus() + " - " +
-									response.getReason());
+							Logs.retrofit("Error fetching term: " + response.getStatus() + " - " +
+										  response.getReason());
 						}
 						setUiLoading(false);
 					}
@@ -197,10 +201,12 @@ public class TermFragment extends Fragment {
 	}
 
 	private void persistTerm(Term term) {
+		term.setCompletelyFetched(true);
 		if (mListener != null) mListener.onTermFetched(term);
 	}
 
 	private void reloadUi(Term term) {
+		Logs.retrofit("Loading UI for " + term);
 		termTitle.setText(term.getDescriptor());
 		if (term.getUsedFor() != null) {
 			termSubtitle.setVisibility(View.VISIBLE);

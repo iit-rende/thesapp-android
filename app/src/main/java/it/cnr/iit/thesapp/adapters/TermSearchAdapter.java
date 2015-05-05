@@ -91,7 +91,7 @@ public class TermSearchAdapter extends ArrayAdapter<Term> implements Filterable 
 			@Override
 			protected FilterResults performFiltering(final CharSequence constraint) {
 				final FilterResults filterResults = new FilterResults();
-				if (constraint != null) {
+				if (constraint != null && constraint.length() > 0) {
 					try {
 						Logs.retrofit("Searching for " + constraint.toString() + " in " +
 									  domain.getDescriptor() + " (" + language + ")");
@@ -101,6 +101,9 @@ public class TermSearchAdapter extends ArrayAdapter<Term> implements Filterable 
 						if (search != null) {
 							Logs.retrofit("Suggestion received for " + search.getQuery() + ": " +
 										  search.getSuggestions().size());
+							for (Term term : search.getSuggestions()) {
+								term.setDomain(search.getDomain());
+							}
 							filterResults.values = search.getSuggestions();
 							filterResults.count = search.getSuggestions().size();
 						} else {
@@ -133,10 +136,12 @@ public class TermSearchAdapter extends ArrayAdapter<Term> implements Filterable 
 	}
 
 	public void setDomain(Domain domain) {
+		Logs.ui("Setting domain for search: " + domain.getDescriptor());
 		this.domain = domain;
 	}
 
 	public void setLanguage(String language) {
+		Logs.ui("Setting language for search: " + language);
 		this.language = language;
 	}
 

@@ -9,15 +9,13 @@ import android.widget.ProgressBar;
 
 import com.devspark.robototextview.widget.RobotoAutoCompleteTextView;
 
-import java.lang.ref.WeakReference;
-
 import it.cnr.iit.thesapp.R;
 
 public class DelayedAutoCompleteTextView extends RobotoAutoCompleteTextView {
 
 	private static final int          MESSAGE_TEXT_CHANGED       = 100;
 	private static final int          DEFAULT_AUTOCOMPLETE_DELAY = 750;
-	private final        DelayHandler mHandler                   = new DelayHandler(this);
+	private final DelayHandler mHandler = new DelayHandler();
 	private              int          mAutoCompleteDelay         = DEFAULT_AUTOCOMPLETE_DELAY;
 	private ProgressBar mLoadingIndicator;
 
@@ -39,6 +37,7 @@ public class DelayedAutoCompleteTextView extends RobotoAutoCompleteTextView {
 		if (mLoadingIndicator != null) {
 			mLoadingIndicator.setVisibility(View.VISIBLE);
 		}
+
 		mHandler.removeMessages(MESSAGE_TEXT_CHANGED);
 		mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_TEXT_CHANGED, text),
 				mAutoCompleteDelay);
@@ -56,19 +55,13 @@ public class DelayedAutoCompleteTextView extends RobotoAutoCompleteTextView {
 	}
 
 
-	public static class DelayHandler extends Handler {
-
-		public WeakReference<DelayedAutoCompleteTextView> delayedAutoCompleteTextViewWeakReference;
-
-		public DelayHandler(DelayedAutoCompleteTextView delayedAutoCompleteTextView) {
-			this.delayedAutoCompleteTextViewWeakReference =
-					new WeakReference<DelayedAutoCompleteTextView>(delayedAutoCompleteTextView);
+	public class DelayHandler extends Handler {
+		public DelayHandler() {
 		}
 
 		@Override
 		public void handleMessage(Message msg) {
-			delayedAutoCompleteTextViewWeakReference.get().performFiltering((CharSequence) msg.obj,
-					msg.arg1);
+			DelayedAutoCompleteTextView.super.performFiltering((CharSequence) msg.obj, msg.arg1);
 		}
 	}
 }

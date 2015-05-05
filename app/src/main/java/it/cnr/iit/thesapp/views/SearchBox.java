@@ -90,6 +90,7 @@ public class SearchBox extends FrameLayout {
 	}
 
 	public void setTermSearchAdapter(TermSearchAdapter termSearchAdapter) {
+		Logs.ui("Setting term search adapter");
 		this.mTermSearchAdapter = termSearchAdapter;
 		searchTextView.setAdapter(mTermSearchAdapter);
 		onLanguageSelected(PrefUtils.loadLanguage(getContext()));
@@ -109,6 +110,7 @@ public class SearchBox extends FrameLayout {
 		PrefUtils.saveDomain(getContext(), domain.getDescriptor());
 		selectedDomain = domain;
 		mTermSearchAdapter.setDomain(domain);
+		searchTextView.performFiltering(searchTextView.getText(), 0);
 	}
 
 	private void onLanguageSelected(String language) {

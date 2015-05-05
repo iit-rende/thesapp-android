@@ -11,6 +11,9 @@ public class TermSearch {
 	@SerializedName("query")
 	@Expose
 	private String query;
+	@SerializedName("domain")
+	@Expose
+	private String domain;
 	@SerializedName("suggestions")
 	@Expose
 	private List<Term> suggestions = new ArrayList<Term>();
@@ -41,5 +44,13 @@ public class TermSearch {
 	 */
 	public void setSuggestions(List<Term> suggestions) {
 		this.suggestions = suggestions;
+	}
+
+	public String getDomain() {
+		return domain;
+	}
+
+	public void setDomain(String domain) {
+		this.domain = domain;
 	}
 }
