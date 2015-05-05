@@ -22,7 +22,7 @@
 		android:layout_below="@id/activity_toolbar"
 		android:layout_margin="8dp">
 
-		<it.cnr.iit.thesapp.views.DelayAutoCompleteTextView
+		<it.cnr.iit.thesapp.views.DelayedAutoCompleteTextView
 			android:id="@+id/search_text"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"

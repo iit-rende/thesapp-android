@@ -13,7 +13,7 @@ import it.cnr.iit.thesapp.adapters.TermExplorerAdapter;
 import it.cnr.iit.thesapp.adapters.TermSearchAdapter;
 import it.cnr.iit.thesapp.fragments.TermFragment;
 import it.cnr.iit.thesapp.model.Term;
-import it.cnr.iit.thesapp.views.DelayAutoCompleteTextView;
+import it.cnr.iit.thesapp.views.DelayedAutoCompleteTextView;
 
 
 public class MainActivity extends AppCompatActivity implements TermFragment.WordFragmentCallbacks {
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements TermFragment.Word
 		pager.setOffscreenPageLimit(3);
 		pager.setAdapter(termExplorerAdapter);
 
-		DelayAutoCompleteTextView searchText = (DelayAutoCompleteTextView) findViewById(
+		DelayedAutoCompleteTextView searchText = (DelayedAutoCompleteTextView) findViewById(
 				R.id.search_text);
 		searchText.setLoadingIndicator((android.widget.ProgressBar) findViewById(
 				R.id.pb_loading_indicator));
