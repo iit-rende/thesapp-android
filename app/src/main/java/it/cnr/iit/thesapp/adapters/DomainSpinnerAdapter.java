@@ -20,7 +20,7 @@ public class DomainSpinnerAdapter extends ArrayAdapter<Domain> implements Spinne
 	private int count = -1;
 
 	public DomainSpinnerAdapter(Context context, List<Domain> domains) {
-		super(context, 0, domains);
+		super(context, android.R.layout.simple_dropdown_item_1line, domains);
 		this.domains = domains;
 		this.inflater = LayoutInflater.from(context);
 	}
@@ -60,6 +60,15 @@ public class DomainSpinnerAdapter extends ArrayAdapter<Domain> implements Spinne
 				false);
 		label.setText(domains.get(position).getDescriptor());
 		return label;
+	}
+
+	public int getPositionFromDescriptor(String descriptor) {
+		if (domains != null) {
+			for (int i = 0; i < domains.size(); i++) {
+				if (domains.get(i).getDescriptor().equals(descriptor)) return i;
+			}
+		}
+		return 0;
 	}
 
 	@Override

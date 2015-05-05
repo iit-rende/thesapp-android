@@ -14,34 +14,11 @@
 		android:minHeight="?attr/android:actionBarSize"
 		android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-
-	<FrameLayout
+	<it.cnr.iit.thesapp.views.SearchBox
 		android:id="@+id/search_container"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/activity_toolbar"
-		android:layout_margin="8dp">
-
-		<it.cnr.iit.thesapp.views.DelayedAutoCompleteTextView
-			android:id="@+id/search_text"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:hint="@string/search_hint"
-			android:imeOptions="flagNoExtractUi|flagNoFullscreen|actionSearch"
-			android:inputType="textCapSentences"
-			android:paddingEnd="8dp"
-			android:paddingRight="8dp"/>
-
-		<ProgressBar
-			android:id="@+id/pb_loading_indicator"
-			style="?android:attr/progressBarStyleSmall"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center_vertical|end"
-			android:layout_marginEnd="8dp"
-			android:layout_marginRight="8dp"
-			android:visibility="gone"/>
-	</FrameLayout>
+		android:layout_below="@id/activity_toolbar"/>
 
 	<android.support.v4.view.ViewPager
 		android:id="@+id/pager"

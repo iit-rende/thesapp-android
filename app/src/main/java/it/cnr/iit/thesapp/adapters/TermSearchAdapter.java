@@ -25,7 +25,7 @@ public class TermSearchAdapter extends ArrayAdapter<Term> implements Filterable 
 	private       List<Term>     words;
 	private int count = -1;
 	private Domain domain;
-	private String language;
+	private String language = "it";
 
 	public TermSearchAdapter(Context context, List<Term> objects) {
 		super(context, android.R.layout.simple_dropdown_item_1line, objects);
@@ -93,6 +93,8 @@ public class TermSearchAdapter extends ArrayAdapter<Term> implements Filterable 
 				final FilterResults filterResults = new FilterResults();
 				if (constraint != null) {
 					try {
+						Logs.retrofit("Searching for " + constraint.toString() + " in " +
+									  domain.getDescriptor() + " (" + language + ")");
 						TermSearch search = App.getApi().getService().query(constraint.toString(),
 								domain.getDescriptor(), language);
 

@@ -6,21 +6,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 
+import it.cnr.iit.thesapp.adapters.DomainSpinnerAdapter;
 import it.cnr.iit.thesapp.adapters.TermExplorerAdapter;
-import it.cnr.iit.thesapp.adapters.TermSearchAdapter;
 import it.cnr.iit.thesapp.fragments.TermFragment;
+import it.cnr.iit.thesapp.model.DomainSearch;
 import it.cnr.iit.thesapp.model.Term;
-import it.cnr.iit.thesapp.views.DelayedAutoCompleteTextView;
+import it.cnr.iit.thesapp.utils.Logs;
+import it.cnr.iit.thesapp.utils.PrefUtils;
+import it.cnr.iit.thesapp.views.SearchBox;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class MainActivity extends AppCompatActivity implements TermFragment.WordFragmentCallbacks {
 
 	private TermExplorerAdapter termExplorerAdapter;
-	private TermSearchAdapter   termSearchAdapter;
 	private ViewPager           pager;
+	private SearchBox searchBox;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,19 +38,15 @@ public class MainActivity extends AppCompatActivity implements TermFragment.Word
 		pager.setOffscreenPageLimit(3);
 		pager.setAdapter(termExplorerAdapter);
 
-		DelayedAutoCompleteTextView searchText = (DelayedAutoCompleteTextView) findViewById(
-				R.id.search_text);
-		searchText.setLoadingIndicator((android.widget.ProgressBar) findViewById(
-				R.id.pb_loading_indicator));
-		termSearchAdapter = new TermSearchAdapter(this, null);
-		searchText.setAdapter(termSearchAdapter);
-		searchText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		searchBox = (SearchBox) findViewById(R.id.search_container);
+		searchBox.setSearchBoxListener(new SearchBox.SearchBoxListener() {
 			@Override
-			public void onItemClick(AdapterView<?> adapter, View view, int pos, long id) {
-				final Term term = termSearchAdapter.getItem(pos);
-				onWordSelected(term.getDescriptor(), term.getDomain(), term.getLanguage());
+			public void onTermSelected(String descriptor, String domain, String language) {
+				onWordSelected(descriptor, domain, language);
 			}
 		});
+
+		loadDomains();
 	}
 
 	@Override
@@ -69,6 +69,30 @@ public class MainActivity extends AppCompatActivity implements TermFragment.Word
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+
+
+	private void loadDomains() {
+		App.getApi().getService().domains(PrefUtils.loadLanguage(this),
+				new Callback<DomainSearch>() {
+					@Override
+					public void success(DomainSearch domainSearch, Response response) {
+						if (response.getStatus() == 200) {
+							Logs.retrofit("Domain fetched: " + domainSearch.getDomains().size());
+							DomainSpinnerAdapter domainSpinnerAdapter = new DomainSpinnerAdapter(
+									MainActivity.this, domainSearch.getDomains());
+							searchBox.setDomainSpinnerAdapter(domainSpinnerAdapter);
+						} else {
+							Logs.retrofit("Domain fetch failed: " + response.getStatus() + " - " +
+										  response.getReason());
+						}
+					}
+
+					@Override
+					public void failure(RetrofitError error) {
+						error.printStackTrace();
+					}
+				});
 	}
 
 	public void onWordSelected(String termDescriptor, String termDomain, String termLanguage) {
