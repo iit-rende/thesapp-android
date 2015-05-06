@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
@@ -71,6 +72,7 @@ public class SearchBox extends FrameLayout {
 		searchTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View view, int pos, long id) {
+				hideKeyboard();
 				final Term term = mTermSearchAdapter.getItem(pos);
 				if (mListener != null) mListener.onTermSelected(term.getDescriptor(),
 						term.getDomainDescriptor(), term.getLanguage());
@@ -99,6 +101,12 @@ public class SearchBox extends FrameLayout {
 
 			}
 		});
+	}
+
+	private void hideKeyboard() {
+		InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
+				Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(searchTextView.getWindowToken(), 0);
 	}
 
 	private void openSearchDropdown() {
