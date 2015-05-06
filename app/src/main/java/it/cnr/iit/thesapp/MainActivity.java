@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements TermFragment.Term
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(
+		setSupportActionBar((Toolbar) findViewById(
 				R.id.activity_toolbar));
 		pager = (ViewPager) findViewById(R.id.pager);
 		termExplorerAdapter = new TermExplorerAdapter(this, getSupportFragmentManager(), null,

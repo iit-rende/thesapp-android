@@ -68,7 +68,7 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 				removeTerms(clickedFromPage);
 				App.terms.add(term);
 				count = -1;
-				notifyChangeInPosition(1);
+				notifyChangeInPosition(App.terms.size());
 				notifyDataSetChanged();
 			}
 			return getPositionForTerm(term);
@@ -86,8 +86,8 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 	}
 
 	private boolean isTermInList(Term term) {
-		for (Term word1 : App.terms) {
-			if (term.equals(word1)) return true;
+		for (Term term1 : App.terms) {
+			if (term.equals(term1)) return true;
 		}
 		return false;
 	}
@@ -157,12 +157,6 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 		return baseId + position;
 	}
 
-	/**
-	 * Notify that the position of a fragment has been changed.
-	 * Create a new ID for each position to force recreation of the fragment
-	 *
-	 * @param n number of items which have been changed
-	 */
 	public void notifyChangeInPosition(int n) {
 		// shift the ID returned by getItemId outside the range of all previous fragments
 		baseId += getCount() + n;
