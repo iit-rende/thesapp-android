@@ -101,6 +101,12 @@ public class TermFragment extends Fragment {
 		super.onViewCreated(view, savedInstanceState);
 		progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 		errorView = (ErrorView) view.findViewById(R.id.error_view);
+		errorView.setCallback(new ErrorView.ErrorViewListener() {
+			@Override
+			public void onViewClicked() {
+				fetchTerm();
+			}
+		});
 
 		toolbar = (Toolbar) view.findViewById(R.id.card_toolbar);
 		toolbar.setNavigationIcon(getActivity().getResources().getDrawable(
@@ -285,7 +291,7 @@ public class TermFragment extends Fragment {
 		if (terms != null && terms.size() > 0) {
 			TermsContainer container = new TermsContainer(getActivity());
 			container.setTitle(containerTitle);
-			container.setTerms(terms, termColor, mListener);
+			container.setTerms(terms, termColor, mListener, page);
 			hierarchyContainer.addView(container);
 		}
 	}
@@ -320,7 +326,8 @@ public class TermFragment extends Fragment {
 	public interface TermFragmentCallbacks {
 		Term getTerm(String termDescriptor, String termDomain, String termLanguage);
 
-		void onTermClicked(String termDescriptor, String termDomain, String termLanguage);
+		void onTermClicked(String termDescriptor, String termDomain, String termLanguage,
+						   int clickedFromPage);
 
 		void onTermFetched(Term term);
 

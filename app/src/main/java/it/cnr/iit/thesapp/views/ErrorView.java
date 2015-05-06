@@ -10,8 +10,9 @@ import com.devspark.robototextview.widget.RobotoTextView;
 import it.cnr.iit.thesapp.R;
 
 public class ErrorView extends FrameLayout {
-	private RobotoTextView mSmallError;
-	private RobotoTextView mBigError;
+	private RobotoTextView    mSmallError;
+	private RobotoTextView    mBigError;
+	private ErrorViewListener callback;
 
 	public ErrorView(Context context) {
 		super(context);
@@ -32,10 +33,24 @@ public class ErrorView extends FrameLayout {
 		View view = inflate(getContext(), R.layout.panel_error_view, this);
 		mSmallError = (RobotoTextView) view.findViewById(R.id.small_error);
 		mBigError = (RobotoTextView) view.findViewById(R.id.big_error);
+		setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (callback != null) callback.onViewClicked();
+			}
+		});
 	}
 
 	public void setError(String bigError, String smallError) {
 		mSmallError.setText(smallError);
 		mBigError.setText(bigError);
+	}
+
+	public void setCallback(ErrorViewListener callback) {
+		this.callback = callback;
+	}
+
+	public interface ErrorViewListener {
+		void onViewClicked();
 	}
 }

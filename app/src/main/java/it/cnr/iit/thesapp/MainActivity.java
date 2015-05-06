@@ -1,11 +1,15 @@
 package it.cnr.iit.thesapp;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import it.cnr.iit.thesapp.adapters.DomainSpinnerAdapter;
 import it.cnr.iit.thesapp.adapters.TermExplorerAdapter;
@@ -22,6 +26,9 @@ import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity implements TermFragment.TermFragmentCallbacks {
 
+	public static final String OPENED_TERM_DESCRIPTORS = "openedTermDescriptors";
+	public static final String OPENED_TERM_DOMAINS     = "openedTermDomains";
+	public static final String OPENED_TERM_LANGUAGES   = "openedTermLanguages";
 	private TermExplorerAdapter termExplorerAdapter;
 	private ViewPager           pager;
 	private SearchBox searchBox;
@@ -38,11 +45,25 @@ public class MainActivity extends AppCompatActivity implements TermFragment.Term
 		pager.setOffscreenPageLimit(3);
 		pager.setAdapter(termExplorerAdapter);
 
+		if (savedInstanceState != null) {
+			String[] openedTermDescriptors = savedInstanceState.getStringArray(
+					OPENED_TERM_DESCRIPTORS);
+			String[] openedTermDomains = savedInstanceState.getStringArray(OPENED_TERM_DOMAINS);
+			String[] openedTermLanguages = savedInstanceState.getStringArray
+					(OPENED_TERM_LANGUAGES);
+			List<Term> terms = new ArrayList<>();
+			for (int i = 0; i < openedTermDescriptors.length; i++) {
+				terms.add(new Term(openedTermDescriptors[i], openedTermDomains[i],
+						openedTermLanguages[i]));
+			}
+			termExplorerAdapter.setTerms(terms);
+		}
+
 		searchBox = (SearchBox) findViewById(R.id.search_container);
 		searchBox.setSearchBoxListener(new SearchBox.SearchBoxListener() {
 			@Override
 			public void onTermSelected(String descriptor, String domain, String language) {
-				onWordSelected(descriptor, domain, language);
+				onWordSelected(descriptor, domain, language, -1);
 			}
 		});
 		DomainSpinnerAdapter domainSpinnerAdapter = new DomainSpinnerAdapter(MainActivity.this,
@@ -75,6 +96,27 @@ public class MainActivity extends AppCompatActivity implements TermFragment.Term
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+		super.onSaveInstanceState(outState, outPersistentState);
+		final List<Term> terms = termExplorerAdapter.getTerms();
+		final int size = terms.size();
+		String[] openedTermDescriptors = new String[size];
+		String[] openedTermDomains = new String[size];
+		String[] openedTermLanguages = new String[size];
+		for (int i = 0; i < size; i++) {
+			final Term term = terms.get(i);
+			openedTermDescriptors[i] = term.getDescriptor();
+			openedTermDomains[i] = term.getDomainDescriptor();
+			openedTermLanguages[i] = term.getLanguage();
+		}
+
+		outState.putStringArray(OPENED_TERM_DESCRIPTORS, openedTermDescriptors);
+		outState.putStringArray(OPENED_TERM_DOMAINS, openedTermDomains);
+		outState.putStringArray(OPENED_TERM_LANGUAGES, openedTermLanguages);
+	}
+
+
 	private void loadDomains() {
 		Logs.cache("Loading domains from cache");
 		searchBox.setDomains(PrefUtils.loadDomains(this));
@@ -102,8 +144,10 @@ public class MainActivity extends AppCompatActivity implements TermFragment.Term
 				});
 	}
 
-	public void onWordSelected(String termDescriptor, String termDomain, String termLanguage) {
-		int pos = termExplorerAdapter.addTerm(termDescriptor, termDomain, termLanguage);
+	public void onWordSelected(String termDescriptor, String termDomain, String termLanguage,
+							   int clickedFromPage) {
+		int pos = termExplorerAdapter.addTerm(termDescriptor, termDomain, termLanguage,
+				clickedFromPage);
 		Log.d("Pager", "Positon for word " + termDescriptor + ": " + pos);
 		if (pos != -1) {
 			pager.setCurrentItem(pos, true);
@@ -116,8 +160,9 @@ public class MainActivity extends AppCompatActivity implements TermFragment.Term
 	}
 
 	@Override
-	public void onTermClicked(String termDescriptor, String termDomain, String termLanguage) {
-		onWordSelected(termDescriptor, termDomain, termLanguage);
+	public void onTermClicked(String termDescriptor, String termDomain, String termLanguage,
+							  int clickedFromPage) {
+		onWordSelected(termDescriptor, termDomain, termLanguage, clickedFromPage);
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.util.SparseArray;
@@ -24,11 +25,12 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 																				 .PageListener {
 
 
-	private final List<Term> terms;
 	private final float      pageWidth;
 	private final ViewPager  pager;
 	SparseArray<TermFragment> registeredFragments = new SparseArray<TermFragment>();
+	private List<Term> terms;
 	private int count = -1;
+	private int baseId;
 
 	public TermExplorerAdapter(Context context, FragmentManager fm, List<Term> terms,
 							   ViewPager pager) {
@@ -54,17 +56,20 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 		if (positionForTerm >= 0) terms.get(positionForTerm).copy(term);
 	}
 
-	public int addTerm(String termDescriptor, String termDomain, String termLanguage) {
+	public int addTerm(String termDescriptor, String termDomain, String termLanguage,
+					   int clickedFromPage) {
 		Term term = new Term(termDescriptor, termDomain, termLanguage);
-		return addTerm(term);
+		return addTerm(term, clickedFromPage);
 	}
 
-	public int addTerm(Term term) {
+	public int addTerm(Term term, int clickedFromPage) {
 		if (term != null) {
 			Log.d("Thesaurus", "Adding " + term.getDescriptor() + " to explorer");
 			if (!isTermInList(term)) {
+				removeTerms(clickedFromPage);
 				terms.add(term);
 				count = -1;
+				notifyChangeInPosition(1);
 				notifyDataSetChanged();
 			}
 			return getPositionForTerm(term);
@@ -72,24 +77,29 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 		return -1;
 	}
 
-	private int getPositionForTerm(Term targetWord) {
+	private int getPositionForTerm(Term targetTerm) {
 		int i = 0;
-		for (Term word : terms) {
-			if (word.equals(targetWord)) return i;
+		for (Term term : terms) {
+			if (term.equals(targetTerm)) return i;
 			i++;
 		}
 		return -1;
 	}
 
-	private boolean isTermInList(Term word) {
+	private boolean isTermInList(Term term) {
 		for (Term word1 : terms) {
-			if (word.equals(word1)) return true;
+			if (term.equals(word1)) return true;
 		}
 		return false;
 	}
 
-	public void removeWords(long lastWordToShow) {
-		//TODO
+	public void removeTerms(int lastPositionToKeep) {
+		if (lastPositionToKeep >= 0) {
+			for (int i = getCount() - 1; i > lastPositionToKeep; i--) {
+				terms.remove(i);
+				registeredFragments.remove(i);
+			}
+		}
 	}
 
 	public Term getTerm(String termDescriptor, String termDomain, String termLanguage) {
@@ -103,6 +113,17 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 
 	public Term getTerm(int position) {
 		return terms.get(position);
+	}
+
+	public List<Term> getTerms() {
+		return terms;
+	}
+
+	public void setTerms(List<Term> terms) {
+		this.terms = terms;
+		notifyChangeInPosition(terms.size());
+		count = -1;
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -123,6 +144,29 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 	public void destroyItem(ViewGroup container, int position, Object object) {
 		registeredFragments.remove(position);
 		super.destroyItem(container, position, object);
+	}
+
+	@Override
+	public int getItemPosition(Object object) {
+		return PagerAdapter.POSITION_NONE;
+	}
+
+
+	@Override
+	public long getItemId(int position) {
+		// give an ID different from position when position has been changed
+		return baseId + position;
+	}
+
+	/**
+	 * Notify that the position of a fragment has been changed.
+	 * Create a new ID for each position to force recreation of the fragment
+	 *
+	 * @param n number of items which have been changed
+	 */
+	public void notifyChangeInPosition(int n) {
+		// shift the ID returned by getItemId outside the range of all previous fragments
+		baseId += getCount() + n;
 	}
 
 	public TermFragment getRegisteredFragment(int position) {

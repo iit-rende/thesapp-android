@@ -46,7 +46,7 @@ public class TermsContainer extends LinearLayout {
 	}
 
 	public void setTerms(List<Term> terms, int termColor,
-						 final TermFragment.TermFragmentCallbacks callback) {
+						 final TermFragment.TermFragmentCallbacks callback, final int page) {
 		int padding = getResources().getDimensionPixelSize(R.dimen.padding_small);
 		int textColor = getResources().getColor(R.color.white);
 		if (terms != null) for (final Term term : terms) {
@@ -65,7 +65,7 @@ public class TermsContainer extends LinearLayout {
 				@Override
 				public void onClick(View v) {
 					if (callback != null) callback.onTermClicked(term.getDescriptor(),
-							term.getDomainDescriptor(), term.getLanguage());
+							term.getDomainDescriptor(), term.getLanguage(), page);
 				}
 			});
 			container.addView(tv);
