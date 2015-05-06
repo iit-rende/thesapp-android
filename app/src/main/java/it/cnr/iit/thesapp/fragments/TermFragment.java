@@ -2,21 +2,22 @@ package it.cnr.iit.thesapp.fragments;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Property;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 
 import com.devspark.robototextview.widget.RobotoTextView;
-
-import org.apmem.tools.layouts.FlowLayout;
 
 import java.util.List;
 
@@ -24,6 +25,8 @@ import it.cnr.iit.thesapp.App;
 import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.model.Term;
 import it.cnr.iit.thesapp.utils.Logs;
+import it.cnr.iit.thesapp.views.ErrorView;
+import it.cnr.iit.thesapp.views.TermsContainer;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -44,23 +47,23 @@ public class TermFragment extends Fragment {
 			object.setCardElevation(value);
 		}
 	};
-	private WordFragmentCallbacks mListener;
-	private RobotoTextView termTitle;
-	private RobotoTextView termDescription;
-	private FlowLayout            relatedContainer;
-	private FlowLayout            synonymsContainer;
-	private FlowLayout     broaderContainer;
-	private FlowLayout     narrowerContainer;
+	private TermFragmentCallbacks mListener;
+	private RobotoTextView        termTitle;
+	private RobotoTextView        termDescription;
 	private ScrollView            scrollView;
 	private CardView              cardView;
 	private PageListener          pageListener;
 	private int                   page;
-	private String         termDescriptor;
-	private String         termDomain;
-	private String         termLanguage;
-	private ProgressBar    progressBar;
-	private View           termContent;
-	private RobotoTextView termSubtitle;
+	private String                termDescriptor;
+	private String                termDomain;
+	private String                termLanguage;
+	private ProgressBar           progressBar;
+	private View                  cardContent;
+	private RobotoTextView        termSubtitle;
+	private Toolbar               toolbar;
+	private View                  titleContainer;
+	private LinearLayout          hierarchyContainer;
+	private ErrorView             errorView;
 
 	public TermFragment() {
 		// Required empty public constructor
@@ -70,7 +73,7 @@ public class TermFragment extends Fragment {
 		TermFragment fragment = new TermFragment();
 		Bundle args = new Bundle();
 		args.putString(ARG_WORD_DESCRIPTOR, term.getDescriptor());
-		args.putString(ARG_WORD_DOMAIN, term.getDomain());
+		args.putString(ARG_WORD_DOMAIN, term.getDomainDescriptor());
 		args.putString(ARG_WORD_LANGUAGE, term.getLanguage());
 		fragment.setArguments(args);
 		return fragment;
@@ -96,8 +99,10 @@ public class TermFragment extends Fragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+		errorView = (ErrorView) view.findViewById(R.id.error_view);
 
-		Toolbar toolbar = (Toolbar) view.findViewById(R.id.card_toolbar);
+		toolbar = (Toolbar) view.findViewById(R.id.card_toolbar);
 		toolbar.setNavigationIcon(getActivity().getResources().getDrawable(
 				R.drawable.ic_navigation_arrow_back));
 		toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -107,17 +112,13 @@ public class TermFragment extends Fragment {
 				if (mListener != null) mListener.onUpPressed();
 			}
 		});
-		progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-		termContent = view.findViewById(R.id.term_content);
+		titleContainer = view.findViewById(R.id.title_container);
+		cardContent = view.findViewById(R.id.card_content);
+		hierarchyContainer = (LinearLayout) view.findViewById(R.id.hierarchy_container);
 
 		termTitle = (RobotoTextView) view.findViewById(R.id.term_title);
 		termSubtitle = (RobotoTextView) view.findViewById(R.id.term_subtitle);
 		termDescription = (RobotoTextView) view.findViewById(R.id.term_description);
-
-		relatedContainer = (FlowLayout) view.findViewById(R.id.term_related);
-		synonymsContainer = (FlowLayout) view.findViewById(R.id.word_synonyms);
-		broaderContainer = (FlowLayout) view.findViewById(R.id.term_broader);
-		narrowerContainer = (FlowLayout) view.findViewById(R.id.term_narrower);
 
 		scrollView = (ScrollView) view.findViewById(R.id.scrollView);
 		scrollView.setVerticalScrollBarEnabled(false);
@@ -137,7 +138,7 @@ public class TermFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mListener = (WordFragmentCallbacks) activity;
+			mListener = (TermFragmentCallbacks) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(
 					activity.toString() + " must implement WordFragmentCallbacks");
@@ -177,27 +178,69 @@ public class TermFragment extends Fragment {
 					@Override
 					public void success(Term term, Response response) {
 						if (response.getStatus() == 200 && term != null) {
-							Logs.retrofit("Term fetched: " + term.getDescriptor());
+							Logs.retrofit("Term fetched: " + term);
+							term.fillMissingInfo();
 							reloadUi(term);
 							persistTerm(term);
+							setUiLoading(false);
 						} else {
 							Logs.retrofit("Error fetching term: " + response.getStatus() + " - " +
 										  response.getReason());
+							showError(response);
 						}
-						setUiLoading(false);
 					}
 
 					@Override
 					public void failure(RetrofitError error) {
 						error.printStackTrace();
-						setUiLoading(false);
+						showError(error);
 					}
 				});
 	}
 
+	private void showError(Response response) {
+		progressBar.setVisibility(View.GONE);
+		cardContent.setVisibility(View.GONE);
+		errorView.setVisibility(View.VISIBLE);
+		String errorString;
+		switch (response.getStatus()) {
+			case 404:
+				errorString = getString(R.string.error_not_found);
+				break;
+			case 500:
+				errorString = getString(R.string.error_server_problems);
+				break;
+			default:
+				errorString = getString(R.string.error_generic);
+		}
+		errorView.setError(String.valueOf(response.getStatus()), errorString);
+	}
+
+	private void showError(RetrofitError error) {
+		progressBar.setVisibility(View.GONE);
+		cardContent.setVisibility(View.GONE);
+		errorView.setVisibility(View.VISIBLE);
+		String errorString;
+		switch (error.getKind()) {
+
+			case NETWORK:
+				errorString = getString(R.string.error_connection_problem);
+				break;
+			case HTTP:
+				showError(error.getResponse());
+				return;
+			default:
+				errorString = getString(R.string.error_generic);
+				break;
+		}
+
+		errorView.setError("", errorString);
+	}
+
 	private void setUiLoading(boolean loading) {
 		progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
-		termContent.setVisibility(loading ? View.GONE : View.VISIBLE);
+		cardContent.setVisibility(loading ? View.GONE : View.VISIBLE);
+		errorView.setVisibility(View.GONE);
 	}
 
 	private void persistTerm(Term term) {
@@ -214,40 +257,39 @@ public class TermFragment extends Fragment {
 		} else {
 			termSubtitle.setVisibility(View.GONE);
 		}
-		termDescription.setText(term.getScopeNote());
+		if (!TextUtils.isEmpty(term.getScopeNote())) {
+			termDescription.setVisibility(View.VISIBLE);
+			termDescription.setText(term.getScopeNote());
+		} else {
+			termDescription.setVisibility(View.GONE);
+		}
+		setUiColor(Color.parseColor(term.getDomain().getColor()));
 
-		addWordsToContainer(relatedContainer, term.getRelatedTerms());
-		addWordsToContainer(synonymsContainer, term.getCategories());
-		addWordsToContainer(broaderContainer, term.getBroaderTerms());
-		addWordsToContainer(narrowerContainer, term.getNarrowerTerms());
+		hierarchyContainer.removeAllViews();
+		addTermsContainer(term.getRelatedTerms(), getString(R.string.related_terms),
+				getResources().getColor(R.color.material_deep_teal_500));
+		addTermsContainer(term.getCategories(), getString(R.string.categories_terms),
+				getResources().getColor(R.color.md_green_500));
+		addTermsContainer(term.getBroaderTerms(), getString(R.string.broader_terms),
+				getResources().getColor(R.color.md_orange_500));
+		addTermsContainer(term.getNarrowerTerms(), getString(R.string.narrower_terms),
+				getResources().getColor(R.color.md_amber_500));
 	}
 
-	private void addWordsToContainer(FlowLayout container, List<Term> terms) {
-		int padding = getResources().getDimensionPixelSize(R.dimen.padding_small);
-		int backgroundColor = getResources().getColor(R.color.primary);
-		int textColor = getResources().getColor(R.color.white);
-		if (terms != null) for (final Term term : terms) {
-			RobotoTextView tv = new RobotoTextView(getActivity());
-			tv.setText(term.getDescriptor());
-			tv.setTextColor(textColor);
-			tv.setPadding(padding, padding, padding, padding);
-			tv.setBackgroundColor(backgroundColor);
+	private void setUiColor(int color) {
+		titleContainer.setBackgroundColor(color);
+		toolbar.setBackgroundColor(color);
+	}
 
-			final FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
-					FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
-			params.setMargins(padding / 2, padding / 2, padding / 2, padding / 2);
-			tv.setLayoutParams(params);
-
-			tv.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if (mListener != null) mListener.onTermClicked(term.getDescriptor(),
-							term.getDomain(), term.getLanguage());
-				}
-			});
-			container.addView(tv);
+	private void addTermsContainer(List<Term> terms, String containerTitle, int termColor) {
+		if (terms != null && terms.size() > 0) {
+			TermsContainer container = new TermsContainer(getActivity());
+			container.setTitle(containerTitle);
+			container.setTerms(terms, termColor, mListener);
+			hierarchyContainer.addView(container);
 		}
 	}
+
 
 	public void scrollToTop() {
 		scrollView.fullScroll(View.FOCUS_UP);
@@ -275,7 +317,7 @@ public class TermFragment extends Fragment {
 		void onPageClicked(int position);
 	}
 
-	public interface WordFragmentCallbacks {
+	public interface TermFragmentCallbacks {
 		Term getTerm(String termDescriptor, String termDomain, String termLanguage);
 
 		void onTermClicked(String termDescriptor, String termDomain, String termLanguage);

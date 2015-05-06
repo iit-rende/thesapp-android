@@ -50,7 +50,8 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 
 	public void onTermFetched(Term term) {
 		term.setCompletelyFetched(true);
-		terms.get(getPositionForTerm(term)).copy(term);
+		final int positionForTerm = getPositionForTerm(term);
+		if (positionForTerm >= 0) terms.get(positionForTerm).copy(term);
 	}
 
 	public int addTerm(String termDescriptor, String termDomain, String termLanguage) {
@@ -94,7 +95,7 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 	public Term getTerm(String termDescriptor, String termDomain, String termLanguage) {
 		for (Term term : terms) {
 			Logs.cache(term.toString());
-			if (term.getDescriptor().equals(termDescriptor) && term.getDomain().equals(
+			if (term.getDescriptor().equals(termDescriptor) && term.getDomainDescriptor().equals(
 					termDomain) && term.getLanguage().equals(termLanguage)) return term;
 		}
 		return null;

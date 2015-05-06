@@ -3,20 +3,23 @@ package it.cnr.iit.thesapp.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Domain {
 
 	@SerializedName("descriptor")
 	@Expose
 	private String descriptor;
-	@SerializedName("localization")
-	@Expose
-	private String localization;
 	@SerializedName("icon")
 	@Expose
 	private String icon;
 	@SerializedName("color")
 	@Expose
 	private String color;
+	@SerializedName("localizations")
+	@Expose
+	private List<DomainLocalization> localizations = new ArrayList<DomainLocalization>();
 
 	/**
 	 * @return The descriptor
@@ -30,20 +33,6 @@ public class Domain {
 	 */
 	public void setDescriptor(String descriptor) {
 		this.descriptor = descriptor;
-	}
-
-	/**
-	 * @return The localization
-	 */
-	public String getLocalization() {
-		return localization;
-	}
-
-	/**
-	 * @param localization The localization
-	 */
-	public void setLocalization(String localization) {
-		this.localization = localization;
 	}
 
 	/**
@@ -72,5 +61,19 @@ public class Domain {
 	 */
 	public void setColor(String color) {
 		this.color = color;
+	}
+
+	/**
+	 * @return The localizations
+	 */
+	public List<DomainLocalization> getLocalizations() {
+		return localizations;
+	}
+
+	/**
+	 * @param localizations The localizations
+	 */
+	public void setLocalizations(List<DomainLocalization> localizations) {
+		this.localizations = localizations;
 	}
 }

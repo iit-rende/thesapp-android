@@ -68,7 +68,7 @@ public class DomainSpinnerAdapter extends ArrayAdapter<Domain> implements Spinne
 				if (domains.get(i).getDescriptor().equals(descriptor)) return i;
 			}
 		}
-		return 0;
+		return -1;
 	}
 
 	@Override

@@ -102,7 +102,7 @@ public class TermSearchAdapter extends ArrayAdapter<Term> implements Filterable 
 							Logs.retrofit("Suggestion received for " + search.getQuery() + ": " +
 										  search.getSuggestions().size());
 							for (Term term : search.getSuggestions()) {
-								term.setDomain(search.getDomain());
+								term.setDomainDescriptor(search.getDomain());
 							}
 							filterResults.values = search.getSuggestions();
 							filterResults.count = search.getSuggestions().size();

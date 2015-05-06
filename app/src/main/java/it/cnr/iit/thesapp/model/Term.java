@@ -16,7 +16,8 @@ public class Term {
 	private String  scopeNote;
 	@SerializedName("domain")
 	@Expose
-	private String  domain;
+	private Domain  domain;
+	private String  domainDescriptor;
 	@SerializedName("language")
 	@Expose
 	private String  language;
@@ -44,11 +45,14 @@ public class Term {
 	@SerializedName("localizations")
 	@Expose
 	private List<Term> localizations     = new ArrayList<Term>();
+	@SerializedName("hierarchy")
+	@Expose
+	private List<Term> hierarchy         = new ArrayList<Term>();
 	private boolean    completelyFetched = false;
 
 	public Term(String termDescriptor, String termDomain, String termLanguage) {
 		this.descriptor = termDescriptor;
-		this.domain = termDomain;
+		this.domainDescriptor = termDomain;
 		this.language = termLanguage;
 	}
 
@@ -56,7 +60,7 @@ public class Term {
 	public String toString() {
 		return "Term{" +
 			   "descriptor='" + descriptor + '\'' +
-			   ", domain='" + domain + '\'' +
+			   ", domainDescriptor='" + domainDescriptor + '\'' +
 			   ", language='" + language + '\'' +
 			   '}';
 	}
@@ -70,14 +74,15 @@ public class Term {
 
 		if (descriptor != null ? !descriptor.equals(term.descriptor) : term.descriptor != null)
 			return false;
-		if (domain != null ? !domain.equals(term.domain) : term.domain != null) return false;
+		if (domainDescriptor != null ? !domainDescriptor.equals(term.domainDescriptor) :
+			term.domainDescriptor != null) return false;
 		return !(language != null ? !language.equals(term.language) : term.language != null);
 	}
 
 	@Override
 	public int hashCode() {
 		int result = descriptor != null ? descriptor.hashCode() : 0;
-		result = 31 * result + (domain != null ? domain.hashCode() : 0);
+		result = 31 * result + (domainDescriptor != null ? domainDescriptor.hashCode() : 0);
 		result = 31 * result + (language != null ? language.hashCode() : 0);
 		return result;
 	}
@@ -86,6 +91,7 @@ public class Term {
 		setDescriptor(term.getDescriptor());
 		setScopeNote(term.getScopeNote());
 		setDomain(term.getDomain());
+		setDomainDescriptor(term.getDomainDescriptor());
 		setLanguage(term.getLanguage());
 		setCategories(term.getCategories());
 		setRelatedTerms(term.getRelatedTerms());
@@ -94,6 +100,39 @@ public class Term {
 		setUseFor(term.getUseFor());
 		setUsedFor(term.getUsedFor());
 		setLocalizations(term.getLocalizations());
+		setHierarchy(term.getHierarchy());
+	}
+
+	public void fillMissingInfo() {
+		setDomainDescriptor(getDomain().getDescriptor());
+		if (categories != null) for (Term term : categories) {
+			term.setLanguage(getLanguage());
+			term.setDomain(getDomain());
+		}
+		if (relatedTerms != null) for (Term term : relatedTerms) {
+			term.setLanguage(getLanguage());
+			term.setDomain(getDomain());
+		}
+		if (narrowerTerms != null) for (Term term : narrowerTerms) {
+			term.setLanguage(getLanguage());
+			term.setDomain(getDomain());
+		}
+		if (broaderTerms != null) for (Term term : broaderTerms) {
+			term.setLanguage(getLanguage());
+			term.setDomain(getDomain());
+		}
+		if (useFor != null) for (Term term : useFor) {
+			term.setLanguage(getLanguage());
+			term.setDomain(getDomain());
+		}
+		if (hierarchy != null) for (Term term : hierarchy) {
+			term.setLanguage(getLanguage());
+			term.setDomain(getDomain());
+		}
+		if (usedFor != null) {
+			usedFor.setLanguage(getLanguage());
+			usedFor.setDomain(getDomain());
+		}
 	}
 
 	/**
@@ -125,17 +164,17 @@ public class Term {
 	}
 
 	/**
-	 * @return The domain
+	 * @return The domainDescriptor
 	 */
-	public String getDomain() {
-		return domain;
+	public String getDomainDescriptor() {
+		return domainDescriptor;
 	}
 
 	/**
-	 * @param domain The domain
+	 * @param domainDescriptor The domainDescriptor
 	 */
-	public void setDomain(String domain) {
-		this.domain = domain;
+	public void setDomainDescriptor(String domainDescriptor) {
+		this.domainDescriptor = domainDescriptor;
 	}
 
 	/**
@@ -264,5 +303,22 @@ public class Term {
 
 	public void setCompletelyFetched(boolean completelyFetched) {
 		this.completelyFetched = completelyFetched;
+	}
+
+	public List<Term> getHierarchy() {
+		return hierarchy;
+	}
+
+	public void setHierarchy(List<Term> hierarchy) {
+		this.hierarchy = hierarchy;
+	}
+
+	public Domain getDomain() {
+		return domain;
+	}
+
+	public void setDomain(Domain domain) {
+		this.domain = domain;
+		setDomainDescriptor(domain.getDescriptor());
 	}
 }

@@ -12,6 +12,8 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.List;
+
 import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.adapters.DomainSpinnerAdapter;
 import it.cnr.iit.thesapp.adapters.TermSearchAdapter;
@@ -32,7 +34,6 @@ public class SearchBox extends FrameLayout {
 
 	//Variables
 	private Domain selectedDomain;
-	private String selectedLanguage;
 
 	public SearchBox(Context context) {
 		super(context);
@@ -72,7 +73,7 @@ public class SearchBox extends FrameLayout {
 			public void onItemClick(AdapterView<?> adapter, View view, int pos, long id) {
 				final Term term = mTermSearchAdapter.getItem(pos);
 				if (mListener != null) mListener.onTermSelected(term.getDescriptor(),
-						term.getDomain(), term.getLanguage());
+						term.getDomainDescriptor(), term.getLanguage());
 			}
 		});
 		searchTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -84,7 +85,6 @@ public class SearchBox extends FrameLayout {
 				return false;
 			}
 		});
-
 		setTermSearchAdapter(new TermSearchAdapter(getContext(), null));
 
 		domainSpinner = (Spinner) findViewById(R.id.spinner);
@@ -116,9 +116,18 @@ public class SearchBox extends FrameLayout {
 		this.mDomainSpinnerAdapter = domainSpinnerAdapter;
 		domainSpinner.setAdapter(mDomainSpinnerAdapter);
 		if (selectedDomain == null) {
-			int wantedPosition = domainSpinnerAdapter.getPositionFromDescriptor(
+			int wantedPosition = mDomainSpinnerAdapter.getPositionFromDescriptor(
 					PrefUtils.loadDomain(getContext()));
-			domainSpinner.setSelection(wantedPosition);
+			if (wantedPosition >= 0) domainSpinner.setSelection(wantedPosition);
+		}
+	}
+
+	public void setDomains(List<Domain> domains) {
+		mDomainSpinnerAdapter.setDomains(domains);
+		if (selectedDomain == null) {
+			int wantedPosition = mDomainSpinnerAdapter.getPositionFromDescriptor(
+					PrefUtils.loadDomain(getContext()));
+			if (wantedPosition >= 0) domainSpinner.setSelection(wantedPosition);
 		}
 	}
 
@@ -130,8 +139,7 @@ public class SearchBox extends FrameLayout {
 	}
 
 	private void onLanguageSelected(String language) {
-		this.selectedLanguage = language;
-		mTermSearchAdapter.setLanguage(selectedLanguage);
+		mTermSearchAdapter.setLanguage(language);
 	}
 
 

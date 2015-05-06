@@ -6,4 +6,12 @@
 
 	<string name="search_hint">Cerca un termine...</string>
 	<string name="error_searching">Problemi con la ricerca</string>
+	<string name="related_terms">Correlati</string>
+	<string name="categories_terms">Categorie</string>
+	<string name="broader_terms">Più generici</string>
+	<string name="narrower_terms">Più specifici</string>
+	<string name="error_not_found">Termine non trovato</string>
+	<string name="error_generic">C\'è qualche problema</string>
+	<string name="error_server_problems">Ci sono problemi con il server</string>
+	<string name="error_connection_problem">Nessuna connessione</string>
 </resources>

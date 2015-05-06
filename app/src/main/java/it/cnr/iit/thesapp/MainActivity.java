@@ -20,7 +20,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class MainActivity extends AppCompatActivity implements TermFragment.WordFragmentCallbacks {
+public class MainActivity extends AppCompatActivity implements TermFragment.TermFragmentCallbacks {
 
 	private TermExplorerAdapter termExplorerAdapter;
 	private ViewPager           pager;
@@ -45,8 +45,12 @@ public class MainActivity extends AppCompatActivity implements TermFragment.Word
 				onWordSelected(descriptor, domain, language);
 			}
 		});
+		DomainSpinnerAdapter domainSpinnerAdapter = new DomainSpinnerAdapter(MainActivity.this,
+				null);
+		searchBox.setDomainSpinnerAdapter(domainSpinnerAdapter);
 
 		loadDomains();
+		fetchDomains();
 	}
 
 	@Override
@@ -71,17 +75,20 @@ public class MainActivity extends AppCompatActivity implements TermFragment.Word
 		return super.onOptionsItemSelected(item);
 	}
 
-
 	private void loadDomains() {
+		Logs.cache("Loading domains from cache");
+		searchBox.setDomains(PrefUtils.loadDomains(this));
+	}
+
+	private void fetchDomains() {
 		App.getApi().getService().domains(PrefUtils.loadLanguage(this),
 				new Callback<DomainSearch>() {
 					@Override
 					public void success(DomainSearch domainSearch, Response response) {
 						if (response.getStatus() == 200) {
 							Logs.retrofit("Domain fetched: " + domainSearch.getDomains().size());
-							DomainSpinnerAdapter domainSpinnerAdapter = new DomainSpinnerAdapter(
-									MainActivity.this, domainSearch.getDomains());
-							searchBox.setDomainSpinnerAdapter(domainSpinnerAdapter);
+							searchBox.setDomains(domainSearch.getDomains());
+							PrefUtils.saveDomains(MainActivity.this, domainSearch.getDomains());
 						} else {
 							Logs.retrofit("Domain fetch failed: " + response.getStatus() + " - " +
 										  response.getReason());
