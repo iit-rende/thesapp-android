@@ -155,6 +155,10 @@ public class SearchBox extends FrameLayout {
 		this.mListener = listener;
 	}
 
+	public void setSearchInterval(long searchInterval) {
+		searchTextView.setAutoCompleteDelay(searchInterval);
+	}
+
 	public interface SearchBoxListener {
 		void onTermSelected(String descriptor, String domain, String language);
 	}

@@ -1,11 +1,20 @@
 package it.cnr.iit.thesapp.api;
 
 
+import com.squareup.okhttp.OkHttpClient;
+
+import java.io.IOException;
+
+import de.greenrobot.event.EventBus;
+import it.cnr.iit.thesapp.event.SetSearchDelayEvent;
 import it.cnr.iit.thesapp.model.DomainSearch;
 import it.cnr.iit.thesapp.model.Term;
 import it.cnr.iit.thesapp.model.TermSearch;
 import retrofit.Callback;
 import retrofit.RestAdapter;
+import retrofit.client.OkClient;
+import retrofit.client.Request;
+import retrofit.client.Response;
 import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.Query;
@@ -18,8 +27,18 @@ public class Api {
 
 		RestAdapter restAdapter =
 				new RestAdapter.Builder()//.setLogLevel(RestAdapter.LogLevel.BASIC)
-						.setEndpoint(ENDPOINT).build();
+						.setClient(new InterceptingOkClient()).setEndpoint(ENDPOINT).build();
 		service = restAdapter.create(ThesAppService.class);
+	}
+
+	public static long getSearchInterval(Response response) {
+		for (retrofit.client.Header header : response.getHeaders()) {
+			//Logs.retrofit(header.getName() + ": " + header.getValue());
+			if (header.getName().equals("X-Search-Interval")) {
+				return Long.parseLong(header.getValue());
+			}
+		}
+		return -1;
 	}
 
 	public ThesAppService getService() {
@@ -41,5 +60,23 @@ public class Api {
 
 		@GET("/domains")
 		void domains(@Header("Accept-Language") String language, Callback<DomainSearch> callback);
+	}
+
+	public class InterceptingOkClient extends OkClient {
+		public InterceptingOkClient() {
+		}
+
+		public InterceptingOkClient(OkHttpClient client) {
+			super(client);
+		}
+
+		@Override
+		public Response execute(Request request) throws
+												 IOException {
+			Response response = super.execute(request);
+			EventBus.getDefault().post(new SetSearchDelayEvent(getSearchInterval(response)));
+
+			return response;
+		}
 	}
 }

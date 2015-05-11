@@ -185,6 +185,7 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 	public void onPageSelected(int position) {
 		Log.d("ViewPager", "Page selected: " + position);
 
+		/*
 		int key;
 		for (int i = 0; i < registeredFragments.size(); i++) {
 			key = registeredFragments.keyAt(i);
@@ -197,6 +198,7 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 				}
 			}
 		}
+		*/
 	}
 
 	@Override
