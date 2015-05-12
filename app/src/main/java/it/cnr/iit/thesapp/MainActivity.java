@@ -148,18 +148,20 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 	}
 
 	@Override
-	public TimelineElement getTerm(String termDescriptor, String termDomain, String termLanguage) {
-		return termExplorerAdapter.getTerm(termDescriptor, termDomain, termLanguage);
+	public TimelineElement getElement(String termDescriptor, String termDomain, String
+			termLanguage,
+									  int elementKind) {
+		return termExplorerAdapter.getTerm(termDescriptor, termDomain, termLanguage, elementKind);
 	}
 
 	@Override
-	public void onTermClicked(String termDescriptor, String termDomain, String termLanguage,
-							  int elementKind, int clickedFromPage) {
+	public void onElementClicked(String termDescriptor, String termDomain, String termLanguage,
+								 int elementKind, int clickedFromPage) {
 		onElementSelected(termDescriptor, termDomain, termLanguage, elementKind, clickedFromPage);
 	}
 
 	@Override
-	public void onTermFetched(TimelineElement term) {
+	public void onElementFetched(TimelineElement term) {
 		termExplorerAdapter.onTermFetched(term);
 	}
 

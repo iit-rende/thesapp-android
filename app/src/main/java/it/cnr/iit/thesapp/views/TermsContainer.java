@@ -69,7 +69,7 @@ public class TermsContainer extends LinearLayout {
 				public void onClick(View v) {
 					if (callback != null) {
 						Logs.ui("Term clicked: " + term.toString());
-						callback.onTermClicked(term.getDescriptor(), term.getDomainDescriptor(),
+						callback.onElementClicked(term.getDescriptor(), term.getDomainDescriptor(),
 								term.getLanguage(), term.getElementKind(), page);
 					}
 				}
@@ -100,7 +100,7 @@ public class TermsContainer extends LinearLayout {
 				public void onClick(View v) {
 					if (callback != null) {
 						Logs.ui("Category clicked: " + category.toString());
-						callback.onTermClicked(category.getDescriptor(),
+						callback.onElementClicked(category.getDescriptor(),
 								category.getDomainDescriptor(), category.getLanguage(),
 								category.getElementKind(), page);
 					}

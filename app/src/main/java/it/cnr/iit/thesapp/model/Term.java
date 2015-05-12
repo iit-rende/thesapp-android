@@ -6,8 +6,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.cnr.iit.thesapp.utils.Logs;
-
 public class Term extends TimelineElement {
 	@SerializedName("scopeNote")
 	@Expose
@@ -71,7 +69,6 @@ public class Term extends TimelineElement {
 
 	@Override
 	public void fillMissingInfo() {
-		Logs.thesaurus("Filling term: " + this.toStringComplete());
 		setDomainDescriptor(getDomain().getDescriptor());
 		if (categories != null) for (Category term : categories) {
 			term.setLanguage(getLanguage());

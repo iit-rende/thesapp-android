@@ -18,15 +18,16 @@ public abstract class TimelineElementFragment extends Fragment {
 	private static final String ARG_WORD_DOMAIN       = "word_DOMAIN";
 	private static final String ARG_WORD_LANGUAGE     = "word_LANGUAGE";
 	private static final String ARG_WORD_ELEMENT_KIND = "word_KIND";
-	public TermFragmentCallbacks mListener;
-	public PageListener          pageListener;
-	public int                   page;
-	public String                termDescriptor;
-	public String                termDomain;
-	public String                termLanguage;
-	public ProgressBar           progressBar;
-	public View                  cardContent;
-	public ErrorView             errorView;
+	public  TermFragmentCallbacks mListener;
+	public  PageListener          pageListener;
+	public  int                   page;
+	public  String                termDescriptor;
+	public  String                termDomain;
+	public  String                termLanguage;
+	public  ProgressBar           progressBar;
+	public  View                  cardContent;
+	public  ErrorView             errorView;
+	private int                   termKind;
 
 	public TimelineElementFragment() {
 		// Required empty public constructor
@@ -61,6 +62,7 @@ public abstract class TimelineElementFragment extends Fragment {
 			termDescriptor = getArguments().getString(ARG_WORD_DESCRIPTOR);
 			termDomain = getArguments().getString(ARG_WORD_DOMAIN);
 			termLanguage = getArguments().getString(ARG_WORD_LANGUAGE);
+			termKind = getArguments().getInt(ARG_WORD_ELEMENT_KIND);
 		}
 	}
 
@@ -88,7 +90,17 @@ public abstract class TimelineElementFragment extends Fragment {
 		loadElement();
 	}
 
-	public abstract void loadElement();
+	public void loadElement() {
+		if (mListener != null) {
+			final TimelineElement element = mListener.getElement(termDescriptor, termDomain,
+					termLanguage, termKind);
+			if (element != null && element.isCompletelyFetched()) {
+				reloadUi(element);
+			} else {
+				fetchElement();
+			}
+		}
+	}
 
 	public abstract void fetchElement();
 
@@ -139,7 +151,7 @@ public abstract class TimelineElementFragment extends Fragment {
 
 	public void persistTerm(TimelineElement term) {
 		term.setCompletelyFetched(true);
-		if (mListener != null) mListener.onTermFetched(term);
+		if (mListener != null) mListener.onElementFetched(term);
 	}
 
 	public abstract void reloadUi(TimelineElement element);
@@ -159,13 +171,13 @@ public abstract class TimelineElementFragment extends Fragment {
 	}
 
 	public interface TermFragmentCallbacks {
-		TimelineElement getTerm(String elementDescriptor, String elementDomain,
-								String elementLanguage);
+		TimelineElement getElement(String elementDescriptor, String elementDomain,
+								   String elementLanguage, int elementKind);
 
-		void onTermClicked(String elementDescriptor, String elementDomain, String elementLanguage,
-						   int elementKind, int clickedFromPage);
+		void onElementClicked(String elementDescriptor, String elementDomain,
+							  String elementLanguage, int elementKind, int clickedFromPage);
 
-		void onTermFetched(TimelineElement term);
+		void onElementFetched(TimelineElement term);
 
 		void onUpPressed();
 	}

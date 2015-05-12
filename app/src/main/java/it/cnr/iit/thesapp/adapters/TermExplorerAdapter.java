@@ -125,11 +125,15 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 		}
 	}
 
-	public TimelineElement getTerm(String termDescriptor, String termDomain, String termLanguage) {
-		for (TimelineElement term : App.timelineElements) {
-			Logs.cache(term.toString());
-			if (term.getDescriptor().equals(termDescriptor) && term.getDomainDescriptor().equals(
-					termDomain) && term.getLanguage().equals(termLanguage)) return term;
+	public TimelineElement getTerm(String elementDescriptor, String elementDomain,
+								   String elementLanguage, int elementKind) {
+		for (TimelineElement element : App.timelineElements) {
+			Logs.cache(element.toString());
+			if (element.getDescriptor().equals(elementDescriptor) &&
+				element.getDomainDescriptor().equals(elementDomain) && element.getLanguage()
+																			  .equals(
+					elementLanguage) &&
+				element.getElementKind() == elementKind) return element;
 		}
 		return null;
 	}

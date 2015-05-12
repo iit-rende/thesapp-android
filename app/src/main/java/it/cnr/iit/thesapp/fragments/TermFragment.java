@@ -96,16 +96,6 @@ public class TermFragment extends TimelineElementFragment {
 	}
 
 
-	public void loadElement() {
-		if (mListener != null) {
-			final Term term = (Term) mListener.getTerm(termDescriptor, termDomain, termLanguage);
-			if (term != null && term.isCompletelyFetched()) {
-				reloadUi(term);
-			} else {
-				fetchElement();
-			}
-		}
-	}
 
 	public void fetchElement() {
 		setUiLoading(true);

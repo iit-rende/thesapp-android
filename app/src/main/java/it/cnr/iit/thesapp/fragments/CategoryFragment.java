@@ -95,17 +95,6 @@ public class CategoryFragment extends TimelineElementFragment {
 	}
 
 
-	public void loadElement() {
-		if (mListener != null) {
-			final Term term = (Term) mListener.getTerm(termDescriptor, termDomain, termLanguage);
-			if (term != null && term.isCompletelyFetched()) {
-				reloadUi(term);
-			} else {
-				fetchElement();
-			}
-		}
-	}
-
 	public void fetchElement() {
 		setUiLoading(true);
 		Logs.retrofit(
@@ -141,7 +130,6 @@ public class CategoryFragment extends TimelineElementFragment {
 	public void reloadUi(TimelineElement element) {
 		if (element instanceof Category) {
 			Category category = (Category) element;
-			category.fillMissingInfo();
 
 			Logs.retrofit("Loading UI for " + category);
 			termTitle.setText(category.getDescriptor());
