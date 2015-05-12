@@ -33,7 +33,6 @@ public class TermFragment extends TimelineElementFragment {
 	private RobotoTextView termTitle;
 	private RobotoTextView termDescription;
 	private ScrollView     scrollView;
-	private CardView       cardView;
 	private RobotoTextView termSubtitle;
 	private Toolbar        toolbar;
 	private View           titleContainer;
@@ -85,7 +84,7 @@ public class TermFragment extends TimelineElementFragment {
 		scrollView.setVerticalScrollBarEnabled(false);
 		scrollView.setHorizontalScrollBarEnabled(false);
 
-		cardView = (CardView) view.findViewById(R.id.cardView);
+		CardView cardView = (CardView) view.findViewById(R.id.cardView);
 		cardView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -94,7 +93,6 @@ public class TermFragment extends TimelineElementFragment {
 			}
 		});
 	}
-
 
 
 	public void fetchElement() {
