@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import de.greenrobot.event.EventBus;
 import it.cnr.iit.thesapp.event.SetSearchDelayEvent;
+import it.cnr.iit.thesapp.model.Category;
 import it.cnr.iit.thesapp.model.DomainSearch;
 import it.cnr.iit.thesapp.model.Term;
 import it.cnr.iit.thesapp.model.TermSearch;
@@ -57,6 +58,10 @@ public class Api {
 		@GET("/terms")
 		void term(@Query("descriptor") String descriptor, @Query("domain") String domain,
 				  @Header("Accept-Language") String language, Callback<Term> callback);
+
+		@GET("/categories")
+		void category(@Query("descriptor") String descriptor, @Query("domain") String domain,
+					  @Header("Accept-Language") String language, Callback<Category> callback);
 
 		@GET("/domains")
 		void domains(@Header("Accept-Language") String language, Callback<DomainSearch> callback);

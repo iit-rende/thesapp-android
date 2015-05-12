@@ -16,7 +16,10 @@ import java.util.List;
 import it.cnr.iit.thesapp.App;
 import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.fragments.TermFragment;
+import it.cnr.iit.thesapp.fragments.TimelineElementFragment;
+import it.cnr.iit.thesapp.model.Category;
 import it.cnr.iit.thesapp.model.Term;
+import it.cnr.iit.thesapp.model.TimelineElement;
 import it.cnr.iit.thesapp.utils.Logs;
 
 public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPager
@@ -27,14 +30,14 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 
 	private final float     pageWidth;
 	private final ViewPager pager;
-	SparseArray<TermFragment> registeredFragments = new SparseArray<TermFragment>();
+	SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
 	private int count = -1;
 	private int baseId;
 
-	public TermExplorerAdapter(Context context, FragmentManager fm, List<Term> terms,
+	public TermExplorerAdapter(Context context, FragmentManager fm, List<TimelineElement> terms,
 							   ViewPager pager) {
 		super(fm);
-		if (terms != null) App.terms = terms;
+		if (terms != null) App.timelineElements = terms;
 
 		TypedValue outValue = new TypedValue();
 		context.getResources().getValue(R.dimen.pager_page_width, outValue, true);
@@ -49,10 +52,10 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 		return pageWidth;
 	}
 
-	public void onTermFetched(Term term) {
+	public void onTermFetched(TimelineElement term) {
 		term.setCompletelyFetched(true);
 		final int positionForTerm = getPositionForTerm(term);
-		if (positionForTerm >= 0) App.terms.get(positionForTerm).copy(term);
+		if (positionForTerm >= 0) App.timelineElements.get(positionForTerm).copy(term);
 	}
 
 	public int addTerm(String termDescriptor, String termDomain, String termLanguage,
@@ -61,14 +64,20 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 		return addTerm(term, clickedFromPage);
 	}
 
+	public int addCategory(String termDescriptor, String termDomain, String termLanguage,
+						   int clickedFromPage) {
+		Category category = new Category(termDescriptor, termDomain, termLanguage);
+		return addCategory(category, clickedFromPage);
+	}
+
 	public int addTerm(Term term, int clickedFromPage) {
 		if (term != null) {
-			Log.d("Thesaurus", "Adding " + term.getDescriptor() + " to explorer");
+			Logs.thesaurus("Adding term " + term.getDescriptor() + " to explorer");
 			if (!isTermInList(term)) {
 				removeTerms(clickedFromPage);
-				App.terms.add(term);
+				App.timelineElements.add(term);
 				count = -1;
-				notifyChangeInPosition(App.terms.size());
+				notifyChangeInPosition(App.timelineElements.size());
 				notifyDataSetChanged();
 			}
 			return getPositionForTerm(term);
@@ -76,18 +85,33 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 		return -1;
 	}
 
-	private int getPositionForTerm(Term targetTerm) {
+	public int addCategory(Category category, int clickedFromPage) {
+		if (category != null) {
+			Logs.thesaurus("Adding category " + category.getDescriptor() + " to explorer");
+			if (!isTermInList(category)) {
+				removeTerms(clickedFromPage);
+				App.timelineElements.add(category);
+				count = -1;
+				notifyChangeInPosition(App.timelineElements.size());
+				notifyDataSetChanged();
+			}
+			return getPositionForTerm(category);
+		}
+		return -1;
+	}
+
+	private int getPositionForTerm(TimelineElement targetElement) {
 		int i = 0;
-		for (Term term : App.terms) {
-			if (term.equals(targetTerm)) return i;
+		for (TimelineElement timelineElement : App.timelineElements) {
+			if (timelineElement.equals(targetElement)) return i;
 			i++;
 		}
 		return -1;
 	}
 
-	private boolean isTermInList(Term term) {
-		for (Term term1 : App.terms) {
-			if (term.equals(term1)) return true;
+	private boolean isTermInList(TimelineElement element) {
+		for (TimelineElement timelineElement : App.timelineElements) {
+			if (element.equals(timelineElement)) return true;
 		}
 		return false;
 	}
@@ -95,14 +119,14 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 	public void removeTerms(int lastPositionToKeep) {
 		if (lastPositionToKeep >= 0) {
 			for (int i = getCount() - 1; i > lastPositionToKeep; i--) {
-				App.terms.remove(i);
+				App.timelineElements.remove(i);
 				registeredFragments.remove(i);
 			}
 		}
 	}
 
-	public Term getTerm(String termDescriptor, String termDomain, String termLanguage) {
-		for (Term term : App.terms) {
+	public TimelineElement getTerm(String termDescriptor, String termDomain, String termLanguage) {
+		for (TimelineElement term : App.timelineElements) {
 			Logs.cache(term.toString());
 			if (term.getDescriptor().equals(termDescriptor) && term.getDomainDescriptor().equals(
 					termDomain) && term.getLanguage().equals(termLanguage)) return term;
@@ -110,31 +134,28 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 		return null;
 	}
 
-	public Term getTerm(int position) {
-		return App.terms.get(position);
+	public TimelineElement getTerm(int position) {
+		return App.timelineElements.get(position);
 	}
 
-	public List<Term> getTerms() {
-		return App.terms;
-	}
-
-	public void setTerms(List<Term> terms) {
-		App.terms = terms;
-		notifyChangeInPosition(terms.size());
-		count = -1;
-		notifyDataSetChanged();
-	}
 
 	@Override
 	public Fragment getItem(int position) {
-		final TermFragment termFragment = TermFragment.newInstance(App.terms.get(position));
-		termFragment.setPageListener(this, position);
-		return termFragment;
+		TimelineElementFragment timelineElementFragment;
+		if (getTerm(position).getElementKind() == TimelineElement.KIND_TERM)
+			timelineElementFragment = TimelineElementFragment.newInstance(App.timelineElements.get(
+					position));
+		else timelineElementFragment = TimelineElementFragment.newInstance(App.timelineElements
+				.get(
+				position));
+		if (timelineElementFragment != null) timelineElementFragment.setPageListener(this,
+				position);
+		return timelineElementFragment;
 	}
 
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
-		TermFragment fragment = (TermFragment) super.instantiateItem(container, position);
+		Fragment fragment = (Fragment) super.instantiateItem(container, position);
 		registeredFragments.put(position, fragment);
 		return fragment;
 	}
@@ -162,15 +183,15 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 		baseId += getCount() + n;
 	}
 
-	public TermFragment getRegisteredFragment(int position) {
+	public Fragment getRegisteredFragment(int position) {
 		return registeredFragments.get(position);
 	}
 
 	@Override
 	public int getCount() {
 		if (count == -1) {
-			if (App.terms != null) {
-				count = App.terms.size();
+			if (App.timelineElements != null) {
+				count = App.timelineElements.size();
 			} else {
 				return 0;
 			}

@@ -60,9 +60,14 @@ public class DelayedAutoCompleteTextView extends RobotoAutoCompleteTextView {
 			mLoadingIndicator.setVisibility(View.VISIBLE);
 		}
 
-		mHandler.removeMessages(MESSAGE_TEXT_CHANGED);
-		mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_TEXT_CHANGED, text),
-				mAutoCompleteDelay);
+		if (mAutoCompleteDelay < 10) {
+			mHandler.removeMessages(MESSAGE_TEXT_CHANGED);
+			super.performFiltering(text, keyCode);
+		} else {
+			mHandler.removeMessages(MESSAGE_TEXT_CHANGED);
+			mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_TEXT_CHANGED, text),
+					mAutoCompleteDelay);
+		}
 	}
 
 	@Override

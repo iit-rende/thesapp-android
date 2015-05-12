@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.cnr.iit.thesapp.api.Api;
-import it.cnr.iit.thesapp.model.Term;
+import it.cnr.iit.thesapp.model.TimelineElement;
 
 public class App extends Application {
-	public static List<Term> terms = new ArrayList<>();
+	public static List<TimelineElement> timelineElements = new ArrayList<>();
 	private static Api api;
 
 	public static Api getApi() {

@@ -14,10 +14,10 @@ import java.util.List;
 
 import it.cnr.iit.thesapp.adapters.DomainSpinnerAdapter;
 import it.cnr.iit.thesapp.adapters.TermExplorerAdapter;
-import it.cnr.iit.thesapp.fragments.TermFragment;
+import it.cnr.iit.thesapp.fragments.TimelineElementFragment;
 import it.cnr.iit.thesapp.model.Domain;
 import it.cnr.iit.thesapp.model.DomainSearch;
-import it.cnr.iit.thesapp.model.Term;
+import it.cnr.iit.thesapp.model.TimelineElement;
 import it.cnr.iit.thesapp.utils.Logs;
 import it.cnr.iit.thesapp.utils.PrefUtils;
 import it.cnr.iit.thesapp.views.SearchBox;
@@ -26,7 +26,8 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class MainActivity extends AppCompatActivity implements TermFragment.TermFragmentCallbacks {
+public class MainActivity extends AppCompatActivity implements TimelineElementFragment
+																	   .TermFragmentCallbacks {
 	private TermExplorerAdapter termExplorerAdapter;
 	private ViewPager           pager;
 	private SearchBox      searchBox;
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements TermFragment.Term
 		searchBox.setSearchBoxListener(new SearchBox.SearchBoxListener() {
 			@Override
 			public void onTermSelected(String descriptor, String domain, String language) {
-				onWordSelected(descriptor, domain, language, -1);
+				onElementSelected(descriptor, domain, language, TimelineElement.KIND_TERM, -1);
 			}
 		});
 		DomainSpinnerAdapter domainSpinnerAdapter = new DomainSpinnerAdapter(MainActivity.this,
@@ -129,10 +130,17 @@ public class MainActivity extends AppCompatActivity implements TermFragment.Term
 				});
 	}
 
-	public void onWordSelected(String termDescriptor, String termDomain, String termLanguage,
-							   int clickedFromPage) {
-		int pos = termExplorerAdapter.addTerm(termDescriptor, termDomain, termLanguage,
-				clickedFromPage);
+	public void onElementSelected(String termDescriptor, String termDomain, String termLanguage,
+								  int elementKind, int clickedFromPage) {
+		int pos = -1;
+		if (elementKind == TimelineElement.KIND_TERM) {
+			pos = termExplorerAdapter.addTerm(termDescriptor, termDomain, termLanguage,
+					clickedFromPage);
+		}
+		if (elementKind == TimelineElement.KIND_CATEGORY) {
+			pos = termExplorerAdapter.addCategory(termDescriptor, termDomain, termLanguage,
+					clickedFromPage);
+		}
 		Log.d("Pager", "Positon for word " + termDescriptor + ": " + pos);
 		if (pos != -1) {
 			pager.setCurrentItem(pos, true);
@@ -140,18 +148,18 @@ public class MainActivity extends AppCompatActivity implements TermFragment.Term
 	}
 
 	@Override
-	public Term getTerm(String termDescriptor, String termDomain, String termLanguage) {
+	public TimelineElement getTerm(String termDescriptor, String termDomain, String termLanguage) {
 		return termExplorerAdapter.getTerm(termDescriptor, termDomain, termLanguage);
 	}
 
 	@Override
 	public void onTermClicked(String termDescriptor, String termDomain, String termLanguage,
-							  int clickedFromPage) {
-		onWordSelected(termDescriptor, termDomain, termLanguage, clickedFromPage);
+							  int elementKind, int clickedFromPage) {
+		onElementSelected(termDescriptor, termDomain, termLanguage, elementKind, clickedFromPage);
 	}
 
 	@Override
-	public void onTermFetched(Term term) {
+	public void onTermFetched(TimelineElement term) {
 		termExplorerAdapter.onTermFetched(term);
 	}
 

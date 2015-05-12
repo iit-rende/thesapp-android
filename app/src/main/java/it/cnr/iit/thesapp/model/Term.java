@@ -6,106 +6,74 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Term {
+import it.cnr.iit.thesapp.utils.Logs;
 
-	@SerializedName("descriptor")
-	@Expose
-	private String  descriptor;
+public class Term extends TimelineElement {
 	@SerializedName("scopeNote")
 	@Expose
 	private String  scopeNote;
-	@SerializedName("domain")
-	@Expose
-	private Domain  domain;
-	private String  domainDescriptor;
-	@SerializedName("language")
-	@Expose
-	private String  language;
 	@SerializedName("semantic")
 	@Expose
 	private boolean semantic;
 	@SerializedName("categories")
 	@Expose
-	private List<Term> categories    = new ArrayList<Term>();
+	private List<Category> categories    = new ArrayList<Category>();
 	@SerializedName("relatedTerms")
 	@Expose
-	private List<Term> relatedTerms  = new ArrayList<Term>();
+	private List<Term>     relatedTerms  = new ArrayList<Term>();
 	@SerializedName("narrowerTerms")
 	@Expose
-	private List<Term> narrowerTerms = new ArrayList<Term>();
+	private List<Term>     narrowerTerms = new ArrayList<Term>();
 	@SerializedName("broaderTerms")
 	@Expose
-	private List<Term> broaderTerms  = new ArrayList<Term>();
+	private List<Term>     broaderTerms  = new ArrayList<Term>();
 	@SerializedName("useFor")
 	@Expose
-	private List<Term> useFor        = new ArrayList<Term>();
+	private List<Term>     useFor        = new ArrayList<Term>();
 	@SerializedName("usedFor")
 	@Expose
 	private Term usedFor;
 	@SerializedName("localizations")
 	@Expose
-	private List<Term> localizations     = new ArrayList<Term>();
+	private List<Term> localizations = new ArrayList<Term>();
 	@SerializedName("hierarchy")
 	@Expose
-	private List<Term> hierarchy         = new ArrayList<Term>();
-	private boolean    completelyFetched = false;
+	private List<Term> hierarchy     = new ArrayList<Term>();
+
+	public Term() {
+		super();
+		this.setElementKind(KIND_TERM);
+	}
 
 	public Term(String termDescriptor, String termDomain, String termLanguage) {
-		this.descriptor = termDescriptor;
-		this.domainDescriptor = termDomain;
-		this.language = termLanguage;
+		super(termDescriptor, termDomain, termLanguage, KIND_TERM);
 	}
 
 	@Override
-	public String toString() {
-		return "Term{" +
-			   "descriptor='" + descriptor + '\'' +
-			   ", domainDescriptor='" + domainDescriptor + '\'' +
-			   ", language='" + language + '\'' +
-			   '}';
+	public void copy(TimelineElement element) {
+		if (element instanceof Term) {
+			Term term = (Term) element;
+			setDescriptor(term.getDescriptor());
+			setScopeNote(term.getScopeNote());
+			setDomain(term.getDomain());
+			setDomainDescriptor(term.getDomainDescriptor());
+			setLanguage(term.getLanguage());
+			setCategories(term.getCategories());
+			setRelatedTerms(term.getRelatedTerms());
+			setNarrowerTerms(term.getNarrowerTerms());
+			setBroaderTerms(term.getBroaderTerms());
+			setUseFor(term.getUseFor());
+			setUsedFor(term.getUsedFor());
+			setLocalizations(term.getLocalizations());
+			setHierarchy(term.getHierarchy());
+		}
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		Term term = (Term) o;
-
-		if (descriptor != null ? !descriptor.equals(term.descriptor) : term.descriptor != null)
-			return false;
-		if (domainDescriptor != null ? !domainDescriptor.equals(term.domainDescriptor) :
-			term.domainDescriptor != null) return false;
-		return !(language != null ? !language.equals(term.language) : term.language != null);
-	}
-
-	@Override
-	public int hashCode() {
-		int result = descriptor != null ? descriptor.hashCode() : 0;
-		result = 31 * result + (domainDescriptor != null ? domainDescriptor.hashCode() : 0);
-		result = 31 * result + (language != null ? language.hashCode() : 0);
-		return result;
-	}
-
-	public void copy(Term term) {
-		setDescriptor(term.getDescriptor());
-		setScopeNote(term.getScopeNote());
-		setDomain(term.getDomain());
-		setDomainDescriptor(term.getDomainDescriptor());
-		setLanguage(term.getLanguage());
-		setCategories(term.getCategories());
-		setRelatedTerms(term.getRelatedTerms());
-		setNarrowerTerms(term.getNarrowerTerms());
-		setBroaderTerms(term.getBroaderTerms());
-		setUseFor(term.getUseFor());
-		setUsedFor(term.getUsedFor());
-		setLocalizations(term.getLocalizations());
-		setHierarchy(term.getHierarchy());
-	}
-
 	public void fillMissingInfo() {
+		Logs.thesaurus("Filling term: " + this.toStringComplete());
 		setDomainDescriptor(getDomain().getDescriptor());
-		if (categories != null) for (Term term : categories) {
+		if (categories != null) for (Category term : categories) {
 			term.setLanguage(getLanguage());
 			term.setDomain(getDomain());
 		}
@@ -135,19 +103,6 @@ public class Term {
 		}
 	}
 
-	/**
-	 * @return The descriptor
-	 */
-	public String getDescriptor() {
-		return descriptor;
-	}
-
-	/**
-	 * @param descriptor The descriptor
-	 */
-	public void setDescriptor(String descriptor) {
-		this.descriptor = descriptor;
-	}
 
 	/**
 	 * @return The scopeNote
@@ -163,45 +118,18 @@ public class Term {
 		this.scopeNote = scopeNote;
 	}
 
-	/**
-	 * @return The domainDescriptor
-	 */
-	public String getDomainDescriptor() {
-		return domainDescriptor;
-	}
-
-	/**
-	 * @param domainDescriptor The domainDescriptor
-	 */
-	public void setDomainDescriptor(String domainDescriptor) {
-		this.domainDescriptor = domainDescriptor;
-	}
-
-	/**
-	 * @return The language
-	 */
-	public String getLanguage() {
-		return language;
-	}
-
-	/**
-	 * @param language The language
-	 */
-	public void setLanguage(String language) {
-		this.language = language;
-	}
 
 	/**
 	 * @return The categories
 	 */
-	public List<Term> getCategories() {
+	public List<Category> getCategories() {
 		return categories;
 	}
 
 	/**
 	 * @param categories The categories
 	 */
-	public void setCategories(List<Term> categories) {
+	public void setCategories(List<Category> categories) {
 		this.categories = categories;
 	}
 
@@ -297,13 +225,7 @@ public class Term {
 		this.semantic = semantic;
 	}
 
-	public boolean isCompletelyFetched() {
-		return completelyFetched;
-	}
 
-	public void setCompletelyFetched(boolean completelyFetched) {
-		this.completelyFetched = completelyFetched;
-	}
 
 	public List<Term> getHierarchy() {
 		return hierarchy;
@@ -313,12 +235,24 @@ public class Term {
 		this.hierarchy = hierarchy;
 	}
 
-	public Domain getDomain() {
-		return domain;
-	}
 
-	public void setDomain(Domain domain) {
-		this.domain = domain;
-		setDomainDescriptor(domain.getDescriptor());
+	public String toStringComplete() {
+		return "Term{" +
+			   "descriptor='" + getDescriptor() + '\'' +
+			   ", domainDescriptor='" + getDomainDescriptor() + '\'' +
+			   ", domain='" + getDomain() + '\'' +
+			   ", language='" + getLanguage() + '\'' +
+			   "scopeNote='" + scopeNote + '\'' +
+			   ", semantic=" + semantic +
+			   ", categories=" + categories.size() +
+			   ", relatedTerms=" + relatedTerms.size() +
+			   ", narrowerTerms=" + narrowerTerms.size() +
+			   ", broaderTerms=" + broaderTerms.size() +
+			   ", useFor=" + useFor.size() +
+			   ", usedFor=" + usedFor +
+			   ", localizations=" + localizations.size() +
+			   ", hierarchy=" + hierarchy.size() +
+			   ", completelyFetched=" + isCompletelyFetched() +
+			   '}';
 	}
 }

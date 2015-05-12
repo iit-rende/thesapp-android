@@ -15,4 +15,5 @@
 	<string name="error_server_problems">Ci sono problemi con il server</string>
 	<string name="error_connection_problem">Nessuna connessione</string>
 	<string name="loading_domains">Scarico i domini…</string>
+	<string name="category_terms">Termini nella categoria</string>
 </resources>

@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +28,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class TermFragment extends TimelineElementFragment {
+public class CategoryFragment extends TimelineElementFragment {
 	private RobotoTextView termTitle;
 	private RobotoTextView termDescription;
 	private ScrollView     scrollView;
@@ -39,7 +38,7 @@ public class TermFragment extends TimelineElementFragment {
 	private View           titleContainer;
 	private LinearLayout   hierarchyContainer;
 
-	public TermFragment() {
+	public CategoryFragment() {
 		// Required empty public constructor
 	}
 
@@ -112,19 +111,20 @@ public class TermFragment extends TimelineElementFragment {
 		Logs.retrofit(
 				"Fetching term: " + termDescriptor + " in " + termDomain + " (" + termLanguage +
 				")");
-		App.getApi().getService().term(termDescriptor, termDomain, termLanguage,
-				new Callback<Term>() {
+		App.getApi().getService().category(termDescriptor, termDomain, termLanguage,
+				new Callback<Category>() {
 					@Override
-					public void success(Term term, Response response) {
-						if (response.getStatus() == 200 && term != null) {
-							Logs.retrofit("Term fetched: " + term);
-							term.fillMissingInfo();
-							reloadUi(term);
-							persistTerm(term);
+					public void success(Category category, Response response) {
+						if (response.getStatus() == 200 && category != null) {
+							Logs.retrofit("Term fetched: " + category);
+							category.fillMissingInfo();
+							reloadUi(category);
+							persistTerm(category);
 							setUiLoading(false);
 						} else {
-							Logs.retrofit("Error fetching term: " + response.getStatus() + " - " +
-										  response.getReason());
+							Logs.retrofit(
+									"Error fetching category: " + response.getStatus() + " - " +
+									response.getReason());
 							showError(response);
 						}
 					}
@@ -139,35 +139,18 @@ public class TermFragment extends TimelineElementFragment {
 
 
 	public void reloadUi(TimelineElement element) {
-		if (element instanceof Term) {
-			Term term = (Term) element;
-			term.fillMissingInfo();
+		if (element instanceof Category) {
+			Category category = (Category) element;
+			category.fillMissingInfo();
 
-			Logs.retrofit("Loading UI for " + term);
-			termTitle.setText(term.getDescriptor());
-			if (term.getUsedFor() != null) {
-				termSubtitle.setVisibility(View.VISIBLE);
-				termSubtitle.setText(term.getUsedFor().getDescriptor());
-			} else {
-				termSubtitle.setVisibility(View.GONE);
-			}
-			if (!TextUtils.isEmpty(term.getScopeNote())) {
-				termDescription.setVisibility(View.VISIBLE);
-				termDescription.setText(term.getScopeNote());
-			} else {
-				termDescription.setVisibility(View.GONE);
-			}
-			setUiColor(Color.parseColor(term.getDomain().getColor()));
+			Logs.retrofit("Loading UI for " + category);
+			termTitle.setText(category.getDescriptor());
+
+			setUiColor(Color.parseColor(category.getDomain().getColor()));
 
 			hierarchyContainer.removeAllViews();
-			addTermsContainer(term.getRelatedTerms(), getString(R.string.related_terms),
+			addTermsContainer(category.getTerms(), getString(R.string.category_terms),
 					getResources().getColor(R.color.material_deep_teal_500));
-			addCategoryContainer(term.getCategories(), getString(R.string.categories_terms),
-					getResources().getColor(R.color.md_green_500));
-			addTermsContainer(term.getBroaderTerms(), getString(R.string.broader_terms),
-					getResources().getColor(R.color.md_orange_500));
-			addTermsContainer(term.getNarrowerTerms(), getString(R.string.narrower_terms),
-					getResources().getColor(R.color.md_amber_500));
 		}
 	}
 
@@ -185,15 +168,6 @@ public class TermFragment extends TimelineElementFragment {
 		}
 	}
 
-	private void addCategoryContainer(List<Category> categories, String containerTitle,
-									  int termColor) {
-		if (categories != null && categories.size() > 0) {
-			TermsContainer container = new TermsContainer(getActivity());
-			container.setTitle(containerTitle);
-			container.setCategories(categories, termColor, mListener, page);
-			hierarchyContainer.addView(container);
-		}
-	}
 
 	public void scrollToTop() {
 		scrollView.fullScroll(View.FOCUS_UP);

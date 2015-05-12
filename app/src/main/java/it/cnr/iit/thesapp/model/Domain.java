@@ -76,4 +76,14 @@ public class Domain {
 	public void setLocalizations(List<DomainLocalization> localizations) {
 		this.localizations = localizations;
 	}
+
+	@Override
+	public String toString() {
+		return "Domain{" +
+			   "descriptor='" + descriptor + '\'' +
+			   ", icon='" + icon + '\'' +
+			   ", color='" + color + '\'' +
+			   ", localizations=" + localizations.size() +
+			   '}';
+	}
 }
