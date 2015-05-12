@@ -1,13 +1,17 @@
 package it.cnr.iit.thesapp;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Property;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -27,12 +31,27 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class MainActivity extends AppCompatActivity implements TimelineElementFragment.TimelineElementFragmentCallback {
+public class MainActivity extends AppCompatActivity implements TimelineElementFragment
+																	   .TimelineElementFragmentCallback {
+
 	private TermExplorerAdapter termExplorerAdapter;
 	private ViewPager           pager;
 	private SearchBox      searchBox;
 	private ProgressDialog dialog;
 	private Toolbar        toolbar;
+	private int            toolbarColor;
+	final Property<MainActivity, Integer> uiColorProperty = new Property<MainActivity, Integer>(
+			int.class, "color") {
+		@Override
+		public Integer get(MainActivity object) {
+			return object.getToolbarColor();
+		}
+
+		@Override
+		public void set(MainActivity object, Integer value) {
+			object.setToolbarColor(value);
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -193,8 +212,25 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 	@Override
 	public void setToolbarDomain(Domain domain, int page) {
 		if (domain != null && pager.getCurrentItem() == page) {
-			toolbar.setBackgroundColor(Color.parseColor(domain.getColor()));
+
+			ObjectAnimator anim = ObjectAnimator.ofInt(this, uiColorProperty, Color.parseColor(
+					domain.getColor()));
+			anim.setEvaluator(new ArgbEvaluator());
+			anim.setDuration(250);
+			anim.start();
 			toolbar.setTitle(domain.getDescriptor());
+		}
+	}
+
+	public Integer getToolbarColor() {
+		return toolbarColor;
+	}
+
+	public void setToolbarColor(Integer toolbarColor) {
+		this.toolbarColor = toolbarColor;
+		toolbar.setBackgroundColor(toolbarColor);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			getWindow().setStatusBarColor(toolbarColor);
 		}
 	}
 }
