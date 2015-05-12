@@ -47,7 +47,7 @@ public class CategoryFragment extends TimelineElementFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_term, container, false);
+		return inflater.inflate(R.layout.fragment_category, container, false);
 	}
 
 	@Override
@@ -72,13 +72,10 @@ public class CategoryFragment extends TimelineElementFragment {
 				if (mListener != null) mListener.onUpPressed();
 			}
 		});
-		titleContainer = view.findViewById(R.id.title_container);
 		cardContent = view.findViewById(R.id.card_content);
 		hierarchyContainer = (LinearLayout) view.findViewById(R.id.hierarchy_container);
 
 		termTitle = (RobotoTextView) view.findViewById(R.id.term_title);
-		termSubtitle = (RobotoTextView) view.findViewById(R.id.term_subtitle);
-		termDescription = (RobotoTextView) view.findViewById(R.id.term_description);
 
 		scrollView = (ScrollView) view.findViewById(R.id.scrollView);
 		scrollView.setVerticalScrollBarEnabled(false);
@@ -143,7 +140,7 @@ public class CategoryFragment extends TimelineElementFragment {
 	}
 
 	private void setUiColor(int color) {
-		titleContainer.setBackgroundColor(color);
+		termTitle.setBackgroundColor(color);
 		toolbar.setBackgroundColor(color);
 	}
 

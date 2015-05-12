@@ -21,7 +21,8 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:animateLayoutChanges="true"
-			android:orientation="vertical">
+			android:orientation="vertical"
+			>
 
 			<android.support.v7.widget.Toolbar
 				android:id="@+id/card_toolbar"
@@ -40,45 +41,20 @@
 				tools:visibility="visible">
 
 
-				<LinearLayout
-					android:id="@+id/title_container"
+				<com.devspark.robototextview.widget.RobotoTextView
+					android:id="@+id/term_title"
+					style="@style/display_1"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:background="@color/primary"
-					android:orientation="vertical">
+					android:paddingBottom="24dp"
+					android:paddingLeft="16dp"
+					android:paddingRight="16dp"
+					android:paddingTop="24dp"
+					android:textColor="@color/white"
+					tools:text="Word to show"/>
 
-
-					<com.devspark.robototextview.widget.RobotoTextView
-						android:id="@+id/term_title"
-						style="@style/display_1"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:paddingLeft="16dp"
-						android:paddingRight="16dp"
-						android:paddingTop="24dp"
-						android:textColor="@color/white"
-						tools:text="Word to show"/>
-
-					<com.devspark.robototextview.widget.RobotoTextView
-						android:id="@+id/term_subtitle"
-						style="@style/subhead_italic"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:paddingLeft="16dp"
-						android:paddingRight="16dp"
-						android:textColor="@color/white"
-						tools:text="Word to show"/>
-
-					<Space
-						android:layout_width="match_parent"
-						android:layout_height="24dp"/>
-				</LinearLayout>
-
-
-				<include
-
-					android:id="@+id/term_content"
-					layout="@layout/panel_word_card_content"/>
+				<include layout="@layout/panel_category_content"/>
 			</LinearLayout>
 		</LinearLayout>
 
