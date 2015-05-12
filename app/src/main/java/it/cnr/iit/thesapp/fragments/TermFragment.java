@@ -1,6 +1,5 @@
 package it.cnr.iit.thesapp.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -145,7 +144,7 @@ public class TermFragment extends TimelineElementFragment {
 			} else {
 				termDescription.setVisibility(View.GONE);
 			}
-			setUiColor(Color.parseColor(term.getDomain().getColor()));
+			//setUiColor(Color.parseColor(term.getDomain().getColor()));
 
 			hierarchyContainer.removeAllViews();
 			addTermsContainer(term.getRelatedTerms(), getString(R.string.related_terms),
@@ -156,8 +155,10 @@ public class TermFragment extends TimelineElementFragment {
 					getResources().getColor(R.color.md_orange_500));
 			addTermsContainer(term.getNarrowerTerms(), getString(R.string.narrower_terms),
 					getResources().getColor(R.color.md_amber_500));
+			setWindowToolbar(term.getDomain());
 		}
 	}
+
 
 	private void setUiColor(int color) {
 		titleContainer.setBackgroundColor(color);

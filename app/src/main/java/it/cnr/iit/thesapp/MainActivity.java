@@ -1,6 +1,7 @@
 package it.cnr.iit.thesapp;
 
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v4.view.ViewPager;
@@ -26,29 +27,48 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class MainActivity extends AppCompatActivity implements TimelineElementFragment
-																	   .TermFragmentCallbacks {
+public class MainActivity extends AppCompatActivity implements TimelineElementFragment.TimelineElementFragmentCallback {
 	private TermExplorerAdapter termExplorerAdapter;
 	private ViewPager           pager;
 	private SearchBox      searchBox;
 	private ProgressDialog dialog;
+	private Toolbar        toolbar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		setSupportActionBar((Toolbar) findViewById(R.id.activity_toolbar));
+		toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
+		setSupportActionBar(toolbar);
 		pager = (ViewPager) findViewById(R.id.pager);
 		termExplorerAdapter = new TermExplorerAdapter(this, getSupportFragmentManager(), null,
 				pager);
 		pager.setOffscreenPageLimit(3);
 		pager.setAdapter(termExplorerAdapter);
+		pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			@Override
+			public void onPageScrolled(int position, float positionOffset,
+									   int positionOffsetPixels) {}
+
+			@Override
+			public void onPageSelected(int position) {
+				setToolbarDomain(App.timelineElements.get(position).getDomain(), position);
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {}
+		});
 
 		searchBox = (SearchBox) findViewById(R.id.search_container);
 		searchBox.setSearchBoxListener(new SearchBox.SearchBoxListener() {
 			@Override
 			public void onTermSelected(String descriptor, String domain, String language) {
 				onElementSelected(descriptor, domain, language, TimelineElement.KIND_TERM, -1);
+			}
+
+			@Override
+			public void onDomainSelected(Domain domain) {
+				setToolbarDomain(domain, pager.getCurrentItem());
 			}
 		});
 		DomainSpinnerAdapter domainSpinnerAdapter = new DomainSpinnerAdapter(MainActivity.this,
@@ -168,5 +188,13 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 	@Override
 	public void onUpPressed() {
 		if (pager.getCurrentItem() > 0) pager.setCurrentItem(pager.getCurrentItem() - 1, true);
+	}
+
+	@Override
+	public void setToolbarDomain(Domain domain, int page) {
+		if (domain != null && pager.getCurrentItem() == page) {
+			toolbar.setBackgroundColor(Color.parseColor(domain.getColor()));
+			toolbar.setTitle(domain.getDescriptor());
+		}
 	}
 }

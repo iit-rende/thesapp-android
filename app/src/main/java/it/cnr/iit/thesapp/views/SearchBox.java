@@ -144,6 +144,7 @@ public class SearchBox extends FrameLayout {
 		selectedDomain = domain;
 		mTermSearchAdapter.setDomain(domain);
 		searchTextView.performFiltering(searchTextView.getText(), 0);
+		if (mListener != null) mListener.onDomainSelected(domain);
 	}
 
 	private void onLanguageSelected(String language) {
@@ -161,5 +162,7 @@ public class SearchBox extends FrameLayout {
 
 	public interface SearchBoxListener {
 		void onTermSelected(String descriptor, String domain, String language);
+
+		void onDomainSelected(Domain domain);
 	}
 }

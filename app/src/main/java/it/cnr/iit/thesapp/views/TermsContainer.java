@@ -48,7 +48,7 @@ public class TermsContainer extends LinearLayout {
 	}
 
 	public void setTerms(List<Term> terms, int termColor,
-						 final TimelineElementFragment.TermFragmentCallbacks callback,
+						 final TimelineElementFragment.TimelineElementFragmentCallback callback,
 						 final int page) {
 		int padding = getResources().getDimensionPixelSize(R.dimen.padding_small);
 		int textColor = getResources().getColor(R.color.white);
@@ -79,7 +79,8 @@ public class TermsContainer extends LinearLayout {
 	}
 
 	public void setCategories(List<Category> categories, int termColor,
-							  final TimelineElementFragment.TermFragmentCallbacks callback,
+							  final TimelineElementFragment.TimelineElementFragmentCallback
+									  callback,
 							  final int page) {
 		int padding = getResources().getDimensionPixelSize(R.dimen.padding_small);
 		int textColor = getResources().getColor(R.color.white);

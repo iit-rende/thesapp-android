@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import it.cnr.iit.thesapp.R;
+import it.cnr.iit.thesapp.model.Domain;
 import it.cnr.iit.thesapp.model.TimelineElement;
 import it.cnr.iit.thesapp.utils.Logs;
 import it.cnr.iit.thesapp.views.ErrorView;
@@ -18,16 +19,16 @@ public abstract class TimelineElementFragment extends Fragment {
 	private static final String ARG_WORD_DOMAIN       = "word_DOMAIN";
 	private static final String ARG_WORD_LANGUAGE     = "word_LANGUAGE";
 	private static final String ARG_WORD_ELEMENT_KIND = "word_KIND";
-	public  TermFragmentCallbacks mListener;
-	public  PageListener          pageListener;
-	public  int                   page;
-	public  String                termDescriptor;
-	public  String                termDomain;
-	public  String                termLanguage;
-	public  ProgressBar           progressBar;
-	public  View                  cardContent;
-	public  ErrorView             errorView;
-	private int                   termKind;
+	public  TimelineElementFragmentCallback mListener;
+	public  PageListener                    pageListener;
+	public  int                             page;
+	public  String                          termDescriptor;
+	public  String                          termDomain;
+	public  String                          termLanguage;
+	public  ProgressBar                     progressBar;
+	public  View                            cardContent;
+	public  ErrorView                       errorView;
+	private int                             termKind;
 
 	public TimelineElementFragment() {
 		// Required empty public constructor
@@ -71,7 +72,7 @@ public abstract class TimelineElementFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mListener = (TermFragmentCallbacks) activity;
+			mListener = (TimelineElementFragmentCallback) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(
 					activity.toString() + " must implement WordFragmentCallbacks");
@@ -156,6 +157,9 @@ public abstract class TimelineElementFragment extends Fragment {
 
 	public abstract void reloadUi(TimelineElement element);
 
+	public void setWindowToolbar(Domain domain) {
+		if (mListener != null) mListener.setToolbarDomain(domain, page);
+	}
 
 	public abstract void scrollToTop();
 
@@ -166,11 +170,12 @@ public abstract class TimelineElementFragment extends Fragment {
 	}
 
 
+
 	public interface PageListener {
 		void onPageClicked(int position);
 	}
 
-	public interface TermFragmentCallbacks {
+	public interface TimelineElementFragmentCallback {
 		TimelineElement getElement(String elementDescriptor, String elementDomain,
 								   String elementLanguage, int elementKind);
 
@@ -180,5 +185,7 @@ public abstract class TimelineElementFragment extends Fragment {
 		void onElementFetched(TimelineElement term);
 
 		void onUpPressed();
+
+		void setToolbarDomain(Domain domain, int page);
 	}
 }

@@ -28,7 +28,7 @@
 				android:id="@+id/card_toolbar"
 				android:layout_width="match_parent"
 				android:layout_height="@dimen/card_toolbar_height"
-				android:background="@color/primary"
+				android:background="@color/element_card_header_color"
 				android:minHeight="@dimen/card_toolbar_height"
 				android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
@@ -46,7 +46,7 @@
 					style="@style/display_1"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:background="@color/primary"
+					android:background="@color/element_card_header_color"
 					android:paddingBottom="24dp"
 					android:paddingLeft="16dp"
 					android:paddingRight="16dp"

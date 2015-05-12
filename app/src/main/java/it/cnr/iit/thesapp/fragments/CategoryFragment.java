@@ -1,6 +1,5 @@
 package it.cnr.iit.thesapp.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -127,11 +126,13 @@ public class CategoryFragment extends TimelineElementFragment {
 			Logs.retrofit("Loading UI for " + category);
 			termTitle.setText(category.getDescriptor());
 
-			setUiColor(Color.parseColor(category.getDomain().getColor()));
+			//setUiColor(Color.parseColor(category.getDomain().getColor()));
 
 			hierarchyContainer.removeAllViews();
 			addTermsContainer(category.getTerms(), getString(R.string.category_terms),
 					getResources().getColor(R.color.material_deep_teal_500));
+
+			setWindowToolbar(category.getDomain());
 		}
 	}
 

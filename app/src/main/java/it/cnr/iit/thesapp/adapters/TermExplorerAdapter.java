@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.ViewGroup;
@@ -22,8 +21,7 @@ import it.cnr.iit.thesapp.model.Term;
 import it.cnr.iit.thesapp.model.TimelineElement;
 import it.cnr.iit.thesapp.utils.Logs;
 
-public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPager
-																				 .OnPageChangeListener,
+public class TermExplorerAdapter extends FragmentPagerAdapter implements
 																		 TermFragment
 																				 .PageListener {
 
@@ -44,7 +42,6 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 		//pageWidth = outValue.getFloat();
 		pageWidth = 1f;
 		this.pager = pager;
-		pager.setOnPageChangeListener(this);
 	}
 
 	@Override
@@ -203,31 +200,7 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements ViewPag
 		return count;
 	}
 
-	@Override
-	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
-	@Override
-	public void onPageSelected(int position) {
-		Log.d("ViewPager", "Page selected: " + position);
-
-		/*
-		int key;
-		for (int i = 0; i < registeredFragments.size(); i++) {
-			key = registeredFragments.keyAt(i);
-			TermFragment termFragment = registeredFragments.get(key);
-			if (termFragment != null) {
-				if (i != position) termFragment.elevate(false);
-				else {
-					termFragment.elevate(true);
-					termFragment.scrollToTop();
-				}
-			}
-		}
-		*/
-	}
-
-	@Override
-	public void onPageScrollStateChanged(int i) {}
 
 	@Override
 	public void onPageClicked(int position) {
