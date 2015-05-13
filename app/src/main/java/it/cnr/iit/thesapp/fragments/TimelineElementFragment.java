@@ -3,6 +3,7 @@ package it.cnr.iit.thesapp.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -28,6 +29,7 @@ public abstract class TimelineElementFragment extends Fragment {
 	public  ProgressBar                     progressBar;
 	public  View                            cardContent;
 	public  ErrorView                       errorView;
+	public Toolbar toolbar;
 	private int                             termKind;
 
 	public TimelineElementFragment() {
@@ -167,8 +169,11 @@ public abstract class TimelineElementFragment extends Fragment {
 	public void setPageListener(PageListener pageListener, int page) {
 		this.page = page;
 		this.pageListener = pageListener;
+		if (page == 0 && toolbar != null) {
+			toolbar.setNavigationIcon(null);
+			toolbar.setNavigationOnClickListener(null);
+		}
 	}
-
 
 
 	public interface PageListener {

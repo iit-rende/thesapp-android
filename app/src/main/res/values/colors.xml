@@ -5,9 +5,14 @@
     <color name="background">@color/white</color>
     <color name="accent">@color/md_deep_orange_500</color>
     <color name="controlHighlight">@color/md_deep_orange_A400</color>
-    <color name="element_card_header_color">@color/md_grey_700</color>
 
     <color name="white">#ffffffff</color>
+
+    <color name="element_card_header_color">@color/md_grey_700</color>
+    <color name="element_card_category_label">@color/md_green_500</color>
+    <color name="element_card_related_label">@color/material_deep_teal_500</color>
+    <color name="element_card_broader_label">@color/md_orange_500</color>
+    <color name="element_card_narrower_label">@color/md_amber_500</color>
 
 
 </resources>

@@ -16,4 +16,5 @@
 	<string name="error_connection_problem">Nessuna connessione</string>
 	<string name="loading_domains">Scarico i domini…</string>
 	<string name="category_terms">Termini nella categoria</string>
+	<string name="action_open_search_panel">Cerca</string>
 </resources>

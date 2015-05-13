@@ -4,28 +4,24 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.util.List;
 
 import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.adapters.DomainSpinnerAdapter;
-import it.cnr.iit.thesapp.adapters.TermSearchAdapter;
+import it.cnr.iit.thesapp.adapters.TermSearchRecAdapter;
 import it.cnr.iit.thesapp.model.Domain;
-import it.cnr.iit.thesapp.model.Term;
 import it.cnr.iit.thesapp.utils.Logs;
 import it.cnr.iit.thesapp.utils.PrefUtils;
 
 public class SearchBox extends FrameLayout {
 	//Adapters
-	private TermSearchAdapter    mTermSearchAdapter;
+	private TermSearchRecAdapter mTermSearchAdapter;
 	private DomainSpinnerAdapter mDomainSpinnerAdapter;
 
 	//Widgets
@@ -67,27 +63,14 @@ public class SearchBox extends FrameLayout {
 		super.onFinishInflate();
 
 		searchTextView = (DelayedAutoCompleteTextView) findViewById(R.id.search_text);
+		searchTextView.setSearchListener(new DelayedAutoCompleteTextView.OnSearchListener() {
+			@Override
+			public void performSearch(CharSequence filter) {
+				SearchBox.this.performSearch(filter);
+			}
+		});
 		searchTextView.setLoadingIndicator((android.widget.ProgressBar) findViewById(
 				R.id.pb_loading_indicator));
-		searchTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> adapter, View view, int pos, long id) {
-				hideKeyboard();
-				final Term term = mTermSearchAdapter.getItem(pos);
-				if (mListener != null) mListener.onTermSelected(term.getDescriptor(),
-						term.getDomainDescriptor(), term.getLanguage());
-			}
-		});
-		searchTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-			@Override
-			public boolean onEditorAction(TextView textView, int arg, KeyEvent keyEvent) {
-				if (arg == EditorInfo.IME_ACTION_SEARCH) {
-					openSearchDropdown();
-				}
-				return false;
-			}
-		});
-		setTermSearchAdapter(new TermSearchAdapter(getContext(), null));
 
 		domainSpinner = (Spinner) findViewById(R.id.spinner);
 		domainSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -103,20 +86,26 @@ public class SearchBox extends FrameLayout {
 		});
 	}
 
-	private void hideKeyboard() {
+	private void performSearch(CharSequence filter) {
+		mTermSearchAdapter.getFilter().filter(filter);
+	}
+
+	public void hideKeyboard() {
 		InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
 				Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(searchTextView.getWindowToken(), 0);
 	}
 
-	private void openSearchDropdown() {
-		searchTextView.showDropDown();
-	}
 
-	public void setTermSearchAdapter(TermSearchAdapter termSearchAdapter) {
+	public void setTermSearchAdapter(TermSearchRecAdapter termSearchAdapter) {
 		Logs.ui("Setting term search adapter");
 		this.mTermSearchAdapter = termSearchAdapter;
-		searchTextView.setAdapter(mTermSearchAdapter);
+		mTermSearchAdapter.setFilterCallbacks(new TermSearchRecAdapter.FilterCallbacks() {
+			@Override
+			public void onFilterComplete(int count) {
+				searchTextView.onFilterComplete(count);
+			}
+		});
 		onLanguageSelected(PrefUtils.loadLanguage(getContext()));
 	}
 
@@ -143,7 +132,7 @@ public class SearchBox extends FrameLayout {
 		PrefUtils.saveDomain(getContext(), domain.getDescriptor());
 		selectedDomain = domain;
 		mTermSearchAdapter.setDomain(domain);
-		searchTextView.performFiltering(searchTextView.getText(), 0);
+		searchTextView.performFiltering(searchTextView.getText());
 		if (mListener != null) mListener.onDomainSelected(domain);
 	}
 

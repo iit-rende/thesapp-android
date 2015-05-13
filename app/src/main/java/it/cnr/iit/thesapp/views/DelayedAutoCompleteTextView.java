@@ -3,31 +3,61 @@ package it.cnr.iit.thesapp.views;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ProgressBar;
-
-import com.devspark.robototextview.widget.RobotoAutoCompleteTextView;
 
 import de.greenrobot.event.EventBus;
 import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.event.SetSearchDelayEvent;
 import it.cnr.iit.thesapp.utils.Logs;
 
-public class DelayedAutoCompleteTextView extends RobotoAutoCompleteTextView {
+public class DelayedAutoCompleteTextView extends EditText {
 
 	private static final int          MESSAGE_TEXT_CHANGED       = 100;
 	private static final int          DEFAULT_AUTOCOMPLETE_DELAY = 500;
+	private static final int MIN_CHAR_FOR_SEARCH = 2;
 	private final        DelayHandler mHandler                   = new DelayHandler();
 	private              int          mAutoCompleteDelay         = DEFAULT_AUTOCOMPLETE_DELAY;
-	private ProgressBar mLoadingIndicator;
+	private ProgressBar      mLoadingIndicator;
+	private OnSearchListener mListener;
 
 	public DelayedAutoCompleteTextView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		init();
 	}
+
+	public DelayedAutoCompleteTextView(Context context) {
+		super(context);
+		init();
+	}
+
+	public DelayedAutoCompleteTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+		super(context, attrs, defStyleAttr);
+		init();
+	}
+
 
 	public void setLoadingIndicator(ProgressBar progressBar) {
 		mLoadingIndicator = progressBar;
+	}
+
+	private void init() {
+		addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+			@Override
+			public void onTextChanged(CharSequence text, int start, int before, int count) {
+				performFiltering(text);
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {}
+		});
 	}
 
 	public void setAutoCompleteDelay(long autoCompleteDelay) {
@@ -53,24 +83,24 @@ public class DelayedAutoCompleteTextView extends RobotoAutoCompleteTextView {
 		setAutoCompleteDelay(event.getDelay());
 	}
 
-	@Override
-	protected void performFiltering(CharSequence text, int keyCode) {
+	protected void performFiltering(CharSequence text) {
 		setError(null);
-		if (mLoadingIndicator != null) {
-			mLoadingIndicator.setVisibility(View.VISIBLE);
-		}
+		if (text != null && text.length() >= MIN_CHAR_FOR_SEARCH) {
+			if (mLoadingIndicator != null) {
+				mLoadingIndicator.setVisibility(View.VISIBLE);
+			}
 
-		if (mAutoCompleteDelay < 10) {
-			mHandler.removeMessages(MESSAGE_TEXT_CHANGED);
-			super.performFiltering(text, keyCode);
-		} else {
-			mHandler.removeMessages(MESSAGE_TEXT_CHANGED);
-			mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_TEXT_CHANGED, text),
-					mAutoCompleteDelay);
+			if (mAutoCompleteDelay < 10) {
+				mHandler.removeMessages(MESSAGE_TEXT_CHANGED);
+				if (mListener != null) mListener.performSearch(text);
+			} else {
+				mHandler.removeMessages(MESSAGE_TEXT_CHANGED);
+				mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_TEXT_CHANGED, text),
+						mAutoCompleteDelay);
+			}
 		}
 	}
 
-	@Override
 	public void onFilterComplete(int count) {
 		if (count < 0) {
 			setError(getContext().getString(R.string.error_searching));
@@ -78,9 +108,15 @@ public class DelayedAutoCompleteTextView extends RobotoAutoCompleteTextView {
 		if (mLoadingIndicator != null) {
 			mLoadingIndicator.setVisibility(View.GONE);
 		}
-		super.onFilterComplete(count);
 	}
 
+	public void setSearchListener(OnSearchListener listener) {
+		this.mListener = listener;
+	}
+
+	public interface OnSearchListener {
+		void performSearch(CharSequence filter);
+	}
 
 	public class DelayHandler extends Handler {
 		public DelayHandler() {
@@ -88,7 +124,8 @@ public class DelayedAutoCompleteTextView extends RobotoAutoCompleteTextView {
 
 		@Override
 		public void handleMessage(Message msg) {
-			DelayedAutoCompleteTextView.super.performFiltering((CharSequence) msg.obj, msg.arg1);
+
+			if (mListener != null) mListener.performSearch((CharSequence) msg.obj);
 		}
 	}
 }

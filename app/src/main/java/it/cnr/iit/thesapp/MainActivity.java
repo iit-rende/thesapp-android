@@ -17,7 +17,6 @@ import android.view.MenuItem;
 
 import java.util.List;
 
-import it.cnr.iit.thesapp.adapters.DomainSpinnerAdapter;
 import it.cnr.iit.thesapp.adapters.TermExplorerAdapter;
 import it.cnr.iit.thesapp.fragments.TimelineElementFragment;
 import it.cnr.iit.thesapp.model.Domain;
@@ -26,6 +25,8 @@ import it.cnr.iit.thesapp.model.TimelineElement;
 import it.cnr.iit.thesapp.utils.Logs;
 import it.cnr.iit.thesapp.utils.PrefUtils;
 import it.cnr.iit.thesapp.views.SearchBox;
+import it.cnr.iit.thesapp.views.SearchPanel;
+import it.cnr.iit.thesapp.views.WrappingSlidingPaneLayout;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -34,9 +35,9 @@ import retrofit.client.Response;
 public class MainActivity extends AppCompatActivity implements TimelineElementFragment
 																	   .TimelineElementFragmentCallback {
 
+
 	private TermExplorerAdapter termExplorerAdapter;
 	private ViewPager           pager;
-	private SearchBox      searchBox;
 	private ProgressDialog dialog;
 	private Toolbar        toolbar;
 	private int            toolbarColor;
@@ -52,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 			object.setToolbarColor(value);
 		}
 	};
+	private SearchPanel               searchPanel;
+	private WrappingSlidingPaneLayout slidingSearchPanel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,11 +81,12 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 			public void onPageScrollStateChanged(int state) {}
 		});
 
-		searchBox = (SearchBox) findViewById(R.id.search_container);
-		searchBox.setSearchBoxListener(new SearchBox.SearchBoxListener() {
+		searchPanel = (SearchPanel) findViewById(R.id.search_panel);
+		searchPanel.setSearchListener(new SearchBox.SearchBoxListener() {
 			@Override
 			public void onTermSelected(String descriptor, String domain, String language) {
-				onElementSelected(descriptor, domain, language, TimelineElement.KIND_TERM, -1);
+				slidingSearchPanel.closePane();
+				onElementClicked(descriptor, domain, language, TimelineElement.KIND_TERM, -1);
 			}
 
 			@Override
@@ -90,9 +94,9 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 				setToolbarDomain(domain, pager.getCurrentItem());
 			}
 		});
-		DomainSpinnerAdapter domainSpinnerAdapter = new DomainSpinnerAdapter(MainActivity.this,
-				null);
-		searchBox.setDomainSpinnerAdapter(domainSpinnerAdapter);
+
+		slidingSearchPanel = (WrappingSlidingPaneLayout) findViewById(R.id.sliding_panel);
+		slidingSearchPanel.closePane();
 
 		loadDomains();
 		fetchDomains();
@@ -109,6 +113,10 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 		switch (item.getItemId()) {
 			case R.id.action_settings:
 				return true;
+			case R.id.action_open_search_panel:
+				Logs.ui("Opening search panel");
+				slidingSearchPanel.openPane();
+				return true;
 			default:
 				return false;
 		}
@@ -124,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 		Logs.cache("Loading domains from cache");
 		final List<Domain> domains = PrefUtils.loadDomains(this);
 		if (domains != null) {
-			searchBox.setDomains(domains);
+			searchPanel.setDomains(domains);
 		} else {
 			showLoadingDialog(true);
 		}
@@ -152,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 					public void success(DomainSearch domainSearch, Response response) {
 						if (response.getStatus() == 200) {
 							Logs.retrofit("Domain fetched: " + domainSearch.getDomains().size());
-							searchBox.setDomains(domainSearch.getDomains());
+							searchPanel.setDomains(domainSearch.getDomains());
 							PrefUtils.saveDomains(MainActivity.this, domainSearch.getDomains());
 						} else {
 							Logs.retrofit("Domain fetch failed: " + response.getStatus() + " - " +

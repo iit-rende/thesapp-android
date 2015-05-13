@@ -33,7 +33,6 @@ public class TermFragment extends TimelineElementFragment {
 	private RobotoTextView termDescription;
 	private ScrollView     scrollView;
 	private RobotoTextView termSubtitle;
-	private Toolbar        toolbar;
 	private View           titleContainer;
 	private LinearLayout   hierarchyContainer;
 
@@ -71,6 +70,11 @@ public class TermFragment extends TimelineElementFragment {
 				if (mListener != null) mListener.onUpPressed();
 			}
 		});
+
+		if (page == 0 && toolbar != null) {
+			toolbar.setNavigationIcon(null);
+			toolbar.setNavigationOnClickListener(null);
+		}
 		titleContainer = view.findViewById(R.id.title_container);
 		cardContent = view.findViewById(R.id.card_content);
 		hierarchyContainer = (LinearLayout) view.findViewById(R.id.hierarchy_container);
@@ -148,22 +152,17 @@ public class TermFragment extends TimelineElementFragment {
 
 			hierarchyContainer.removeAllViews();
 			addTermsContainer(term.getRelatedTerms(), getString(R.string.related_terms),
-					getResources().getColor(R.color.material_deep_teal_500));
+					getResources().getColor(R.color.element_card_related_label));
 			addCategoryContainer(term.getCategories(), getString(R.string.categories_terms),
-					getResources().getColor(R.color.md_green_500));
+					getResources().getColor(R.color.element_card_category_label));
 			addTermsContainer(term.getBroaderTerms(), getString(R.string.broader_terms),
-					getResources().getColor(R.color.md_orange_500));
+					getResources().getColor(R.color.element_card_broader_label));
 			addTermsContainer(term.getNarrowerTerms(), getString(R.string.narrower_terms),
-					getResources().getColor(R.color.md_amber_500));
+					getResources().getColor(R.color.element_card_narrower_label));
 			setWindowToolbar(term.getDomain());
 		}
 	}
 
-
-	private void setUiColor(int color) {
-		titleContainer.setBackgroundColor(color);
-		toolbar.setBackgroundColor(color);
-	}
 
 	private void addTermsContainer(List<Term> terms, String containerTitle, int termColor) {
 		if (terms != null && terms.size() > 0) {

@@ -30,7 +30,6 @@ import retrofit.client.Response;
 public class CategoryFragment extends TimelineElementFragment {
 	private RobotoTextView termTitle;
 	private ScrollView     scrollView;
-	private Toolbar        toolbar;
 	private LinearLayout   hierarchyContainer;
 
 	public CategoryFragment() {
@@ -67,6 +66,10 @@ public class CategoryFragment extends TimelineElementFragment {
 				if (mListener != null) mListener.onUpPressed();
 			}
 		});
+		if (page == 0 && toolbar != null) {
+			toolbar.setNavigationIcon(null);
+			toolbar.setNavigationOnClickListener(null);
+		}
 		cardContent = view.findViewById(R.id.card_content);
 		hierarchyContainer = (LinearLayout) view.findViewById(R.id.hierarchy_container);
 
@@ -130,16 +133,12 @@ public class CategoryFragment extends TimelineElementFragment {
 
 			hierarchyContainer.removeAllViews();
 			addTermsContainer(category.getTerms(), getString(R.string.category_terms),
-					getResources().getColor(R.color.material_deep_teal_500));
+					getResources().getColor(R.color.element_card_category_label));
 
 			setWindowToolbar(category.getDomain());
 		}
 	}
 
-	private void setUiColor(int color) {
-		termTitle.setBackgroundColor(color);
-		toolbar.setBackgroundColor(color);
-	}
 
 	private void addTermsContainer(List<Term> terms, String containerTitle, int termColor) {
 		if (terms != null && terms.size() > 0) {
