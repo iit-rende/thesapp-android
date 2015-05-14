@@ -1,13 +1,18 @@
 package it.cnr.iit.thesapp.model;
 
+import android.content.Context;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Domain {
+import it.cnr.iit.thesapp.R;
+import it.cnr.iit.thesapp.utils.PrefUtils;
 
+public class Domain {
+	public static final String DEFAULT_DOMAIN_DESCRIPTOR = "default_domain";
 	@SerializedName("descriptor")
 	@Expose
 	private String descriptor;
@@ -20,6 +25,22 @@ public class Domain {
 	@SerializedName("localizations")
 	@Expose
 	private List<DomainLocalization> localizations = new ArrayList<DomainLocalization>();
+	private String language;
+
+	public Domain() {
+	}
+
+	public Domain(String descriptor) {
+		this.descriptor = descriptor;
+	}
+
+	public static Domain getDefault(Context context) {
+		Domain domain = new Domain();
+		domain.setDescriptor(DEFAULT_DOMAIN_DESCRIPTOR);
+		domain.setLanguage(PrefUtils.loadLanguage(context));
+		domain.setColor(context.getResources().getString(R.color.primary));
+		return domain;
+	}
 
 	/**
 	 * @return The descriptor
@@ -85,5 +106,13 @@ public class Domain {
 			   ", color='" + color + '\'' +
 			   ", localizations=" + localizations.size() +
 			   '}';
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 }

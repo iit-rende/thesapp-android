@@ -6,9 +6,23 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class CategoryList extends TimelineElement {
+	private static final String DEFAULT_DESCRIPTOR = "CATEGORY_LIST_DESCRIPTOR";
 	@SerializedName("categories")
 	@Expose
 	private List<Category> categories;
+
+	public CategoryList() {
+		super();
+		setElementKind(KIND_CATEGORY_LIST);
+	}
+
+	public CategoryList(Domain domain) {
+		super();
+		setDescriptor(DEFAULT_DESCRIPTOR);
+		setElementKind(KIND_CATEGORY_LIST);
+		setDomain(domain);
+		setLanguage(domain.getLanguage());
+	}
 
 	@Override
 	public void copy(TimelineElement element) {
@@ -18,5 +32,13 @@ public class CategoryList extends TimelineElement {
 	@Override
 	public void fillMissingInfo() {
 
+	}
+
+	public List<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
 	}
 }

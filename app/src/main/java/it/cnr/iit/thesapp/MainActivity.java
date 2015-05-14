@@ -14,6 +14,7 @@ import android.util.Log;
 import android.util.Property;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 import com.wunderlist.slidinglayer.SlidingLayer;
 
@@ -61,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
 		toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
 		setSupportActionBar(toolbar);
 		pager = (ViewPager) findViewById(R.id.pager);
@@ -98,7 +101,11 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 
 		slidingLayer = (SlidingLayer) findViewById(R.id.slidingLayer);
 
-		if (savedInstanceState == null) slidingLayer.openLayer(false);
+		if (savedInstanceState == null) {
+			//slidingLayer.openLayer(false);
+			onElementSelected(null, null, PrefUtils.loadLanguage(this),
+					TimelineElement.KIND_DOMAIN_CONTAINER, -1);
+		}
 
 		loadDomains();
 		fetchDomains();
@@ -182,13 +189,18 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 	public void onElementSelected(String termDescriptor, String termDomain, String termLanguage,
 								  int elementKind, int clickedFromPage) {
 		int pos = -1;
-		if (elementKind == TimelineElement.KIND_TERM) {
-			pos = termExplorerAdapter.addTerm(termDescriptor, termDomain, termLanguage,
-					clickedFromPage);
-		}
-		if (elementKind == TimelineElement.KIND_CATEGORY) {
-			pos = termExplorerAdapter.addCategory(termDescriptor, termDomain, termLanguage,
-					clickedFromPage);
+		switch (elementKind) {
+			case TimelineElement.KIND_TERM:
+				pos = termExplorerAdapter.addTerm(termDescriptor, termDomain, termLanguage,
+						clickedFromPage);
+				break;
+			case TimelineElement.KIND_CATEGORY:
+				pos = termExplorerAdapter.addCategory(termDescriptor, termDomain, termLanguage,
+						clickedFromPage);
+				break;
+			case TimelineElement.KIND_DOMAIN_CONTAINER:
+				pos = termExplorerAdapter.addDomainList(termLanguage);
+				break;
 		}
 		Log.d("Pager", "Positon for word " + termDescriptor + ": " + pos);
 		if (pos != -1) {
@@ -228,7 +240,9 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 			anim.setEvaluator(new ArgbEvaluator());
 			anim.setDuration(250);
 			anim.start();
-			toolbar.setTitle(getString(R.string.app_name) + " - " + domain.getDescriptor());
+			String domainName = " - " + domain.getDescriptor();
+			if (domain.getDescriptor().equals(Domain.DEFAULT_DOMAIN_DESCRIPTOR)) domainName = "";
+			toolbar.setTitle(getString(R.string.app_name) + domainName);
 		}
 	}
 
@@ -241,7 +255,8 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 		toolbar.setBackgroundColor(toolbarColor);
 		searchPanel.setFakeToolbarColor(toolbarColor);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			getWindow().setStatusBarColor(toolbarColor);
+			//getWindow().setStatusBarColor(toolbarColor);
+			getWindow().setStatusBarColor(Color.TRANSPARENT);
 		}
 	}
 }

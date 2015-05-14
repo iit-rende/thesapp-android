@@ -17,4 +17,7 @@
 	<string name="loading_domains">Scarico i domini…</string>
 	<string name="category_terms">Termini nella categoria</string>
 	<string name="action_open_search_panel">Cerca</string>
+	<string name="translations_terms">In altre lingue</string>
+	<string name="domain_list_title">Scegli un dominio</string>
+	<string name="domain_list_subtitle">o inizia la ricerca in alto</string>
 </resources>

@@ -4,9 +4,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public abstract class TimelineElement {
-	public static final int KIND_TERM               = 0;
-	public static final int KIND_CATEGORY           = 1;
-	public static final int KIND_CATEGORY_CONTAINER = 2;
+	public static final int KIND_TERM             = 0;
+	public static final int KIND_CATEGORY         = 1;
+	public static final int KIND_CATEGORY_LIST    = 2;
+	public static final int KIND_DOMAIN_CONTAINER = 3;
 
 	@SerializedName("language")
 	@Expose

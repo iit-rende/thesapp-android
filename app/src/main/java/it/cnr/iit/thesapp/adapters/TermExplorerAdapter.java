@@ -17,17 +17,18 @@ import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.fragments.TermFragment;
 import it.cnr.iit.thesapp.fragments.TimelineElementFragment;
 import it.cnr.iit.thesapp.model.Category;
+import it.cnr.iit.thesapp.model.Domain;
+import it.cnr.iit.thesapp.model.DomainSearch;
 import it.cnr.iit.thesapp.model.Term;
 import it.cnr.iit.thesapp.model.TimelineElement;
 import it.cnr.iit.thesapp.utils.Logs;
 
-public class TermExplorerAdapter extends FragmentPagerAdapter implements
-																		 TermFragment
-																				 .PageListener {
+public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFragment.PageListener {
 
 
 	private final float     pageWidth;
 	private final ViewPager pager;
+	private final Context context;
 	SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
 	private int count = -1;
 	private int baseId;
@@ -36,7 +37,7 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements
 							   ViewPager pager) {
 		super(fm);
 		if (terms != null) App.timelineElements = terms;
-
+		this.context = context;
 		TypedValue outValue = new TypedValue();
 		context.getResources().getValue(R.dimen.pager_page_width, outValue, true);
 		//pageWidth = outValue.getFloat();
@@ -67,6 +68,11 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements
 		return addCategory(category, clickedFromPage);
 	}
 
+	public int addDomainList(String language) {
+		DomainSearch domainSearch = new DomainSearch(Domain.getDefault(context), language);
+		return addDomainList(domainSearch, -1);
+	}
+
 	public int addTerm(Term term, int clickedFromPage) {
 		if (term != null) {
 			Logs.thesaurus("Adding term " + term.getDescriptor() + " to explorer");
@@ -93,6 +99,21 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements
 				notifyDataSetChanged();
 			}
 			return getPositionForTerm(category);
+		}
+		return -1;
+	}
+
+	public int addDomainList(DomainSearch domainSearch, int clickedFromPage) {
+		if (domainSearch != null) {
+			Logs.thesaurus("Adding domainSearch " + domainSearch.getDescriptor() + " to explorer");
+			if (!isTermInList(domainSearch)) {
+				removeTerms(clickedFromPage);
+				App.timelineElements.add(domainSearch);
+				count = -1;
+				notifyChangeInPosition(App.timelineElements.size());
+				notifyDataSetChanged();
+			}
+			return getPositionForTerm(domainSearch);
 		}
 		return -1;
 	}
@@ -127,8 +148,7 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements
 		for (TimelineElement element : App.timelineElements) {
 			Logs.cache(element.toString());
 			if (element.getDescriptor().equals(elementDescriptor) &&
-				element.getDomainDescriptor().equals(elementDomain) && element.getLanguage()
-																			  .equals(
+				element.getDomainDescriptor().equals(elementDomain) && element.getLanguage().equals(
 					elementLanguage) &&
 				element.getElementKind() == elementKind) return element;
 		}
@@ -142,13 +162,22 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements
 
 	@Override
 	public Fragment getItem(int position) {
-		TimelineElementFragment timelineElementFragment;
-		if (getTerm(position).getElementKind() == TimelineElement.KIND_TERM)
-			timelineElementFragment = TimelineElementFragment.newInstance(App.timelineElements.get(
-					position));
-		else timelineElementFragment = TimelineElementFragment.newInstance(App.timelineElements
-				.get(
-				position));
+		TimelineElementFragment timelineElementFragment = null;
+		switch (getTerm(position).getElementKind()) {
+			case TimelineElement.KIND_TERM:
+				timelineElementFragment = TimelineElementFragment.newInstance(
+						App.timelineElements.get(position));
+				break;
+			case TimelineElement.KIND_CATEGORY:
+				timelineElementFragment = TimelineElementFragment.newInstance(
+						App.timelineElements.get(position));
+				break;
+			case TimelineElement.KIND_DOMAIN_CONTAINER:
+				timelineElementFragment = TimelineElementFragment.newInstance(
+						App.timelineElements.get(position));
+				break;
+		}
+
 		if (timelineElementFragment != null) timelineElementFragment.setPageListener(this,
 				position);
 		return timelineElementFragment;
@@ -199,7 +228,6 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements
 		}
 		return count;
 	}
-
 
 
 	@Override

@@ -74,6 +74,9 @@ public class Term extends TimelineElement {
 			term.setLanguage(getLanguage());
 			term.setDomain(getDomain());
 		}
+		if (localizations != null) for (Term term : localizations) {
+			term.setDomain(getDomain());
+		}
 		if (relatedTerms != null) for (Term term : relatedTerms) {
 			term.setLanguage(getLanguage());
 			term.setDomain(getDomain());
@@ -221,7 +224,6 @@ public class Term extends TimelineElement {
 	public void setSemantic(boolean semantic) {
 		this.semantic = semantic;
 	}
-
 
 
 	public List<Term> getHierarchy() {

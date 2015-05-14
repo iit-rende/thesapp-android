@@ -31,6 +31,7 @@ public abstract class TimelineElementFragment extends Fragment {
 	public  ErrorView                       errorView;
 	public Toolbar toolbar;
 	private int                             termKind;
+	private boolean alreadyLoadedUi = false;
 
 	public TimelineElementFragment() {
 		// Required empty public constructor
@@ -43,17 +44,22 @@ public abstract class TimelineElementFragment extends Fragment {
 		args.putString(ARG_WORD_LANGUAGE, element.getLanguage());
 		args.putInt(ARG_WORD_ELEMENT_KIND, element.getElementKind());
 
-		if (element.getElementKind() == TimelineElement.KIND_TERM) {
-			Logs.ui("Creating TermFragment");
-			TermFragment termFragment = new TermFragment();
-			termFragment.setArguments(args);
-			return termFragment;
-		}
-		if (element.getElementKind() == TimelineElement.KIND_CATEGORY) {
-			Logs.ui("Creating CategoryFragment");
-			CategoryFragment categoryFragment = new CategoryFragment();
-			categoryFragment.setArguments(args);
-			return categoryFragment;
+		switch (element.getElementKind()) {
+			case TimelineElement.KIND_TERM:
+				Logs.ui("Creating TermFragment");
+				TermFragment termFragment = new TermFragment();
+				termFragment.setArguments(args);
+				return termFragment;
+			case TimelineElement.KIND_CATEGORY:
+				Logs.ui("Creating CategoryFragment");
+				CategoryFragment categoryFragment = new CategoryFragment();
+				categoryFragment.setArguments(args);
+				return categoryFragment;
+			case TimelineElement.KIND_DOMAIN_CONTAINER:
+				Logs.ui("Creating DomainListFragment");
+				DomainListFragment domainListFragment = new DomainListFragment();
+				domainListFragment.setArguments(args);
+				return domainListFragment;
 		}
 		return null;
 	}
@@ -98,6 +104,7 @@ public abstract class TimelineElementFragment extends Fragment {
 			final TimelineElement element = mListener.getElement(termDescriptor, termDomain,
 					termLanguage, termKind);
 			if (element != null && element.isCompletelyFetched()) {
+				setUiLoading(false);
 				reloadUi(element);
 			} else {
 				fetchElement();
@@ -108,6 +115,7 @@ public abstract class TimelineElementFragment extends Fragment {
 	public abstract void fetchElement();
 
 	public void showError(Response response) {
+		alreadyLoadedUi = false;
 		progressBar.setVisibility(View.GONE);
 		cardContent.setVisibility(View.GONE);
 		errorView.setVisibility(View.VISIBLE);
@@ -126,6 +134,7 @@ public abstract class TimelineElementFragment extends Fragment {
 	}
 
 	public void showError(RetrofitError error) {
+		alreadyLoadedUi = false;
 		progressBar.setVisibility(View.GONE);
 		cardContent.setVisibility(View.GONE);
 		errorView.setVisibility(View.VISIBLE);
@@ -147,9 +156,12 @@ public abstract class TimelineElementFragment extends Fragment {
 	}
 
 	public void setUiLoading(boolean loading) {
-		progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
-		cardContent.setVisibility(loading ? View.GONE : View.VISIBLE);
-		errorView.setVisibility(View.GONE);
+		if (!alreadyLoadedUi) {
+			alreadyLoadedUi = !loading;
+			progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+			cardContent.setVisibility(loading ? View.GONE : View.VISIBLE);
+			errorView.setVisibility(View.GONE);
+		}
 	}
 
 	public void persistTerm(TimelineElement term) {

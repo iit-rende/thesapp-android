@@ -1,0 +1,101 @@
+<ScrollView
+	android:id="@+id/scrollView"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<android.support.v7.widget.CardView
+		android:id="@+id/cardView"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="@dimen/activity_horizontal_margin"
+		android:layout_marginRight="@dimen/activity_horizontal_margin"
+		app:cardElevation="@dimen/elevation_high"
+		app:cardMaxElevation="@dimen/elevation_high"
+		app:cardUseCompatPadding="true">
+
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:animateLayoutChanges="true"
+			android:orientation="vertical">
+
+			<android.support.v7.widget.Toolbar
+				android:id="@+id/card_toolbar"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/card_toolbar_height"
+				android:background="@color/element_card_header_color"
+				android:minHeight="@dimen/card_toolbar_height"
+				android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+			<LinearLayout
+				android:id="@+id/card_content"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:visibility="gone"
+				tools:visibility="visible">
+
+
+				<LinearLayout
+					android:id="@+id/title_container"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:background="@color/element_card_header_color"
+					android:orientation="vertical">
+
+
+					<com.devspark.robototextview.widget.RobotoTextView
+						android:id="@+id/term_title"
+						style="@style/display_1"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:paddingLeft="16dp"
+						android:paddingRight="16dp"
+						android:paddingTop="24dp"
+						android:textColor="@color/white"
+						tools:text="Word to show"/>
+
+					<com.devspark.robototextview.widget.RobotoTextView
+						android:id="@+id/term_subtitle"
+						style="@style/subhead_italic"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:paddingLeft="16dp"
+						android:paddingRight="16dp"
+						android:textColor="@color/white"
+						tools:text="Word to show"/>
+
+					<Space
+						android:layout_width="match_parent"
+						android:layout_height="24dp"/>
+				</LinearLayout>
+
+				<LinearLayout
+					android:id="@+id/domain_list_container"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:orientation="vertical"/>
+
+			</LinearLayout>
+		</LinearLayout>
+
+		<ProgressBar
+			android:id="@+id/progressBar"
+			style="@style/Widget.AppCompat.ProgressBar"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/working_card_height"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginTop="@dimen/card_toolbar_height"
+			android:indeterminate="true"/>
+
+		<it.cnr.iit.thesapp.views.ErrorView
+			android:id="@+id/error_view"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/card_toolbar_height"/>
+	</android.support.v7.widget.CardView>
+</ScrollView>

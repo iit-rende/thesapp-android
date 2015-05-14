@@ -6,10 +6,13 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import de.greenrobot.event.EventBus;
 import it.cnr.iit.thesapp.R;
@@ -73,6 +76,18 @@ public class DelayedAutoCompleteTextView extends EditText {
 				allowClearButton = true;
 			}
 		});
+
+		setOnEditorActionListener(new OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				switch (actionId) {
+					case EditorInfo.IME_ACTION_SEARCH:
+						performSearchNow(getText());
+						break;
+				}
+				return false;
+			}
+		});
 	}
 
 	public void setAutoCompleteDelay(long autoCompleteDelay) {
@@ -109,8 +124,7 @@ public class DelayedAutoCompleteTextView extends EditText {
 			}
 
 			if (mAutoCompleteDelay < 10) {
-				mHandler.removeMessages(MESSAGE_TEXT_CHANGED);
-				if (mListener != null) mListener.performSearch(text);
+				performSearchNow(text);
 			} else {
 				mHandler.removeMessages(MESSAGE_TEXT_CHANGED);
 				mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_TEXT_CHANGED, text),
@@ -132,6 +146,11 @@ public class DelayedAutoCompleteTextView extends EditText {
 		}
 	}
 
+	public void performSearchNow(CharSequence text) {
+		mHandler.removeMessages(MESSAGE_TEXT_CHANGED);
+		if (mListener != null) mListener.performSearch(text);
+	}
+
 	public void setSearchListener(OnSearchListener listener) {
 		this.mListener = listener;
 	}
@@ -147,8 +166,7 @@ public class DelayedAutoCompleteTextView extends EditText {
 
 		@Override
 		public void handleMessage(Message msg) {
-
-			if (mListener != null) mListener.performSearch((CharSequence) msg.obj);
+			performSearchNow((CharSequence) msg.obj);
 		}
 	}
 }

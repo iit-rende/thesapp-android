@@ -14,6 +14,7 @@ import java.util.List;
 import it.cnr.iit.thesapp.App;
 import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.model.Domain;
+import it.cnr.iit.thesapp.model.FacetCategory;
 import it.cnr.iit.thesapp.model.Term;
 import it.cnr.iit.thesapp.model.TermSearch;
 import it.cnr.iit.thesapp.utils.Logs;
@@ -21,8 +22,6 @@ import it.cnr.iit.thesapp.utils.Logs;
 public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdapter
 		.TermResultHolder> implements
 																									  Filterable {
-
-
 	int count = -1;
 	private MonsterClickListener clickListener;
 
@@ -30,10 +29,13 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 	private Domain          domain;
 	private String          language;
 	private FilterCallbacks mCallbacks;
+	private FacetCategory category;
 
 	public TermSearchRecAdapter(List<Term> modelData, MonsterClickListener clickListener) {
 		this.items = modelData;
 		this.clickListener = clickListener;
+		this.domain = new Domain();
+		this.category = new FacetCategory();
 	}
 
 	public void setTerms(List<Term> items) {
@@ -97,6 +99,10 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		this.language = language;
 	}
 
+	public void setCategory(FacetCategory category) {
+		this.category = category;
+	}
+
 	public void setFilterCallbacks(FilterCallbacks callbacks) {
 		this.mCallbacks = callbacks;
 	}
@@ -112,7 +118,7 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 						Logs.retrofit("Searching for " + constraint.toString() + " in " +
 									  domain.getDescriptor() + " (" + language + ")");
 						TermSearch search = App.getApi().getService().query(constraint.toString(),
-								domain.getDescriptor(), language);
+								domain.getDescriptor(), category.getDescriptor(), language);
 
 						if (search != null) {
 							Logs.retrofit("Suggestion received for " + search.getQuery() + ": " +

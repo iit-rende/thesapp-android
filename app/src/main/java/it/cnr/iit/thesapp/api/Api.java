@@ -49,10 +49,12 @@ public class Api {
 	public interface ThesAppService {
 		@GET("/search")
 		void query(@Query("query") String queryString, @Query("domain") String domain,
-				   @Header("Accept-Language") String language, Callback<TermSearch> callback);
+				   @Query("category") String category, @Header("Accept-Language") String language,
+				   Callback<TermSearch> callback);
 
 		@GET("/search")
 		TermSearch query(@Query("query") String queryString, @Query("domain") String domain,
+						 @Query("category") String category,
 						 @Header("Accept-Language") String language);
 
 		@GET("/terms")

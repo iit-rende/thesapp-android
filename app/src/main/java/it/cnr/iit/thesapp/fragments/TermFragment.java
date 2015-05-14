@@ -151,10 +151,13 @@ public class TermFragment extends TimelineElementFragment {
 			//setUiColor(Color.parseColor(term.getDomain().getColor()));
 
 			hierarchyContainer.removeAllViews();
-			addTermsContainer(term.getRelatedTerms(), getString(R.string.related_terms),
-					getResources().getColor(R.color.element_card_related_label));
 			addCategoryContainer(term.getCategories(), getString(R.string.categories_terms),
 					getResources().getColor(R.color.element_card_category_label));
+			addTermsContainer(term.getLocalizations(), getString(R.string.translations_terms),
+					getResources().getColor(R.color.element_card_category_label));
+			addTermsContainer(term.getRelatedTerms(), getString(R.string.related_terms),
+					getResources().getColor(R.color.element_card_related_label));
+
 			addTermsContainer(term.getBroaderTerms(), getString(R.string.broader_terms),
 					getResources().getColor(R.color.element_card_broader_label));
 			addTermsContainer(term.getNarrowerTerms(), getString(R.string.narrower_terms),
