@@ -21,28 +21,40 @@
 			android:layout_height="wrap_content"
 			android:layout_weight="0.6"/>
 
-		<FrameLayout
+		<it.cnr.iit.thesapp.views.DelayedAutoCompleteTextView
+			android:id="@+id/search_text"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:layout_weight="0.4">
+			android:layout_gravity="center_vertical"
+			android:layout_weight="0.4"
+			android:background="@null"
+			android:hint="@string/search_hint"
+			android:imeOptions="flagNoExtractUi|flagNoFullscreen|actionSearch"
+			android:inputType="textCapSentences"/>
 
-
-			<it.cnr.iit.thesapp.views.DelayedAutoCompleteTextView
-				android:id="@+id/search_text"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center_vertical"
-				android:background="@null"
-				android:hint="@string/search_hint"
-				android:imeOptions="flagNoExtractUi|flagNoFullscreen|actionSearch"
-				android:inputType="textCapSentences"/>
+		<FrameLayout
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:paddingLeft="2dp"
+			android:paddingRight="2dp">
 
 			<ProgressBar
 				android:id="@+id/pb_loading_indicator"
 				style="?android:attr/progressBarStyleSmall"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
+				android:layout_width="32dp"
+				android:layout_height="32dp"
 				android:layout_gravity="end|center_vertical"
+				android:visibility="invisible"
+				tools:visibility="visible"/>
+
+			<ImageButton
+				android:id="@+id/iv_clear_text"
+				android:layout_width="32dp"
+				android:layout_height="32dp"
+				android:layout_gravity="end|center_vertical"
+				android:background="@null"
+				android:scaleType="fitCenter"
+				android:src="@drawable/ic_content_clear"
 				android:visibility="gone"
 				tools:visibility="visible"/>
 		</FrameLayout>

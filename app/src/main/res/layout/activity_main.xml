@@ -1,39 +1,49 @@
-<it.cnr.iit.thesapp.views.WrappingSlidingPaneLayout
-	android:id="@+id/sliding_panel"
+<RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	android:layout_weight="1">
 
-	<RelativeLayout
+	<android.support.v7.widget.Toolbar
+		android:id="@+id/activity_toolbar"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
-
-		<android.support.v7.widget.Toolbar
-			android:id="@+id/activity_toolbar"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
-			android:background="@color/primary"
-			android:minHeight="?attr/android:actionBarSize"
-			android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+		android:layout_height="wrap_content"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"
+		android:background="@color/primary"
+		android:minHeight="@dimen/toolbar_height"
+		android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
 
-		<android.support.v4.view.CustomViewPager
-			android:id="@+id/pager"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_below="@id/activity_toolbar"
-			/>
-	</RelativeLayout>
-
-	<it.cnr.iit.thesapp.views.SearchPanel
-		android:id="@+id/search_panel"
-		android:layout_width="wrap_content"
+	<android.support.v4.view.CustomViewPager
+		android:id="@+id/pager"
+		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_gravity="right"
-		app:bounded_width="300dp"
+		android:layout_below="@id/activity_toolbar"
 		/>
 
-</it.cnr.iit.thesapp.views.WrappingSlidingPaneLayout>
+	<com.wunderlist.slidinglayer.SlidingLayer
+		android:id="@+id/slidingLayer"
+		xmlns:slidingLayer="http://schemas.android.com/apk/res-auto"
+		android:layout_width="308dp"
+		android:layout_height="match_parent"
+		slidingLayer:changeStateOnTap="false"
+		slidingLayer:shadowDrawable="@drawable/slider_shadow"
+		slidingLayer:shadowSize="8dp"
+		slidingLayer:stickTo="right">
+
+		<it.cnr.iit.thesapp.views.SearchPanel
+			android:id="@+id/search_panel"
+			android:layout_width="300dp"
+			android:layout_height="match_parent"
+			android:background="@color/search_panel_background"
+			app:bounded_width="300dp"
+			/>
+
+	</com.wunderlist.slidinglayer.SlidingLayer>
+
+</RelativeLayout>
+
+
+

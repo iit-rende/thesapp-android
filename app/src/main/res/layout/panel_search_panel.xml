@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  android:layout_width="match_parent"
-			  android:layout_height="match_parent"
-			  android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:orientation="vertical">
 
-	<it.cnr.iit.thesapp.views.SearchBox
-		android:id="@+id/search_box"
+	<View
+		android:id="@+id/fake_toolbar"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"/>
+		android:layout_height="@dimen/toolbar_height"
+		android:background="@color/primary"/>
+
 
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/search_list"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:layout_below="@id/fake_toolbar"
 		android:clipToPadding="false"
+		android:paddingTop="@dimen/search_list_padding_top"
 		android:scrollbars="vertical"/>
-</LinearLayout>
+
+	<it.cnr.iit.thesapp.views.SearchBox
+		android:id="@+id/search_box"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"/>
+</RelativeLayout>

@@ -13,6 +13,7 @@
     <color name="element_card_related_label">@color/material_deep_teal_500</color>
     <color name="element_card_broader_label">@color/md_orange_500</color>
     <color name="element_card_narrower_label">@color/md_amber_500</color>
+    <color name="search_panel_background">@color/md_grey_300</color>
 
 
 </resources>

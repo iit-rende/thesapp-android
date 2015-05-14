@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class SearchPanel extends FrameLayout implements TermSearchRecAdapter.Mon
 	private SearchBox.SearchBoxListener mListener;
 	private int                         mBoundedWidth;
 	private int                         mBoundedHeight;
+	private View fakeToolbar;
 
 	public SearchPanel(Context context) {
 		super(context);
@@ -49,6 +51,7 @@ public class SearchPanel extends FrameLayout implements TermSearchRecAdapter.Mon
 
 	private void init() {
 		inflate(getContext(), R.layout.panel_search_panel, this);
+		fakeToolbar = findViewById(R.id.fake_toolbar);
 		searchBox = (SearchBox) findViewById(R.id.search_box);
 
 		mAdapter = new TermSearchRecAdapter(null, this);
@@ -82,6 +85,10 @@ public class SearchPanel extends FrameLayout implements TermSearchRecAdapter.Mon
 
 	public void setDomains(List<Domain> domains) {
 		searchBox.setDomains(domains);
+	}
+
+	public void setFakeToolbarColor(int color) {
+		fakeToolbar.setBackgroundColor(color);
 	}
 
 	@Override

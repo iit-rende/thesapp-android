@@ -15,6 +15,8 @@ import android.util.Property;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.wunderlist.slidinglayer.SlidingLayer;
+
 import java.util.List;
 
 import it.cnr.iit.thesapp.adapters.TermExplorerAdapter;
@@ -26,7 +28,6 @@ import it.cnr.iit.thesapp.utils.Logs;
 import it.cnr.iit.thesapp.utils.PrefUtils;
 import it.cnr.iit.thesapp.views.SearchBox;
 import it.cnr.iit.thesapp.views.SearchPanel;
-import it.cnr.iit.thesapp.views.WrappingSlidingPaneLayout;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 	private ProgressDialog dialog;
 	private Toolbar        toolbar;
 	private int            toolbarColor;
+	private SearchPanel    searchPanel;
 	final Property<MainActivity, Integer> uiColorProperty = new Property<MainActivity, Integer>(
 			int.class, "color") {
 		@Override
@@ -53,8 +55,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 			object.setToolbarColor(value);
 		}
 	};
-	private SearchPanel               searchPanel;
-	private WrappingSlidingPaneLayout slidingSearchPanel;
+	private SlidingLayer slidingLayer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 		searchPanel.setSearchListener(new SearchBox.SearchBoxListener() {
 			@Override
 			public void onTermSelected(String descriptor, String domain, String language) {
-				slidingSearchPanel.closePane();
+				slidingLayer.closeLayer(true);
 				onElementClicked(descriptor, domain, language, TimelineElement.KIND_TERM, -1);
 			}
 
@@ -95,8 +96,9 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 			}
 		});
 
-		slidingSearchPanel = (WrappingSlidingPaneLayout) findViewById(R.id.sliding_panel);
-		slidingSearchPanel.closePane();
+		slidingLayer = (SlidingLayer) findViewById(R.id.slidingLayer);
+
+		if (savedInstanceState == null) slidingLayer.openLayer(false);
 
 		loadDomains();
 		fetchDomains();
@@ -115,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 				return true;
 			case R.id.action_open_search_panel:
 				Logs.ui("Opening search panel");
-				slidingSearchPanel.openPane();
+				slidingLayer.openLayer(true);
 				return true;
 			default:
 				return false;
@@ -226,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 			anim.setEvaluator(new ArgbEvaluator());
 			anim.setDuration(250);
 			anim.start();
-			toolbar.setTitle(domain.getDescriptor());
+			toolbar.setTitle(getString(R.string.app_name) + " - " + domain.getDescriptor());
 		}
 	}
 
@@ -237,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 	public void setToolbarColor(Integer toolbarColor) {
 		this.toolbarColor = toolbarColor;
 		toolbar.setBackgroundColor(toolbarColor);
+		searchPanel.setFakeToolbarColor(toolbarColor);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			getWindow().setStatusBarColor(toolbarColor);
 		}

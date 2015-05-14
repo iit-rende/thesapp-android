@@ -30,10 +30,12 @@ dependencies {
 
     compile 'com.github.johnkil.android-robototextview:robototextview:2.3.0'
     compile 'org.apmem.tools:layouts:1.8@aar'
+    compile 'com.wunderlist:sliding-layer:1.1.1'
 
     //WEB API LIBRARIES
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'de.greenrobot:eventbus:2.4.0'
+
 }

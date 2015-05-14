@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+			  xmlns:tools="http://schemas.android.com/tools"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent"
+			  android:orientation="vertical">
 
-    <com.devspark.robototextview.widget.RobotoTextView
-        android:id="@+id/word"
-        style="@style/subhead"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"/>
+	<com.devspark.robototextview.widget.RobotoTextView
+		android:id="@+id/word"
+		style="@style/title"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center_vertical"
+		android:minHeight="48dp"
+		android:padding="8dp"
+		tools:text="Termine cercato"/>
 
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import java.util.List;
@@ -71,6 +72,7 @@ public class SearchBox extends FrameLayout {
 		});
 		searchTextView.setLoadingIndicator((android.widget.ProgressBar) findViewById(
 				R.id.pb_loading_indicator));
+		searchTextView.setClearButton((ImageButton) findViewById(R.id.iv_clear_text));
 
 		domainSpinner = (Spinner) findViewById(R.id.spinner);
 		domainSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

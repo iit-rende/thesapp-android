@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import de.greenrobot.event.EventBus;
@@ -24,6 +25,8 @@ public class DelayedAutoCompleteTextView extends EditText {
 	private              int          mAutoCompleteDelay         = DEFAULT_AUTOCOMPLETE_DELAY;
 	private ProgressBar      mLoadingIndicator;
 	private OnSearchListener mListener;
+	private ImageButton mClearButton;
+	private boolean     allowClearButton;
 
 	public DelayedAutoCompleteTextView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -45,6 +48,16 @@ public class DelayedAutoCompleteTextView extends EditText {
 		mLoadingIndicator = progressBar;
 	}
 
+	public void setClearButton(ImageButton button) {
+		mClearButton = button;
+		mClearButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				setText("");
+			}
+		});
+	}
+
 	private void init() {
 		addTextChangedListener(new TextWatcher() {
 			@Override
@@ -56,7 +69,9 @@ public class DelayedAutoCompleteTextView extends EditText {
 			}
 
 			@Override
-			public void afterTextChanged(Editable s) {}
+			public void afterTextChanged(Editable s) {
+				allowClearButton = true;
+			}
 		});
 	}
 
@@ -89,6 +104,9 @@ public class DelayedAutoCompleteTextView extends EditText {
 			if (mLoadingIndicator != null) {
 				mLoadingIndicator.setVisibility(View.VISIBLE);
 			}
+			if (mClearButton != null) {
+				mClearButton.setVisibility(GONE);
+			}
 
 			if (mAutoCompleteDelay < 10) {
 				mHandler.removeMessages(MESSAGE_TEXT_CHANGED);
@@ -106,13 +124,18 @@ public class DelayedAutoCompleteTextView extends EditText {
 			setError(getContext().getString(R.string.error_searching));
 		}
 		if (mLoadingIndicator != null) {
-			mLoadingIndicator.setVisibility(View.GONE);
+			mLoadingIndicator.setVisibility(View.INVISIBLE);
+		}
+
+		if (mClearButton != null && allowClearButton) {
+			mClearButton.setVisibility(VISIBLE);
 		}
 	}
 
 	public void setSearchListener(OnSearchListener listener) {
 		this.mListener = listener;
 	}
+
 
 	public interface OnSearchListener {
 		void performSearch(CharSequence filter);
