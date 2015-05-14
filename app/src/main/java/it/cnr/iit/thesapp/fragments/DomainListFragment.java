@@ -146,6 +146,7 @@ public class DomainListFragment extends TimelineElementFragment implements Domai
 
 
 	public void reloadUi(TimelineElement element) {
+		setUiLoading(false);
 		if (element instanceof DomainSearch) {
 			DomainSearch domainSearch = (DomainSearch) element;
 			domainSearch.fillMissingInfo();

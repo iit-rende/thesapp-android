@@ -9,5 +9,7 @@
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="search_list_padding_top">48dp</dimen>
     <dimen name="status_bar_height">0dp</dimen>
+    <dimen name="search_panel_width">300dp</dimen>
+    <dimen name="search_panel_width_with_shadow">308dp</dimen>
     <item name="pager_page_width" format="float" type="dimen">1.0</item>
 </resources>

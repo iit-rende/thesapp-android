@@ -1,5 +1,7 @@
 <resources>
 	<!-- 7" devices in portrait (~600dp). -->
 	<dimen name="activity_horizontal_margin">48dp</dimen>
+	<dimen name="search_panel_width">400dp</dimen>
+	<dimen name="search_panel_width_with_shadow">408dp</dimen>
 	<item name="pager_page_width" format="float" type="dimen">1.0</item>
 </resources>

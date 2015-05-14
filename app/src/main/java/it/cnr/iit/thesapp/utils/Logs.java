@@ -10,7 +10,7 @@ public class Logs {
 	private static final boolean DOCUMENT   = true && DEBUG;
 	private static final boolean NAV_DRAWER = true && DEBUG;
 	private static final boolean UI         = true && DEBUG;
-	private static final boolean RETROFIT   = true && DEBUG;
+	private static final boolean RETROFIT = false && DEBUG;
 	private static final boolean IMAGE      = true && DEBUG;
 	private static final boolean CACHE      = true && DEBUG;
 

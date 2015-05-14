@@ -32,6 +32,7 @@ public class SearchBox extends FrameLayout {
 
 	//Variables
 	private Domain selectedDomain;
+	private String language;
 
 	public SearchBox(Context context) {
 		super(context);
@@ -149,6 +150,10 @@ public class SearchBox extends FrameLayout {
 
 	public void setSearchInterval(long searchInterval) {
 		searchTextView.setAutoCompleteDelay(searchInterval);
+	}
+
+	public void setLanguage(String language) {
+		mTermSearchAdapter.setLanguage(language);
 	}
 
 	public interface SearchBoxListener {

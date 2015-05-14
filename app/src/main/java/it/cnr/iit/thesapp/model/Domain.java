@@ -22,6 +22,9 @@ public class Domain {
 	@SerializedName("color")
 	@Expose
 	private String color;
+	@SerializedName("localization")
+	@Expose
+	private String localization;
 	@SerializedName("localizations")
 	@Expose
 	private List<DomainLocalization> localizations = new ArrayList<DomainLocalization>();
@@ -38,6 +41,7 @@ public class Domain {
 		Domain domain = new Domain();
 		domain.setDescriptor(DEFAULT_DOMAIN_DESCRIPTOR);
 		domain.setLanguage(PrefUtils.loadLanguage(context));
+		domain.setLocalization(DEFAULT_DOMAIN_DESCRIPTOR);
 		domain.setColor(context.getResources().getString(R.color.primary));
 		return domain;
 	}
@@ -114,5 +118,13 @@ public class Domain {
 
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+
+	public String getLocalization() {
+		return localization;
+	}
+
+	public void setLocalization(String localization) {
+		this.localization = localization;
 	}
 }

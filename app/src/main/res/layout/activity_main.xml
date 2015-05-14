@@ -27,7 +27,7 @@
 	<com.wunderlist.slidinglayer.SlidingLayer
 		android:id="@+id/slidingLayer"
 		xmlns:slidingLayer="http://schemas.android.com/apk/res-auto"
-		android:layout_width="308dp"
+		android:layout_width="@dimen/search_panel_width_with_shadow"
 		android:layout_height="match_parent"
 		android:paddingTop="@dimen/status_bar_height"
 		slidingLayer:changeStateOnTap="false"
@@ -37,10 +37,10 @@
 
 		<it.cnr.iit.thesapp.views.SearchPanel
 			android:id="@+id/search_panel"
-			android:layout_width="300dp"
+			android:layout_width="@dimen/search_panel_width"
 			android:layout_height="match_parent"
 			android:background="@color/search_panel_background"
-			app:bounded_width="300dp"
+			app:bounded_width="@dimen/search_panel_width"
 			/>
 
 	</com.wunderlist.slidinglayer.SlidingLayer>

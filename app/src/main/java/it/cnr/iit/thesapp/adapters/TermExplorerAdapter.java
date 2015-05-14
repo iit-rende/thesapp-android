@@ -1,6 +1,7 @@
 package it.cnr.iit.thesapp.adapters;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -9,8 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.ViewGroup;
-
-import java.util.List;
 
 import it.cnr.iit.thesapp.App;
 import it.cnr.iit.thesapp.R;
@@ -33,10 +32,8 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 	private int count = -1;
 	private int baseId;
 
-	public TermExplorerAdapter(Context context, FragmentManager fm, List<TimelineElement> terms,
-							   ViewPager pager) {
+	public TermExplorerAdapter(Context context, FragmentManager fm, ViewPager pager) {
 		super(fm);
-		if (terms != null) App.timelineElements = terms;
 		this.context = context;
 		TypedValue outValue = new TypedValue();
 		context.getResources().getValue(R.dimen.pager_page_width, outValue, true);
@@ -50,10 +47,10 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 		return pageWidth;
 	}
 
-	public void onTermFetched(TimelineElement term) {
-		term.setCompletelyFetched(true);
-		final int positionForTerm = getPositionForTerm(term);
-		if (positionForTerm >= 0) App.timelineElements.get(positionForTerm).copy(term);
+	public void onElementFetched(TimelineElement element) {
+		element.setCompletelyFetched(true);
+		final int positionForElement = getPositionForElement(element);
+		if (positionForElement >= 0) App.timelineElements.get(positionForElement).copy(element);
 	}
 
 	public int addTerm(String termDescriptor, String termDomain, String termLanguage,
@@ -79,11 +76,12 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 			if (!isTermInList(term)) {
 				removeTerms(clickedFromPage);
 				App.timelineElements.add(term);
+
+				notifyChangeInPosition(getCount());
 				count = -1;
-				notifyChangeInPosition(App.timelineElements.size());
 				notifyDataSetChanged();
 			}
-			return getPositionForTerm(term);
+			return getPositionForElement(term);
 		}
 		return -1;
 	}
@@ -94,11 +92,12 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 			if (!isTermInList(category)) {
 				removeTerms(clickedFromPage);
 				App.timelineElements.add(category);
+
+				notifyChangeInPosition(getCount());
 				count = -1;
-				notifyChangeInPosition(App.timelineElements.size());
 				notifyDataSetChanged();
 			}
-			return getPositionForTerm(category);
+			return getPositionForElement(category);
 		}
 		return -1;
 	}
@@ -113,17 +112,21 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 				notifyChangeInPosition(App.timelineElements.size());
 				notifyDataSetChanged();
 			}
-			return getPositionForTerm(domainSearch);
+			return getPositionForElement(domainSearch);
 		}
 		return -1;
 	}
 
-	private int getPositionForTerm(TimelineElement targetElement) {
+	private int getPositionForElement(TimelineElement targetElement) {
 		int i = 0;
 		for (TimelineElement timelineElement : App.timelineElements) {
-			if (timelineElement.equals(targetElement)) return i;
+			if (timelineElement.equals(targetElement)) {
+				Logs.cache("Position found for : " + targetElement);
+				return i;
+			}
 			i++;
 		}
+		Logs.cache("Can't find position for : " + targetElement);
 		return -1;
 	}
 
@@ -143,12 +146,43 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 		}
 	}
 
+
+	public void goHome() {
+		switch (getCount()) {
+			case 0:
+			case 1:
+			case 2:
+				return;
+			default:
+				pager.setCurrentItem(1, true);
+				//delayedDeleteHistory();
+		}
+	}
+
+	private void delayedDeleteHistory() {
+		final Handler handler = new Handler();
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				deleteHistory();
+			}
+		}, 300);
+	}
+
+	private void deleteHistory() {
+		removeTerms(1);
+		notifyChangeInPosition(getCount());
+		count = -1;
+		notifyDataSetChanged();
+	}
+
 	public TimelineElement getTerm(String elementDescriptor, String elementDomain,
 								   String elementLanguage, int elementKind) {
 		for (TimelineElement element : App.timelineElements) {
-			Logs.cache(element.toString());
+			//Logs.cache(element.toString());
 			if (element.getDescriptor().equals(elementDescriptor) &&
-				element.getDomainDescriptor().equals(elementDomain) && element.getLanguage().equals(
+				element.getDomainDescriptor().equals(elementDomain) && element.getLanguage()
+																			  .equals(
 					elementLanguage) &&
 				element.getElementKind() == elementKind) return element;
 		}

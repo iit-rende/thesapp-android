@@ -44,11 +44,13 @@ public class Category extends TimelineElement {
 			setDomainDescriptor(category.getDomainDescriptor());
 			setLanguage(category.getLanguage());
 			setTerms(category.getTerms());
+			setCompletelyFetched(category.isCompletelyFetched());
 		}
 	}
 
 	@Override
 	public void fillMissingInfo() {
+		setCompletelyFetched(true);
 		setDomainDescriptor(getDomain().getDescriptor());
 		if (terms != null) for (Term term : terms) {
 			//term.setLanguage(getLanguage());

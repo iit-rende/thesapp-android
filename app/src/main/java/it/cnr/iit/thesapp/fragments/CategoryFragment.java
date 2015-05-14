@@ -123,6 +123,7 @@ public class CategoryFragment extends TimelineElementFragment {
 
 
 	public void reloadUi(TimelineElement element) {
+		setUiLoading(false);
 		if (element instanceof Category) {
 			Category category = (Category) element;
 

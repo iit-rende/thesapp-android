@@ -64,11 +64,13 @@ public class Term extends TimelineElement {
 			setUsedFor(term.getUsedFor());
 			setLocalizations(term.getLocalizations());
 			setHierarchy(term.getHierarchy());
+			setCompletelyFetched(term.isCompletelyFetched());
 		}
 	}
 
 	@Override
 	public void fillMissingInfo() {
+		setCompletelyFetched(true);
 		setDomainDescriptor(getDomain().getDescriptor());
 		if (categories != null) for (Category term : categories) {
 			term.setLanguage(getLanguage());

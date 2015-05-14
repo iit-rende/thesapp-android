@@ -57,6 +57,7 @@ public class DomainSearch extends TimelineElement {
 
 	@Override
 	public void fillMissingInfo() {
+		setCompletelyFetched(true);
 		if (getDomains() != null) for (Domain domain : getDomains()) {
 			domain.setLanguage(getLanguage());
 		}

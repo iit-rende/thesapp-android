@@ -12,8 +12,10 @@ import java.util.List;
 import it.cnr.iit.thesapp.model.Domain;
 
 public class PrefUtils {
+	public static final String PREF_LANGUAGE = "language";
+	public static final String IT            = "it";
+	public static final String EN            = "en";
 	private static final String PREF_DOMAIN   = "domain";
-	private static final String PREF_LANGUAGE = "language";
 	private static final String DOMAINS_CACHE = "domains";
 
 	public static void saveDomain(Context context, String domain) {
@@ -48,5 +50,10 @@ public class PrefUtils {
 		Type listType = new TypeToken<List<Domain>>() {
 		}.getType();
 		return new Gson().fromJson(domainsJson, listType);
+	}
+
+	public static void destroyDomains(Context context) {
+		PreferenceManager.getDefaultSharedPreferences(context).edit().remove(DOMAINS_CACHE)
+						 .commit();
 	}
 }

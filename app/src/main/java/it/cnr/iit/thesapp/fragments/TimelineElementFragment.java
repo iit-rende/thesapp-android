@@ -104,9 +104,11 @@ public abstract class TimelineElementFragment extends Fragment {
 			final TimelineElement element = mListener.getElement(termDescriptor, termDomain,
 					termLanguage, termKind);
 			if (element != null && element.isCompletelyFetched()) {
+				Logs.thesaurus("Element is cached: " + element);
 				setUiLoading(false);
 				reloadUi(element);
 			} else {
+				Logs.thesaurus("Element is not cached: " + element);
 				fetchElement();
 			}
 		}
@@ -156,12 +158,9 @@ public abstract class TimelineElementFragment extends Fragment {
 	}
 
 	public void setUiLoading(boolean loading) {
-		if (!alreadyLoadedUi) {
-			alreadyLoadedUi = !loading;
-			progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
-			cardContent.setVisibility(loading ? View.GONE : View.VISIBLE);
-			errorView.setVisibility(View.GONE);
-		}
+		progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+		cardContent.setVisibility(loading ? View.GONE : View.VISIBLE);
+		errorView.setVisibility(View.GONE);
 	}
 
 	public void persistTerm(TimelineElement term) {

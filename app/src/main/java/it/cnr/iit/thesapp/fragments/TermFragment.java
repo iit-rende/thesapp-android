@@ -130,6 +130,7 @@ public class TermFragment extends TimelineElementFragment {
 
 
 	public void reloadUi(TimelineElement element) {
+		setUiLoading(false);
 		if (element instanceof Term) {
 			Term term = (Term) element;
 			term.fillMissingInfo();

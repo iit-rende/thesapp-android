@@ -107,4 +107,8 @@ public class SearchPanel extends FrameLayout implements TermSearchRecAdapter.Mon
 		}
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}
+
+	public void setLanguage(String language) {
+		searchBox.setLanguage(language);
+	}
 }

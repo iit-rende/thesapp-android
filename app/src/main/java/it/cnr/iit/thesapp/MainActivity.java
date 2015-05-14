@@ -3,13 +3,16 @@ package it.cnr.iit.thesapp;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Property;
 import android.view.Menu;
@@ -66,24 +69,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 
 		toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
 		setSupportActionBar(toolbar);
-		pager = (ViewPager) findViewById(R.id.pager);
-		termExplorerAdapter = new TermExplorerAdapter(this, getSupportFragmentManager(), null,
-				pager);
-		pager.setOffscreenPageLimit(3);
-		pager.setAdapter(termExplorerAdapter);
-		pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-			@Override
-			public void onPageScrolled(int position, float positionOffset,
-									   int positionOffsetPixels) {}
-
-			@Override
-			public void onPageSelected(int position) {
-				setToolbarDomain(App.timelineElements.get(position).getDomain(), position);
-			}
-
-			@Override
-			public void onPageScrollStateChanged(int state) {}
-		});
+		createPager();
 
 		searchPanel = (SearchPanel) findViewById(R.id.search_panel);
 		searchPanel.setSearchListener(new SearchBox.SearchBoxListener() {
@@ -101,14 +87,48 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 
 		slidingLayer = (SlidingLayer) findViewById(R.id.slidingLayer);
 
-		if (savedInstanceState == null) {
-			//slidingLayer.openLayer(false);
-			onElementSelected(null, null, PrefUtils.loadLanguage(this),
-					TimelineElement.KIND_DOMAIN_CONTAINER, -1);
-		}
-
 		loadDomains();
 		fetchDomains();
+
+		PreferenceManager.getDefaultSharedPreferences(this)
+						 .registerOnSharedPreferenceChangeListener(
+								 new SharedPreferences.OnSharedPreferenceChangeListener() {
+									 @Override
+									 public void onSharedPreferenceChanged(
+											 SharedPreferences sharedPreferences, String key) {
+										 if (key.equals(PrefUtils.PREF_LANGUAGE)) {
+											 onLanguageChanged();
+										 }
+									 }
+								 });
+	}
+
+	private void onLanguageChanged() {
+		Logs.thesaurus("Language changed");
+		searchPanel.setLanguage(PrefUtils.loadLanguage(this));
+	}
+
+
+	private void createPager() {
+		pager = null;
+		termExplorerAdapter = null;
+		pager = (ViewPager) findViewById(R.id.pager);
+		termExplorerAdapter = new TermExplorerAdapter(this, getSupportFragmentManager(), pager);
+		pager.setOffscreenPageLimit(0);
+		pager.setAdapter(termExplorerAdapter);
+		pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			@Override
+			public void onPageScrolled(int position, float positionOffset,
+									   int positionOffsetPixels) {}
+
+			@Override
+			public void onPageSelected(int position) {
+				setToolbarDomain(App.timelineElements.get(position).getDomain(), position);
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {}
+		});
 	}
 
 	@Override
@@ -121,11 +141,15 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_settings:
+				SettingsActivity.show(this);
 				return true;
 			case R.id.action_open_search_panel:
 				Logs.ui("Opening search panel");
 				slidingLayer.openLayer(true);
 				return true;
+			case R.id.action_delete_history:
+				Logs.ui("Deleting history");
+				termExplorerAdapter.goHome();
 			default:
 				return false;
 		}
@@ -136,6 +160,12 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 		super.onSaveInstanceState(outState, outPersistentState);
 	}
 
+	@Override
+	public void onBackPressed() {
+
+		if (slidingLayer.isOpened()) slidingLayer.closeLayer(true);
+		else super.onBackPressed();
+	}
 
 	private void loadDomains() {
 		Logs.cache("Loading domains from cache");
@@ -188,6 +218,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 
 	public void onElementSelected(String termDescriptor, String termDomain, String termLanguage,
 								  int elementKind, int clickedFromPage) {
+		if (TextUtils.isEmpty(termLanguage)) termLanguage = PrefUtils.loadLanguage(this);
 		int pos = -1;
 		switch (elementKind) {
 			case TimelineElement.KIND_TERM:
@@ -223,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 
 	@Override
 	public void onElementFetched(TimelineElement term) {
-		termExplorerAdapter.onTermFetched(term);
+		termExplorerAdapter.onElementFetched(term);
 	}
 
 	@Override
