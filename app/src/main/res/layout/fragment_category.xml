@@ -47,10 +47,10 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:background="@color/element_card_header_color"
-					android:paddingBottom="24dp"
+					android:paddingBottom="@dimen/element_card_title_padding_top"
 					android:paddingLeft="16dp"
 					android:paddingRight="16dp"
-					android:paddingTop="24dp"
+					android:paddingTop="@dimen/element_card_title_padding_top"
 					android:textColor="@color/white"
 					tools:text="Word to show"/>
 

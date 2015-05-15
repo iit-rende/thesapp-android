@@ -55,7 +55,7 @@
 						android:layout_height="wrap_content"
 						android:paddingLeft="16dp"
 						android:paddingRight="16dp"
-						android:paddingTop="24dp"
+						android:paddingTop="@dimen/element_card_title_padding_top"
 						android:textColor="@color/white"
 						tools:text="Word to show"/>
 
@@ -71,14 +71,17 @@
 
 					<Space
 						android:layout_width="match_parent"
-						android:layout_height="24dp"/>
+						android:layout_height="@dimen/element_card_title_padding_top"/>
 				</LinearLayout>
 
 				<LinearLayout
 					android:id="@+id/domain_list_container"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:orientation="vertical"/>
+					android:divider="@drawable/divider"
+					android:dividerPadding="16dip"
+					android:orientation="vertical"
+					android:showDividers="middle"/>
 
 			</LinearLayout>
 		</LinearLayout>

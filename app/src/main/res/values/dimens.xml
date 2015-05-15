@@ -14,5 +14,6 @@
 	<dimen name="element_card_label_stroke_width">1dp</dimen>
 	<dimen name="element_card_label_corner_radius">1dp</dimen>
 	<dimen name="element_card_label_text_size">16sp</dimen>
+	<dimen name="element_card_title_padding_top">16dp</dimen>
 	<item name="pager_page_width" format="float" type="dimen">1.0</item>
 </resources>
