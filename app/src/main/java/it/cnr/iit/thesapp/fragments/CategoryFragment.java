@@ -1,6 +1,8 @@
 package it.cnr.iit.thesapp.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -134,18 +136,19 @@ public class CategoryFragment extends TimelineElementFragment {
 
 			hierarchyContainer.removeAllViews();
 			addTermsContainer(category.getTerms(), getString(R.string.category_terms),
-					getResources().getColor(R.color.element_card_category_label));
+					R.drawable.term_label_selector, R.color.term_label_text_selector);
 
 			setWindowToolbar(category.getDomain());
 		}
 	}
 
 
-	private void addTermsContainer(List<Term> terms, String containerTitle, int termColor) {
+	private void addTermsContainer(List<Term> terms, String containerTitle,
+								   @DrawableRes int drawableId, @ColorRes int colorId) {
 		if (terms != null && terms.size() > 0) {
 			TermsContainer container = new TermsContainer(getActivity());
 			container.setTitle(containerTitle);
-			container.setTerms(terms, termColor, mListener, page);
+			container.setTerms(terms, drawableId, colorId, mListener, page);
 			hierarchyContainer.addView(container);
 		}
 	}

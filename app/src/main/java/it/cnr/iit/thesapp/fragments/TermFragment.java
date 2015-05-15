@@ -1,6 +1,8 @@
 package it.cnr.iit.thesapp.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -153,36 +155,38 @@ public class TermFragment extends TimelineElementFragment {
 
 			hierarchyContainer.removeAllViews();
 			addCategoryContainer(term.getCategories(), getString(R.string.categories_terms),
-					getResources().getColor(R.color.element_card_category_label));
+					R.drawable.label_background_category, R.color.category_label_text_selector);
 			addTermsContainer(term.getLocalizations(), getString(R.string.translations_terms),
-					getResources().getColor(R.color.element_card_category_label));
+					R.drawable.label_background_localization,
+					R.color.localization_label_text_selector);
 			addTermsContainer(term.getRelatedTerms(), getString(R.string.related_terms),
-					getResources().getColor(R.color.element_card_related_label));
+					R.drawable.label_background_related, R.color.related_label_text_selector);
 
 			addTermsContainer(term.getBroaderTerms(), getString(R.string.broader_terms),
-					getResources().getColor(R.color.element_card_broader_label));
+					R.drawable.label_background_broader, R.color.broader_label_text_selector);
 			addTermsContainer(term.getNarrowerTerms(), getString(R.string.narrower_terms),
-					getResources().getColor(R.color.element_card_narrower_label));
+					R.drawable.label_background_narrower, R.color.narrower_label_text_selector);
 			setWindowToolbar(term.getDomain());
 		}
 	}
 
 
-	private void addTermsContainer(List<Term> terms, String containerTitle, int termColor) {
+	private void addTermsContainer(List<Term> terms, String containerTitle,
+								   @DrawableRes int drawableId, @ColorRes int colorId) {
 		if (terms != null && terms.size() > 0) {
 			TermsContainer container = new TermsContainer(getActivity());
 			container.setTitle(containerTitle);
-			container.setTerms(terms, termColor, mListener, page);
+			container.setTerms(terms, drawableId, colorId, mListener, page);
 			hierarchyContainer.addView(container);
 		}
 	}
 
 	private void addCategoryContainer(List<Category> categories, String containerTitle,
-									  int termColor) {
+									  @DrawableRes int drawableId, @ColorRes int colorId) {
 		if (categories != null && categories.size() > 0) {
 			TermsContainer container = new TermsContainer(getActivity());
 			container.setTitle(containerTitle);
-			container.setCategories(categories, termColor, mListener, page);
+			container.setCategories(categories, drawableId, colorId, mListener, page);
 			hierarchyContainer.addView(container);
 		}
 	}

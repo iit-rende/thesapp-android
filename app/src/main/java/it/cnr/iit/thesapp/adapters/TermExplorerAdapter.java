@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 
@@ -28,7 +27,6 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 	private final float     pageWidth;
 	private final ViewPager pager;
 	private final Context context;
-	SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
 	private int count = -1;
 	private int baseId;
 
@@ -88,7 +86,7 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 
 	public int addCategory(Category category, int clickedFromPage) {
 		if (category != null) {
-			Logs.thesaurus("Adding category " + category.getDescriptor() + " to explorer");
+			Logs.thesaurus("Adding category to explorer: " + category);
 			if (!isTermInList(category)) {
 				removeTerms(clickedFromPage);
 				App.timelineElements.add(category);
@@ -141,7 +139,6 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 		if (lastPositionToKeep >= 0) {
 			for (int i = getCount() - 1; i > lastPositionToKeep; i--) {
 				App.timelineElements.remove(i);
-				registeredFragments.remove(i);
 			}
 		}
 	}
@@ -219,14 +216,11 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
-		Fragment fragment = (Fragment) super.instantiateItem(container, position);
-		registeredFragments.put(position, fragment);
-		return fragment;
+		return (Fragment) super.instantiateItem(container, position);
 	}
 
 	@Override
 	public void destroyItem(ViewGroup container, int position, Object object) {
-		registeredFragments.remove(position);
 		super.destroyItem(container, position, object);
 	}
 
@@ -247,9 +241,6 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 		baseId += getCount() + n;
 	}
 
-	public Fragment getRegisteredFragment(int position) {
-		return registeredFragments.get(position);
-	}
 
 	@Override
 	public int getCount() {

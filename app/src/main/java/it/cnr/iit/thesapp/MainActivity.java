@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 		termExplorerAdapter = null;
 		pager = (ViewPager) findViewById(R.id.pager);
 		termExplorerAdapter = new TermExplorerAdapter(this, getSupportFragmentManager(), pager);
-		pager.setOffscreenPageLimit(0);
+		pager.setOffscreenPageLimit(1);
 		pager.setAdapter(termExplorerAdapter);
 		pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			@Override

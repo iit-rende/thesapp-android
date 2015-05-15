@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<drawable name="label_background_related">@drawable/related_label_selector</drawable>
+	<drawable name="label_background_broader">@drawable/broader_label_selector</drawable>
+	<drawable name="label_background_category">@drawable/category_label_selector</drawable>
+	<drawable name="label_background_localization">@drawable/localization_label_selector</drawable>
+	<drawable name="label_background_narrower">@drawable/narrower_label_selector</drawable>
+	<drawable name="label_background_term">@drawable/term_label_selector</drawable>
+</resources>

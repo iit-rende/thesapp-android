@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.model.Domain;
 
 public class PrefUtils {
@@ -35,7 +36,7 @@ public class PrefUtils {
 
 	public static String loadLanguage(Context context) {
 		return PreferenceManager.getDefaultSharedPreferences(context).getString(PREF_LANGUAGE,
-				"it");
+				context.getString(R.string.default_language));
 	}
 
 	public static void saveDomains(Context context, List<Domain> domains) {

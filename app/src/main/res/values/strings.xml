@@ -22,4 +22,5 @@
 	<string name="choose_language_title">Scegli la lingua</string>
 	<string name="italian">Italiano</string>
 	<string name="english">Inglese</string>
+	<string name="default_language">it</string>
 </resources>

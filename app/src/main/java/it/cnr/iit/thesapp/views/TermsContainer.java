@@ -1,7 +1,13 @@
 package it.cnr.iit.thesapp.views;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Typeface;
+import android.os.Build;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -47,67 +53,73 @@ public class TermsContainer extends LinearLayout {
 		title.setText(text);
 	}
 
-	public void setTerms(List<Term> terms, int termColor,
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	public void setTerms(List<Term> terms, @DrawableRes int drawableId, @ColorRes int colorId,
 						 final TimelineElementFragment.TimelineElementFragmentCallback callback,
 						 final int page) {
-		int padding = getResources().getDimensionPixelSize(R.dimen.padding_small);
-		int textColor = getResources().getColor(R.color.white);
-		if (terms != null) for (final Term term : terms) {
-			RobotoTextView tv = new RobotoTextView(getContext());
-			tv.setText(term.getDescriptor());
-			tv.setTextColor(textColor);
-			tv.setPadding(padding, padding, padding, padding);
-			tv.setBackgroundColor(termColor);
+		int margin = getResources().getDimensionPixelSize(R.dimen.padding_small) / 2;
 
-			final FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
-					FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
-			params.setMargins(padding / 2, padding / 2, padding / 2, padding / 2);
-			tv.setLayoutParams(params);
+		if (terms != null) {
+			for (final Term term : terms) {
+				RobotoTextView tv = createTextView(colorId, drawableId, margin);
+				tv.setText(term.getDescriptor());
 
-			tv.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if (callback != null) {
-						Logs.ui("Term clicked: " + term.toString());
-						callback.onElementClicked(term.getDescriptor(), term.getDomainDescriptor(),
-								term.getLanguage(), term.getElementKind(), page);
+				tv.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (callback != null) {
+							Logs.ui("Term clicked: " + term.toString());
+							callback.onElementClicked(term.getDescriptor(),
+									term.getDomainDescriptor(), term.getLanguage(),
+									term.getElementKind(), page);
+						}
 					}
-				}
-			});
-			container.addView(tv);
+				});
+				container.addView(tv);
+			}
 		}
 	}
 
-	public void setCategories(List<Category> categories, int termColor,
-							  final TimelineElementFragment.TimelineElementFragmentCallback
-									  callback,
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	public void setCategories(List<Category> categories, @DrawableRes int drawableId,
+							  @ColorRes int colorId,
+							  final TimelineElementFragment.TimelineElementFragmentCallback callback,
 							  final int page) {
-		int padding = getResources().getDimensionPixelSize(R.dimen.padding_small);
-		int textColor = getResources().getColor(R.color.white);
-		if (categories != null) for (final Category category : categories) {
-			RobotoTextView tv = new RobotoTextView(getContext());
-			tv.setText(category.getDescriptor());
-			tv.setTextColor(textColor);
-			tv.setPadding(padding, padding, padding, padding);
-			tv.setBackgroundColor(termColor);
+		int margin = getResources().getDimensionPixelSize(R.dimen.padding_small) / 2;
 
-			final FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
-					FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
-			params.setMargins(padding / 2, padding / 2, padding / 2, padding / 2);
-			tv.setLayoutParams(params);
+		if (categories != null) {
+			for (final Category category : categories) {
+				RobotoTextView tv = createTextView(colorId, drawableId, margin);
+				tv.setText(category.getDescriptor());
 
-			tv.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if (callback != null) {
-						Logs.ui("Category clicked: " + category.toString());
-						callback.onElementClicked(category.getDescriptor(),
-								category.getDomainDescriptor(), category.getLanguage(),
-								category.getElementKind(), page);
+				tv.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (callback != null) {
+							Logs.ui("Category clicked: " + category.toString());
+							callback.onElementClicked(category.getDescriptor(),
+									category.getDomainDescriptor(), category.getLanguage(),
+									category.getElementKind(), page);
+						}
 					}
-				}
-			});
-			container.addView(tv);
+				});
+				container.addView(tv);
+			}
 		}
+	}
+
+	public RobotoTextView createTextView(@ColorRes int colorId, @ColorRes int drawableId,
+										 int margin) {
+		RobotoTextView tv = new RobotoTextView(getContext());
+		tv.setTextColor(getResources().getColorStateList(colorId));
+		tv.setTypeface(null, Typeface.BOLD);
+		tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(
+				R.dimen.element_card_label_text_size));
+		tv.setBackgroundResource(drawableId);
+		final FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
+				FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
+		params.setMargins(margin, margin, margin, margin);
+		tv.setLayoutParams(params);
+		return tv;
 	}
 }
