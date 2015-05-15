@@ -12,6 +12,7 @@
 		android:layout_height="wrap_content"
 		android:layout_marginLeft="@dimen/activity_horizontal_margin"
 		android:layout_marginRight="@dimen/activity_horizontal_margin"
+		app:cardCornerRadius="@dimen/element_card_corner_radius"
 		app:cardElevation="@dimen/elevation_high"
 		app:cardMaxElevation="@dimen/elevation_high"
 		app:cardUseCompatPadding="true">

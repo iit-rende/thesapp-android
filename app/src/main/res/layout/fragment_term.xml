@@ -12,6 +12,7 @@
 		android:layout_height="wrap_content"
 		android:layout_marginLeft="@dimen/activity_horizontal_margin"
 		android:layout_marginRight="@dimen/activity_horizontal_margin"
+		app:cardCornerRadius="@dimen/element_card_corner_radius"
 		app:cardElevation="@dimen/elevation_high"
 		app:cardMaxElevation="@dimen/elevation_high"
 		app:cardUseCompatPadding="true">
@@ -47,6 +48,10 @@
 					android:background="@color/element_card_header_color"
 					android:orientation="vertical">
 
+					<Space
+						android:layout_width="match_parent"
+						android:layout_height="@dimen/element_card_title_padding_top"/>
+
 
 					<com.devspark.robototextview.widget.RobotoTextView
 						android:id="@+id/term_title"
@@ -55,7 +60,6 @@
 						android:layout_height="wrap_content"
 						android:paddingLeft="16dp"
 						android:paddingRight="16dp"
-						android:paddingTop="@dimen/element_card_title_padding_top"
 						android:textColor="@color/white"
 						tools:text="Word to show"/>
 
@@ -74,7 +78,8 @@
 						android:layout_height="@dimen/element_card_title_padding_top"/>
 				</LinearLayout>
 
-
+				<include
+					layout="@layout/panel_tree_view_container"/>
 				<include
 
 					android:id="@+id/term_content"

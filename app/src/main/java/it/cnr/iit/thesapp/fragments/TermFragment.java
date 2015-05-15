@@ -26,6 +26,7 @@ import it.cnr.iit.thesapp.model.TimelineElement;
 import it.cnr.iit.thesapp.utils.Logs;
 import it.cnr.iit.thesapp.views.ErrorView;
 import it.cnr.iit.thesapp.views.TermsContainer;
+import it.cnr.iit.thesapp.views.TreeView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -37,6 +38,7 @@ public class TermFragment extends TimelineElementFragment {
 	private RobotoTextView termSubtitle;
 	private View           titleContainer;
 	private LinearLayout   hierarchyContainer;
+	private TreeView termTreeView;
 
 	public TermFragment() {
 		// Required empty public constructor
@@ -84,6 +86,15 @@ public class TermFragment extends TimelineElementFragment {
 		termTitle = (RobotoTextView) view.findViewById(R.id.term_title);
 		termSubtitle = (RobotoTextView) view.findViewById(R.id.term_subtitle);
 		termDescription = (RobotoTextView) view.findViewById(R.id.term_description);
+		termTreeView = (TreeView) view.findViewById(R.id.tree_view);
+		termTreeView.setCallbacks(new TreeView.TreeViewCallbacks() {
+			@Override
+			public void onTermClicked(Term term) {
+				if (mListener != null) mListener.onElementClicked(term.getDescriptor(),
+						term.getDomainDescriptor(), term.getLanguage(), TimelineElement.KIND_TERM,
+						page);
+			}
+		});
 
 		scrollView = (ScrollView) view.findViewById(R.id.scrollView);
 		scrollView.setVerticalScrollBarEnabled(false);
@@ -152,6 +163,8 @@ public class TermFragment extends TimelineElementFragment {
 				termDescription.setVisibility(View.GONE);
 			}
 			//setUiColor(Color.parseColor(term.getDomain().getColor()));
+
+			if (term.getHierarchy() != null) termTreeView.setHierarchy(term);
 
 			hierarchyContainer.removeAllViews();
 			addCategoryContainer(term.getCategories(), getString(R.string.categories_terms),

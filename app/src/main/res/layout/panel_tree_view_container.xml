@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:layout_width="match_parent"
+			  android:layout_height="wrap_content"
+			  android:orientation="vertical">
+
+	<com.devspark.robototextview.widget.RobotoTextView
+		android:id="@+id/tree_view_header"
+		style="@style/caption"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingLeft="16dp"
+		android:paddingRight="16dp"
+		android:text="@string/hierarchy_tree_header"/>
+
+	<it.cnr.iit.thesapp.views.TreeView
+		android:id="@+id/tree_view"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingLeft="16dp"
+		android:paddingRight="16dp"/>
+</LinearLayout>
