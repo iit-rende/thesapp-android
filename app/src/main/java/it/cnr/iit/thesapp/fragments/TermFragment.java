@@ -37,18 +37,16 @@ public class TermFragment extends TimelineElementFragment {
 	private ScrollView     scrollView;
 	private RobotoTextView termSubtitle;
 	private View           titleContainer;
-	private LinearLayout   hierarchyContainer;
-	private TreeView termTreeView;
+	private LinearLayout   infoContainer;
+	private TreeView       termTreeView;
+	private RobotoTextView treeViewHeader;
 
-	public TermFragment() {
-		// Required empty public constructor
-	}
+	public TermFragment() {}
 
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_term, container, false);
 	}
 
@@ -81,11 +79,13 @@ public class TermFragment extends TimelineElementFragment {
 		}
 		titleContainer = view.findViewById(R.id.title_container);
 		cardContent = view.findViewById(R.id.card_content);
-		hierarchyContainer = (LinearLayout) view.findViewById(R.id.hierarchy_container);
+		infoContainer = (LinearLayout) view.findViewById(R.id.hierarchy_container);
 
 		termTitle = (RobotoTextView) view.findViewById(R.id.term_title);
 		termSubtitle = (RobotoTextView) view.findViewById(R.id.term_subtitle);
 		termDescription = (RobotoTextView) view.findViewById(R.id.term_description);
+
+		treeViewHeader = (RobotoTextView) view.findViewById(R.id.tree_view_header);
 		termTreeView = (TreeView) view.findViewById(R.id.tree_view);
 		termTreeView.setCallbacks(new TreeView.TreeViewCallbacks() {
 			@Override
@@ -164,9 +164,16 @@ public class TermFragment extends TimelineElementFragment {
 			}
 			//setUiColor(Color.parseColor(term.getDomain().getColor()));
 
-			if (term.getHierarchy() != null) termTreeView.setHierarchy(term);
+			if (term.getHierarchy() != null && term.getHierarchy().size() > 0) {
+				termTreeView.setVisibility(View.VISIBLE);
+				treeViewHeader.setVisibility(View.VISIBLE);
+				termTreeView.setHierarchy(term);
+			} else {
+				termTreeView.setVisibility(View.GONE);
+				treeViewHeader.setVisibility(View.GONE);
+			}
 
-			hierarchyContainer.removeAllViews();
+			infoContainer.removeAllViews();
 			addCategoryContainer(term.getCategories(), getString(R.string.categories_terms),
 					R.drawable.label_background_category, R.color.category_label_text_selector);
 			addTermsContainer(term.getLocalizations(), getString(R.string.translations_terms),
@@ -190,7 +197,7 @@ public class TermFragment extends TimelineElementFragment {
 			TermsContainer container = new TermsContainer(getActivity());
 			container.setTitle(containerTitle);
 			container.setTerms(terms, drawableId, colorId, mListener, page);
-			hierarchyContainer.addView(container);
+			infoContainer.addView(container);
 		}
 	}
 
@@ -200,7 +207,7 @@ public class TermFragment extends TimelineElementFragment {
 			TermsContainer container = new TermsContainer(getActivity());
 			container.setTitle(containerTitle);
 			container.setCategories(categories, drawableId, colorId, mListener, page);
-			hierarchyContainer.addView(container);
+			infoContainer.addView(container);
 		}
 	}
 

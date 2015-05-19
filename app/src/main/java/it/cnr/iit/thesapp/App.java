@@ -31,5 +31,12 @@ public class App extends Application {
 		DomainSearch domainSearch = new DomainSearch(Domain.getDefault(this),
 				PrefUtils.loadLanguage(this));
 		timelineElements.add(domainSearch);
+		/* TODO add this when the api is ready
+		if (!TextUtils.isEmpty(PrefUtils.loadDomain(this))) {
+			CategoryList categoryList = new CategoryList(PrefUtils.loadDomain(this),
+					PrefUtils.loadLanguage(this));
+			timelineElements.add(categoryList);
+		}
+		*/
 	}
 }

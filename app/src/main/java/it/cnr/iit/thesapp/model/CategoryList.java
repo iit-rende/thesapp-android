@@ -11,9 +11,11 @@ public class CategoryList extends TimelineElement {
 	@Expose
 	private List<Category> categories;
 
-	public CategoryList() {
+	public CategoryList(String domain, String language) {
 		super();
 		setElementKind(KIND_CATEGORY_LIST);
+		setDomainDescriptor(domain);
+		setLanguage(language);
 	}
 
 	public CategoryList(Domain domain) {

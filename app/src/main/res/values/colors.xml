@@ -7,6 +7,8 @@
 	<color name="controlHighlight">@color/md_deep_orange_A400</color>
 
 	<color name="white">#ffffffff</color>
+	<color name="trasparent">#00000000</color>
+
 	<color name="search_panel_background">@color/md_grey_300</color>
 	<color name="element_card_header_color">@color/md_grey_700</color>
 
@@ -17,6 +19,7 @@
 	<color name="element_card_narrower_label">@color/md_deep_orange_500</color>
 	<color name="element_card_localization_label">@color/md_red_500</color>
 	<color name="element_card_term_label">@color/md_blue_500</color>
+	<color name="element_card_hierarchy_label">@color/md_blue_500</color>
 
 	<color name="element_card_category_label_highlight">@color/element_card_category_label</color>
 	<color name="element_card_related_label_highlight">@color/element_card_related_label</color>
@@ -25,7 +28,7 @@
 	<color name="element_card_localization_label_highlight">@color/element_card_localization_label
 	</color>
 	<color name="element_card_term_label_highlight">@color/element_card_term_label</color>
-	<color name="trasparent">#00000000</color>
+	<color name="element_card_hierarchy_label_highlight">@color/element_card_term_label</color>
 	<color name="term_hierarchy_text_pressed">@color/md_grey_300</color>
 
 
