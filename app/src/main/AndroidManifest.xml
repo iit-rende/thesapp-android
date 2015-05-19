@@ -28,6 +28,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="it.cnr.iit.thesapp.MainActivity"/>
         </activity>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="8e6edf2b73b32c64198c99837994efe460b5b4b5"/>
     </application>
 
 </manifest>

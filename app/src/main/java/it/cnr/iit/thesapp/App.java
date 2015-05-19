@@ -2,9 +2,12 @@ package it.cnr.iit.thesapp;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import io.fabric.sdk.android.Fabric;
 import it.cnr.iit.thesapp.api.Api;
 import it.cnr.iit.thesapp.model.Domain;
 import it.cnr.iit.thesapp.model.DomainSearch;
@@ -23,6 +26,9 @@ public class App extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		Crashlytics crashlytics = new Crashlytics.Builder().disabled(BuildConfig.DEBUG).build();
+		final Fabric fabric = new Fabric.Builder(this).kits(crashlytics).debuggable(false).build();
+		Fabric.with(fabric);
 		createTimeLine();
 	}
 

@@ -1,21 +1,63 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 22
     buildToolsVersion "21.1.2"
 
     defaultConfig {
         applicationId "it.cnr.iit.thesapp"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        final MAJOR_RELEASE = 1
+        final MINOR_RELEASE = 2
+        versionCode getVersionCodeNumber(MAJOR_RELEASE, MINOR_RELEASE)
+        versionName getVersionCodeName(MAJOR_RELEASE, MINOR_RELEASE)
     }
+
+    signingConfigs {
+        releaseConfig {
+            storeFile file("thesapp_keystore.jks");
+            storePassword("elioscamerino");
+            keyAlias "elios";
+            keyPassword "elioscamerino";
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.releaseConfig
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def file = output.outputFile
+                    output.outputFile = new File(file.parent, "ThesApp-" + defaultConfig.versionName + "(" + defaultConfig.versionCode + ")" + ".apk")
+                }
+            }
+
         }
+        debug {
+            minifyEnabled false
+            debuggable true
+            applicationIdSuffix ".debug"
+            versionNameSuffix "_debug"
+        }
+
     }
 }
 
@@ -34,4 +76,18 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'de.greenrobot:eventbus:2.4.0'
+    compile('com.crashlytics.sdk.android:crashlytics:2.2.4@aar') {
+        transitive = true;
+    }
+}
+
+
+def getVersionCodeName(int major, int minor) {
+    def versionCodeName = major * 100 + minor
+    return "${versionCodeName}"
+}
+
+def getVersionCodeNumber(int major, int minor) {
+    def versionCodeName = major * 100 + minor
+    return versionCodeName
 }
