@@ -91,6 +91,14 @@ public class SearchPanel extends FrameLayout implements TermSearchRecAdapter.Mon
 		fakeToolbar.setBackgroundColor(color);
 	}
 
+	public void showKeyboard() {
+		searchBox.showKeyboard();
+	}
+
+	public void hideKeyboard() {
+		searchBox.hideKeyboard();
+	}
+
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		// Adjust width as necessary

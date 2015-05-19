@@ -93,12 +93,6 @@ public class SearchBox extends FrameLayout {
 		mTermSearchAdapter.getFilter().filter(filter);
 	}
 
-	public void hideKeyboard() {
-		InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
-				Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(searchTextView.getWindowToken(), 0);
-	}
-
 
 	public void setTermSearchAdapter(TermSearchRecAdapter termSearchAdapter) {
 		Logs.ui("Setting term search adapter");
@@ -154,6 +148,20 @@ public class SearchBox extends FrameLayout {
 
 	public void setLanguage(String language) {
 		mTermSearchAdapter.setLanguage(language);
+	}
+
+	public void showKeyboard() {
+		InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(
+				Context.INPUT_METHOD_SERVICE);
+		inputMethodManager.toggleSoftInputFromWindow(searchTextView.getApplicationWindowToken(),
+				InputMethodManager.SHOW_FORCED, 0);
+		searchTextView.requestFocus();
+	}
+
+	public void hideKeyboard() {
+		InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
+				Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(searchTextView.getWindowToken(), 0);
 	}
 
 	public interface SearchBoxListener {

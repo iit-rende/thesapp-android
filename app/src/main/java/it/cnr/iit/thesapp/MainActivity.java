@@ -86,6 +86,29 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 		});
 
 		slidingLayer = (SlidingLayer) findViewById(R.id.slidingLayer);
+		slidingLayer.setOnInteractListener(new SlidingLayer.OnInteractListener() {
+			@Override
+			public void onOpen() {
+				searchPanel.showKeyboard();
+			}
+
+			@Override
+			public void onShowPreview() { }
+
+			@Override
+			public void onClose() {
+				searchPanel.hideKeyboard();
+			}
+
+			@Override
+			public void onOpened() { }
+
+			@Override
+			public void onPreviewShowed() { }
+
+			@Override
+			public void onClosed() { }
+		});
 
 		loadDomains();
 		fetchDomains();
@@ -102,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 									 }
 								 });
 	}
+
 
 	private void onLanguageChanged() {
 		Logs.thesaurus("Language changed");
