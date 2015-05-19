@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">ThesApp</string>
+	<string name="action_settings">Impostazioni</string>
+	<string name="search_hint">Cerca un termine…</string>
+	<string name="error_searching">Problemi con la ricerca</string>
+	<string name="related_terms">Termini correlati</string>
+	<string name="categories_terms">Categorie</string>
+	<string name="broader_terms">Termini più generici</string>
+	<string name="narrower_terms">Termini più specifici</string>
+	<string name="error_not_found">Termine non trovato</string>
+	<string name="error_generic">C\'è qualche problema</string>
+	<string name="error_server_problems">Ci sono problemi con il server</string>
+	<string name="error_connection_problem">Nessuna connessione</string>
+	<string name="loading_domains">Scarico i domini…</string>
+	<string name="category_terms">Termini nella categoria</string>
+	<string name="action_open_search_panel">Cerca</string>
+	<string name="translations_terms">Traduzioni</string>
+	<string name="domain_list_title">Scegli un dominio</string>
+	<string name="domain_list_subtitle">o inizia la ricerca in alto</string>
+	<string name="action_delete_history">Cancella cronologia</string>
+	<string name="choose_language_summary">Verrà usata per le ricerche</string>
+	<string name="choose_language_title">Scegli la lingua</string>
+	<string name="italian">Italiano</string>
+	<string name="english">Inglese</string>
+	<string name="default_language">it</string>
+	<string name="hierarchy_tree_header">Albero della gerarchia</string>
+</resources>
