@@ -24,4 +24,5 @@
 	<string name="error_generic">There is a problem</string>
 	<string name="error_server_problems">There are server issues</string>
 	<string name="hierarchy_tree_header">Hierarchy Tree</string>
+	<string name="title_activity_settings">Settings</string>
 </resources>
