@@ -9,6 +9,7 @@ import java.util.List;
 import it.cnr.iit.thesapp.utils.Logs;
 
 public class Category extends TimelineElement {
+
 	@SerializedName("terms")
 	@Expose
 	private List<Term> terms = new ArrayList<Term>();
@@ -40,8 +41,8 @@ public class Category extends TimelineElement {
 	@Override
 	public void copy(TimelineElement element) {
 		if (element instanceof Category) {
-			Logs.cache("Copying category: " + element);
 			Category category = (Category) element;
+			Logs.cache("Copying category: " + category);
 			setDescriptor(category.getDescriptor());
 			setDomain(category.getDomain());
 			setDomainDescriptor(category.getDomainDescriptor());
@@ -72,12 +73,12 @@ public class Category extends TimelineElement {
 
 	private String toStringComplete() {
 		return "Category{" +
-			   "descriptor='" + getDescriptor() + '\'' +
-			   ", domainDescriptor='" + getDomainDescriptor() + '\'' +
-			   ", domain='" + getDomain() + '\'' +
-			   ", language='" + getLanguage() + '\'' +
-			   ", terms=" + terms.size() +
-			   ", completelyFetched=" + isCompletelyFetched() +
-			   '}';
+		       "descriptor='" + getDescriptor() + '\'' +
+		       ", domainDescriptor='" + getDomainDescriptor() + '\'' +
+		       ", domain='" + getDomain() + '\'' +
+		       ", language='" + getLanguage() + '\'' +
+		       ", terms=" + terms.size() +
+		       ", completelyFetched=" + isCompletelyFetched() +
+		       '}';
 	}
 }

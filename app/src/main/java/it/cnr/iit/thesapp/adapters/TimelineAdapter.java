@@ -5,10 +5,12 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.ViewGroup;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import it.cnr.iit.thesapp.App;
 import it.cnr.iit.thesapp.R;
@@ -24,11 +26,11 @@ import it.cnr.iit.thesapp.utils.Logs;
 
 public class TimelineAdapter extends FragmentPagerAdapter implements TermFragment.PageListener {
 
-
 	private final float     pageWidth;
 	private final ViewPager pager;
 	private final Context context;
-	private int count = -1;
+	private HashMap<Long, Fragment> mItems = new HashMap<>();
+	private int                     count  = -1;
 	private int baseId;
 
 	public TimelineAdapter(Context context, FragmentManager fm, ViewPager pager) {
@@ -39,12 +41,6 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 		//pageWidth = outValue.getFloat();
 		pageWidth = 1f;
 		this.pager = pager;
-	}
-
-	public void onElementFetched(TimelineElement element) {
-		element.setCompletelyFetched(true);
-		final int positionForElement = getPositionForElement(element);
-		if (positionForElement >= 0) App.timelineElements.get(positionForElement).copy(element);
 	}
 
 	public int addTerm(String termDescriptor, String termDomain, String termLanguage,
@@ -71,12 +67,12 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 
 	public int addTerm(Term term, int clickedFromPage) {
 		if (term != null) {
-			Logs.thesaurus("Adding term " + term.getDescriptor() + " to explorer");
+			Logs.thesaurus("Adding term " + term.getDescriptor() + " to explorer from page " +
+			               clickedFromPage);
 			if (!isTermInList(term)) {
 				removeTerms(clickedFromPage);
 				App.timelineElements.add(term);
-
-				notifyChangeInPosition(getCount());
+				//notifyChangeInPosition(getCount());
 				count = -1;
 				notifyDataSetChanged();
 			}
@@ -87,12 +83,12 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 
 	public int addCategory(Category category, int clickedFromPage) {
 		if (category != null) {
-			Logs.thesaurus("Adding category to explorer: " + category);
+			Logs.thesaurus(
+					"Adding category " + category + " to explorer from page " + clickedFromPage);
 			if (!isTermInList(category)) {
 				removeTerms(clickedFromPage);
 				App.timelineElements.add(category);
-
-				notifyChangeInPosition(getCount());
+				//notifyChangeInPosition(getCount());
 				count = -1;
 				notifyDataSetChanged();
 			}
@@ -103,12 +99,13 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 
 	public int addDomainList(DomainSearch domainSearch, int clickedFromPage) {
 		if (domainSearch != null) {
-			Logs.thesaurus("Adding domainSearch " + domainSearch.getDescriptor() + " to explorer");
+			Logs.thesaurus("Adding domainSearch " + domainSearch.getDescriptor() +
+			               " to explorer from page " + clickedFromPage);
 			if (!isTermInList(domainSearch)) {
 				removeTerms(clickedFromPage);
 				App.timelineElements.add(domainSearch);
 				count = -1;
-				notifyChangeInPosition(App.timelineElements.size());
+				//notifyChangeInPosition(App.timelineElements.size());
 				notifyDataSetChanged();
 			}
 			return getPositionForElement(domainSearch);
@@ -118,12 +115,13 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 
 	public int addCategoryList(CategoryList categoryList, int clickedFromPage) {
 		if (categoryList != null) {
-			Logs.thesaurus("Adding categoryList " + categoryList.getDescriptor() + " to explorer");
+			Logs.thesaurus("Adding categoryList " + categoryList.getDescriptor() +
+			               " to explorer from page " + clickedFromPage);
 			if (!isTermInList(categoryList)) {
 				removeTerms(clickedFromPage);
 				App.timelineElements.add(categoryList);
 				count = -1;
-				notifyChangeInPosition(App.timelineElements.size());
+				//notifyChangeInPosition(App.timelineElements.size());
 				notifyDataSetChanged();
 			}
 			return getPositionForElement(categoryList);
@@ -152,8 +150,13 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 	}
 
 	public void removeTerms(int lastPositionToKeep) {
+		Logs.cache("Last position to keep: " + lastPositionToKeep);
+
 		if (lastPositionToKeep >= 0) {
 			for (int i = getCount() - 1; i > lastPositionToKeep; i--) {
+				Logs.cache("Removed item at: " + i);
+				final long itemHash = getItemHash(i);
+				if (mItems.containsKey(itemHash)) mItems.remove(itemHash);
 				App.timelineElements.remove(i);
 			}
 		}
@@ -166,8 +169,10 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 			case 2:
 				return;
 			default:
+				deleteHistory();
 				pager.setCurrentItem(1, true);
-				//delayedDeleteHistory();
+
+				break;
 		}
 	}
 
@@ -183,7 +188,7 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 
 	private void deleteHistory() {
 		removeTerms(1);
-		notifyChangeInPosition(getCount());
+		//notifyChangeInPosition(getCount());
 		count = -1;
 		notifyDataSetChanged();
 	}
@@ -206,11 +211,19 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 
 	@Override
 	public Fragment getItem(int position) {
+		long id = getItemHash(position);
+
+		if (mItems.get(id) != null) {
+			return mItems.get(id);
+		}
 		TimelineElementFragment timelineElementFragment = TimelineElementFragment.newInstance(
 				App.timelineElements.get(position));
 
 		if (timelineElementFragment != null) timelineElementFragment.setPageListener(this,
 				position);
+
+		mItems.put(id, timelineElementFragment);
+
 		return timelineElementFragment;
 	}
 
@@ -226,13 +239,11 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 
 	@Override
 	public long getItemId(int position) {
-		// give an ID different from position when position has been changed
-		return baseId + position;
+		return getItemHash(position);
 	}
 
-	public void notifyChangeInPosition(int n) {
-		// shift the ID returned by getItemId outside the range of all previous fragments
-		baseId += getCount() + n;
+	private long getItemHash(int position) {
+		return App.timelineElements.get(position).hashCode();
 	}
 
 	@Override
@@ -247,9 +258,45 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 		return count;
 	}
 
+
 	@Override
 	public int getItemPosition(Object object) {
-		return PagerAdapter.POSITION_NONE;
+	    /*
+         * Purpose of this method is to check whether an item in the adapter
+         * still exists in the dataset and where it should show.
+         * For each entry in dataset, request its Fragment.
+         *
+         * If the Fragment is found, return its (new) position. There's
+         * no need to return POSITION_UNCHANGED; ViewPager handles it.
+         *
+         * If the Fragment passed to this method is not found, remove all
+         * references and let the ViewPager remove it from display by
+         * by returning POSITION_NONE;
+         */
+		Fragment f = (Fragment) object;
+
+		for (int i = 0; i < getCount(); i++) {
+
+			Fragment item = (Fragment) getItem(i);
+			if (item.equals(f)) {
+				// item still exists in dataset; return position
+				return i;
+			}
+		}
+
+		// if we arrive here, the data-item for which the Fragment was created
+		// does not exist anymore.
+
+		// Also, cleanup: remove reference to Fragment from mItems
+		for (Map.Entry<Long, Fragment> entry : mItems.entrySet()) {
+			if (entry.getValue().equals(f)) {
+				mItems.remove(entry.getKey());
+				break;
+			}
+		}
+
+		// Let ViewPager remove the Fragment by returning POSITION_NONE.
+		return POSITION_NONE;
 	}
 
 	@Override

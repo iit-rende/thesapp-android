@@ -17,6 +17,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public abstract class TimelineElementFragment extends Fragment {
+
 	private static final String ARG_WORD_DESCRIPTOR   = "word_DESCRIPTOR";
 	private static final String ARG_WORD_DOMAIN       = "word_DOMAIN";
 	private static final String ARG_WORD_LANGUAGE     = "word_LANGUAGE";
@@ -173,7 +174,7 @@ public abstract class TimelineElementFragment extends Fragment {
 		final int positionForElement = getPositionForElement(element);
 		if (positionForElement >= 0) {
 			Logs.cache("Element persisted at position: " + positionForElement);
-			App.timelineElements.get(positionForElement).copy(element);
+			App.timelineElements.set(positionForElement, element);
 		}
 	}
 
@@ -210,17 +211,18 @@ public abstract class TimelineElementFragment extends Fragment {
 
 
 	public interface PageListener {
+
 		void onPageClicked(int position);
 	}
 
 	public interface TimelineElementFragmentCallback {
+
 		TimelineElement getElement(String elementDescriptor, String elementDomain,
-								   String elementLanguage, int elementKind);
+		                           String elementLanguage, int elementKind);
 
 		void onElementClicked(String elementDescriptor, String elementDomain,
-							  String elementLanguage, int elementKind, int clickedFromPage);
+		                      String elementLanguage, int elementKind, int clickedFromPage);
 
-		void onElementFetched(TimelineElement term);
 
 		void onUpPressed();
 

@@ -13,10 +13,17 @@ import it.cnr.iit.thesapp.utils.Logs;
 public class DomainSearch extends TimelineElement {
 
 	public static final String DEFAULT_DESCRIPTOR = "DOMAIN_SEARCH";
+	public static final String DEFAULT_DOMAIN_DESCRIPTOR = "DOMAIN_SEARCH";
 
 	@SerializedName("domains")
 	@Expose
 	private List<Domain> domains = new ArrayList<Domain>();
+
+	public DomainSearch() {
+		setElementKind(KIND_DOMAIN_CONTAINER);
+		setDescriptor(DEFAULT_DESCRIPTOR);
+		setDomainDescriptor(DEFAULT_DOMAIN_DESCRIPTOR);
+	}
 
 	public DomainSearch(Context context) {
 		super();
@@ -47,8 +54,8 @@ public class DomainSearch extends TimelineElement {
 	@Override
 	public void copy(TimelineElement element) {
 		if (element instanceof DomainSearch) {
-			Logs.cache("Copying domainSearch: " + element);
 			DomainSearch domain = (DomainSearch) element;
+			Logs.cache("Copying domainSearch: " + domain);
 			setDescriptor(domain.getDescriptor());
 			setDomains(domain.getDomains());
 			setLanguage(domain.getLanguage());

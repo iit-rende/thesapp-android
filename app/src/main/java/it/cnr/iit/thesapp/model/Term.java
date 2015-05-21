@@ -9,6 +9,7 @@ import java.util.List;
 import it.cnr.iit.thesapp.utils.Logs;
 
 public class Term extends TimelineElement {
+
 	@SerializedName("scopeNote")
 	@Expose
 	private String  scopeNote;
@@ -52,8 +53,8 @@ public class Term extends TimelineElement {
 	@Override
 	public void copy(TimelineElement element) {
 		if (element instanceof Term) {
-			Logs.cache("Copying term: " + element);
 			Term term = (Term) element;
+			Logs.cache("Copying term: " + term);
 			setDescriptor(term.getDescriptor());
 			setScopeNote(term.getScopeNote());
 			setDomain(term.getDomain());
@@ -247,21 +248,21 @@ public class Term extends TimelineElement {
 
 	public String toStringComplete() {
 		return "Term{" +
-			   "descriptor='" + getDescriptor() + '\'' +
-			   ", domainDescriptor='" + getDomainDescriptor() + '\'' +
-			   ", domain='" + getDomain() + '\'' +
-			   ", language='" + getLanguage() + '\'' +
-			   "scopeNote='" + scopeNote + '\'' +
-			   ", semantic=" + semantic +
-			   ", categories=" + categories.size() +
-			   ", relatedTerms=" + relatedTerms.size() +
-			   ", narrowerTerms=" + narrowerTerms.size() +
-			   ", broaderTerms=" + broaderTerms.size() +
-			   ", useFor=" + useFor.size() +
-			   ", usedFor=" + usedFor +
-			   ", localizations=" + localizations.size() +
-			   ", hierarchy=" + hierarchy.size() +
-			   ", completelyFetched=" + isCompletelyFetched() +
-			   '}';
+		       "descriptor='" + getDescriptor() + '\'' +
+		       ", domainDescriptor='" + getDomainDescriptor() + '\'' +
+		       ", domain='" + getDomain() + '\'' +
+		       ", language='" + getLanguage() + '\'' +
+		       "scopeNote='" + scopeNote + '\'' +
+		       ", semantic=" + semantic +
+		       ", categories=" + categories.size() +
+		       ", relatedTerms=" + relatedTerms.size() +
+		       ", narrowerTerms=" + narrowerTerms.size() +
+		       ", broaderTerms=" + broaderTerms.size() +
+		       ", useFor=" + useFor.size() +
+		       ", usedFor=" + usedFor +
+		       ", localizations=" + localizations.size() +
+		       ", hierarchy=" + hierarchy.size() +
+		       ", completelyFetched=" + isCompletelyFetched() +
+		       '}';
 	}
 }

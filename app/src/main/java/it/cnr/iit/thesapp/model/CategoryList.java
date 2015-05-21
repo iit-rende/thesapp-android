@@ -14,6 +14,11 @@ public class CategoryList extends TimelineElement {
 	@Expose
 	private List<Category> categories;
 
+	public CategoryList() {
+		setDescriptor(DEFAULT_DESCRIPTOR);
+		setElementKind(KIND_CATEGORY_LIST);
+	}
+
 	public CategoryList(String domain, String language) {
 		super();
 		setDescriptor(DEFAULT_DESCRIPTOR);
@@ -33,14 +38,14 @@ public class CategoryList extends TimelineElement {
 	@Override
 	public void copy(TimelineElement element) {
 		if (element instanceof CategoryList) {
-			Logs.cache("Copying categoryList: " + element);
-			CategoryList category = (CategoryList) element;
-			setDescriptor(category.getDescriptor());
-			setDomain(category.getDomain());
-			setDomainDescriptor(category.getDomainDescriptor());
-			setLanguage(category.getLanguage());
-			setCategories(category.getCategories());
-			setCompletelyFetched(category.isCompletelyFetched());
+			CategoryList categoryList = (CategoryList) element;
+			Logs.cache("Copying categoryList: " + categoryList);
+			setDescriptor(categoryList.getDescriptor());
+			setDomain(categoryList.getDomain());
+			setDomainDescriptor(categoryList.getDomainDescriptor());
+			setLanguage(categoryList.getLanguage());
+			setCategories(categoryList.getCategories());
+			setCompletelyFetched(categoryList.isCompletelyFetched());
 		}
 	}
 

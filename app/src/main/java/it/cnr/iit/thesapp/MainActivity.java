@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 				pos = timelineAdapter.addDomainList(termLanguage);
 				break;
 			case TimelineElement.KIND_CATEGORY_LIST:
-				pos = timelineAdapter.addCategoryList(termDomain, termLanguage, clickedFromPage);
+				pos = timelineAdapter.addCategoryList(termDomain, termLanguage, 0);
 				break;
 		}
 		Log.d("Pager", "Positon for word " + termDescriptor + ": " + pos);
@@ -279,10 +279,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 		onElementSelected(termDescriptor, termDomain, termLanguage, elementKind, clickedFromPage);
 	}
 
-	@Override
-	public void onElementFetched(TimelineElement term) {
-		timelineAdapter.onElementFetched(term);
-	}
+
 
 	@Override
 	public void onUpPressed() {
