@@ -1,6 +1,7 @@
 package it.cnr.iit.thesapp;
 
 import android.app.Application;
+import android.text.TextUtils;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 import it.cnr.iit.thesapp.api.Api;
+import it.cnr.iit.thesapp.model.CategoryList;
 import it.cnr.iit.thesapp.model.Domain;
 import it.cnr.iit.thesapp.model.DomainSearch;
 import it.cnr.iit.thesapp.model.TimelineElement;
@@ -37,12 +39,11 @@ public class App extends Application {
 		DomainSearch domainSearch = new DomainSearch(Domain.getDefault(this),
 				PrefUtils.loadLanguage(this));
 		timelineElements.add(domainSearch);
-		/* TODO add this when the api is ready
+
 		if (!TextUtils.isEmpty(PrefUtils.loadDomain(this))) {
 			CategoryList categoryList = new CategoryList(PrefUtils.loadDomain(this),
 					PrefUtils.loadLanguage(this));
 			timelineElements.add(categoryList);
 		}
-		*/
 	}
 }

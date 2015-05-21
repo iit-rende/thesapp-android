@@ -54,7 +54,7 @@ public class SearchPanel extends FrameLayout implements TermSearchRecAdapter.Mon
 		fakeToolbar = findViewById(R.id.fake_toolbar);
 		searchBox = (SearchBox) findViewById(R.id.search_box);
 
-		mAdapter = new TermSearchRecAdapter(null, this);
+		mAdapter = new TermSearchRecAdapter(null, this, getContext());
 		searchBox.setTermSearchAdapter(mAdapter);
 
 		DomainSpinnerAdapter domainSpinnerAdapter = new DomainSpinnerAdapter(getContext(), null);

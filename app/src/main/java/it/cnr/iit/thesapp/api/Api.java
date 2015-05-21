@@ -8,6 +8,7 @@ import java.io.IOException;
 import de.greenrobot.event.EventBus;
 import it.cnr.iit.thesapp.event.SetSearchDelayEvent;
 import it.cnr.iit.thesapp.model.Category;
+import it.cnr.iit.thesapp.model.CategoryList;
 import it.cnr.iit.thesapp.model.DomainSearch;
 import it.cnr.iit.thesapp.model.Term;
 import it.cnr.iit.thesapp.model.TermSearch;
@@ -21,6 +22,7 @@ import retrofit.http.Header;
 import retrofit.http.Query;
 
 public class Api {
+
 	public static final String ENDPOINT = "http://146.48.65.88";
 	private final ThesAppService service;
 
@@ -47,29 +49,36 @@ public class Api {
 	}
 
 	public interface ThesAppService {
+
 		@GET("/search")
 		void query(@Query("query") String queryString, @Query("domain") String domain,
-				   @Query("category") String category, @Header("Accept-Language") String language,
-				   Callback<TermSearch> callback);
+		           @Query("category") String category, @Header("Accept-Language") String language,
+		           Callback<TermSearch> callback);
 
 		@GET("/search")
 		TermSearch query(@Query("query") String queryString, @Query("domain") String domain,
-						 @Query("category") String category,
-						 @Header("Accept-Language") String language);
+		                 @Query("category") String category,
+		                 @Header("Accept-Language") String language);
 
 		@GET("/terms")
 		void term(@Query("descriptor") String descriptor, @Query("domain") String domain,
-				  @Header("Accept-Language") String language, Callback<Term> callback);
+		          @Header("Accept-Language") String language, Callback<Term> callback);
 
-		@GET("/categories")
-		void category(@Query("descriptor") String descriptor, @Query("domain") String domain,
-					  @Header("Accept-Language") String language, Callback<Category> callback);
+		@GET("/hierarchy")
+		void category(@Query("category") String descriptor, @Query("domain") String domain,
+		              @Header("Accept-Language") String language, Callback<Category> callback);
+
+		@GET("/hierarchy")
+		void categoryList(@Query("domain") String domain,
+		                  @Header("Accept-Language") String language,
+		                  Callback<CategoryList> callback);
 
 		@GET("/domains")
 		void domains(@Header("Accept-Language") String language, Callback<DomainSearch> callback);
 	}
 
 	public class InterceptingOkClient extends OkClient {
+
 		public InterceptingOkClient() {
 		}
 
@@ -79,7 +88,7 @@ public class Api {
 
 		@Override
 		public Response execute(Request request) throws
-												 IOException {
+				IOException {
 			Response response = super.execute(request);
 			EventBus.getDefault().post(new SetSearchDelayEvent(getSearchInterval(response)));
 

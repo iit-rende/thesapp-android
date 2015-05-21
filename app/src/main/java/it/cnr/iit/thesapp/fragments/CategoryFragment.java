@@ -95,17 +95,18 @@ public class CategoryFragment extends TimelineElementFragment {
 	public void fetchElement() {
 		setUiLoading(true);
 		Logs.retrofit(
-				"Fetching term: " + termDescriptor + " in " + termDomain + " (" + termLanguage +
+				"Fetching Category: " + termDescriptor + " in " + termDomain + " (" +
+				termLanguage +
 				")");
 		App.getApi().getService().category(termDescriptor, termDomain, termLanguage,
 				new Callback<Category>() {
 					@Override
 					public void success(Category category, Response response) {
 						if (response.getStatus() == 200 && category != null) {
-							Logs.retrofit("Term fetched: " + category);
+							Logs.retrofit("Category fetched: " + category);
 							category.fillMissingInfo();
 							reloadUi(category);
-							persistTerm(category);
+							persistElement(category);
 							setUiLoading(false);
 						} else {
 							Logs.retrofit(
@@ -129,7 +130,7 @@ public class CategoryFragment extends TimelineElementFragment {
 		if (element instanceof Category) {
 			Category category = (Category) element;
 
-			Logs.retrofit("Loading UI for " + category);
+			Logs.ui("Loading UI for " + category);
 			termTitle.setText(category.getDescriptor());
 
 			//setUiColor(Color.parseColor(category.getDomain().getColor()));
@@ -142,6 +143,9 @@ public class CategoryFragment extends TimelineElementFragment {
 		}
 	}
 
+	public void scrollToTop() {
+		scrollView.fullScroll(View.FOCUS_UP);
+	}
 
 	private void addTermsContainer(List<Term> terms, String containerTitle,
 								   @DrawableRes int drawableId, @ColorRes int colorId) {
@@ -151,10 +155,5 @@ public class CategoryFragment extends TimelineElementFragment {
 			container.setTerms(terms, drawableId, colorId, mListener, page);
 			hierarchyContainer.addView(container);
 		}
-	}
-
-
-	public void scrollToTop() {
-		scrollView.fullScroll(View.FOCUS_UP);
 	}
 }

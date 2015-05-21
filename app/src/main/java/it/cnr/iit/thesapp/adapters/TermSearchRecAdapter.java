@@ -1,6 +1,8 @@
 package it.cnr.iit.thesapp.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +22,9 @@ import it.cnr.iit.thesapp.model.TermSearch;
 import it.cnr.iit.thesapp.utils.Logs;
 
 public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdapter
-		.TermResultHolder> implements
-																									  Filterable {
+		.TermResultHolder> implements Filterable {
+
+	private final String highlightColor;
 	int count = -1;
 	private MonsterClickListener clickListener;
 
@@ -30,12 +33,16 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 	private String          language;
 	private FilterCallbacks mCallbacks;
 	private FacetCategory category;
+	private String        searchedTerm;
 
-	public TermSearchRecAdapter(List<Term> modelData, MonsterClickListener clickListener) {
+	public TermSearchRecAdapter(List<Term> modelData, MonsterClickListener clickListener,
+	                            Context context) {
 		this.items = modelData;
 		this.clickListener = clickListener;
 		this.domain = new Domain();
 		this.category = new FacetCategory();
+		this.highlightColor = String.format("#%06X", (0xFFFFFF & context.getResources().getColor(
+				R.color.accent)));
 	}
 
 	public void setTerms(List<Term> items) {
@@ -48,17 +55,23 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 	@Override
 	public TermResultHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 		View itemView = LayoutInflater.
-											  from(viewGroup.getContext()).
-											  inflate(R.layout.item_word_search, viewGroup, false);
+				                              from(viewGroup.getContext()).
+				                              inflate(R.layout.item_word_search, viewGroup, false);
 		return new TermResultHolder(itemView, viewType);
 	}
 
 
 	@Override
 	public void onBindViewHolder(final TermResultHolder viewHolder, int position) {
-		Term monster = items.get(position);
-		viewHolder.termDescriptor.setText(monster.getDescriptor());
-
+		Term term = items.get(position);
+		if (!term.isSemantic()) {
+			String line = highlightSearchedTerm(searchedTerm, term.getDescriptor());
+			Logs.ui("Syntactic term: " + line);
+			viewHolder.termDescriptor.setText(Html.fromHtml(line));
+		} else {
+			Logs.ui("Semantic term: " + term.getDescriptor());
+			viewHolder.termDescriptor.setText(term.getDescriptor());
+		}
 		viewHolder.setClickListener(new TermResultHolder.ClickListener() {
 			@Override
 			public void onClick(View v, int pos, boolean isLongClick) {
@@ -116,17 +129,17 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 				if (constraint != null && constraint.length() > 0) {
 					try {
 						Logs.retrofit("Searching for " + constraint.toString() + " in " +
-									  domain.getDescriptor() + " (" + language + ")");
+						              domain.getDescriptor() + " (" + language + ")");
 						TermSearch search = App.getApi().getService().query(constraint.toString(),
 								domain.getDescriptor(), category.getDescriptor(), language);
 
 						if (search != null) {
 							Logs.retrofit("Suggestion received for " + search.getQuery() + ": " +
-										  search.getSuggestions().size());
+							              search.getSuggestions().size());
 							for (Term term : search.getSuggestions()) {
 								term.setDomainDescriptor(search.getDomain());
 							}
-							filterResults.values = search.getSuggestions();
+							filterResults.values = search;
 							filterResults.count = search.getSuggestions().size();
 						} else {
 							Logs.retrofit("Suggestion search for " + constraint + " failed");
@@ -146,33 +159,44 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 			@SuppressWarnings("unchecked")
 			@Override
 			protected void publishResults(final CharSequence contraint,
-										  final FilterResults results) {
+			                              final FilterResults results) {
 				Logs.ui("Result published for " + contraint);
-				setTerms((List<Term>) results.values);
+				setTerms(((TermSearch) results.values).getSuggestions());
+				setSearchedTerm(((TermSearch) results.values).getQuery());
+				//setSuggestedCategories(((TermSearch) results.values).getSuggestions());//TODO
 				if (mCallbacks != null) mCallbacks.onFilterComplete(results.count);
 			}
 
 			@Override
 			public CharSequence convertResultToString(final Object resultValue) {
-				return resultValue == null ? "" : ((Term) resultValue).getDescriptor();
+				return "";
 			}
 		};
 	}
 
+	private String highlightSearchedTerm(String termSearched, String textToHighlight) {
+		return textToHighlight.replaceAll("(?i)(" + termSearched + ")",
+				"<font color=" + highlightColor + ">$1</font>");
+	}
+
+	public void setSearchedTerm(String searchedTerm) {
+		this.searchedTerm = searchedTerm;
+	}
+
 	public interface MonsterClickListener {
+
 		public void onTermClicked(Term monster);
 
 		public void onTermLongClicked(Term monster);
 	}
 
 	public interface FilterCallbacks {
+
 		void onFilterComplete(int count);
 	}
 
-	public final static class TermResultHolder extends RecyclerView.ViewHolder implements View
-																								  .OnClickListener,
-																						  View
-																								  .OnLongClickListener {
+	public final static class TermResultHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+			View.OnLongClickListener {
 
 
 		public  RobotoTextView termDescriptor;
@@ -205,6 +229,7 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		}
 
 		public interface ClickListener {
+
 			void onClick(View v, int position, boolean isLongClick);
 		}
 	}

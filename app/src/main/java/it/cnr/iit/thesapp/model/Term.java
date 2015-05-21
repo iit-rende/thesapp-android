@@ -6,6 +6,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.cnr.iit.thesapp.utils.Logs;
+
 public class Term extends TimelineElement {
 	@SerializedName("scopeNote")
 	@Expose
@@ -50,6 +52,7 @@ public class Term extends TimelineElement {
 	@Override
 	public void copy(TimelineElement element) {
 		if (element instanceof Term) {
+			Logs.cache("Copying term: " + element);
 			Term term = (Term) element;
 			setDescriptor(term.getDescriptor());
 			setScopeNote(term.getScopeNote());
@@ -105,6 +108,14 @@ public class Term extends TimelineElement {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "Term{" +
+		       "descriptor='" + getDescriptor() + '\'' +
+		       ", domainDescriptor='" + getDomainDescriptor() + '\'' +
+		       ", language='" + getLanguage() + '\'' +
+		       '}';
+	}
 
 	/**
 	 * @return The scopeNote
@@ -119,7 +130,6 @@ public class Term extends TimelineElement {
 	public void setScopeNote(String scopeNote) {
 		this.scopeNote = scopeNote;
 	}
-
 
 	/**
 	 * @return The categories
@@ -227,7 +237,6 @@ public class Term extends TimelineElement {
 		this.semantic = semantic;
 	}
 
-
 	public List<Term> getHierarchy() {
 		return hierarchy;
 	}
@@ -235,7 +244,6 @@ public class Term extends TimelineElement {
 	public void setHierarchy(List<Term> hierarchy) {
 		this.hierarchy = hierarchy;
 	}
-
 
 	public String toStringComplete() {
 		return "Term{" +

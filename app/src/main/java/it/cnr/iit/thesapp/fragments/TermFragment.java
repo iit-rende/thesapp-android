@@ -124,7 +124,7 @@ public class TermFragment extends TimelineElementFragment {
 							Logs.retrofit("Term fetched: " + term);
 							term.fillMissingInfo();
 							reloadUi(term);
-							persistTerm(term);
+							persistElement(term);
 							setUiLoading(false);
 						} else {
 							Logs.retrofit("Error fetching term: " + response.getStatus() + " - " +
@@ -190,6 +190,9 @@ public class TermFragment extends TimelineElementFragment {
 		}
 	}
 
+	public void scrollToTop() {
+		scrollView.fullScroll(View.FOCUS_UP);
+	}
 
 	private void addTermsContainer(List<Term> terms, String containerTitle,
 								   @DrawableRes int drawableId, @ColorRes int colorId) {
@@ -209,9 +212,5 @@ public class TermFragment extends TimelineElementFragment {
 			container.setCategories(categories, drawableId, colorId, mListener, page);
 			infoContainer.addView(container);
 		}
-	}
-
-	public void scrollToTop() {
-		scrollView.fullScroll(View.FOCUS_UP);
 	}
 }

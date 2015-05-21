@@ -15,13 +15,14 @@ import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.fragments.TermFragment;
 import it.cnr.iit.thesapp.fragments.TimelineElementFragment;
 import it.cnr.iit.thesapp.model.Category;
+import it.cnr.iit.thesapp.model.CategoryList;
 import it.cnr.iit.thesapp.model.Domain;
 import it.cnr.iit.thesapp.model.DomainSearch;
 import it.cnr.iit.thesapp.model.Term;
 import it.cnr.iit.thesapp.model.TimelineElement;
 import it.cnr.iit.thesapp.utils.Logs;
 
-public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFragment.PageListener {
+public class TimelineAdapter extends FragmentPagerAdapter implements TermFragment.PageListener {
 
 
 	private final float     pageWidth;
@@ -30,7 +31,7 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 	private int count = -1;
 	private int baseId;
 
-	public TermExplorerAdapter(Context context, FragmentManager fm, ViewPager pager) {
+	public TimelineAdapter(Context context, FragmentManager fm, ViewPager pager) {
 		super(fm);
 		this.context = context;
 		TypedValue outValue = new TypedValue();
@@ -40,11 +41,6 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 		this.pager = pager;
 	}
 
-	@Override
-	public float getPageWidth(int position) {
-		return pageWidth;
-	}
-
 	public void onElementFetched(TimelineElement element) {
 		element.setCompletelyFetched(true);
 		final int positionForElement = getPositionForElement(element);
@@ -52,15 +48,20 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 	}
 
 	public int addTerm(String termDescriptor, String termDomain, String termLanguage,
-					   int clickedFromPage) {
+	                   int clickedFromPage) {
 		Term term = new Term(termDescriptor, termDomain, termLanguage);
 		return addTerm(term, clickedFromPage);
 	}
 
 	public int addCategory(String termDescriptor, String termDomain, String termLanguage,
-						   int clickedFromPage) {
+	                       int clickedFromPage) {
 		Category category = new Category(termDescriptor, termDomain, termLanguage);
 		return addCategory(category, clickedFromPage);
+	}
+
+	public int addCategoryList(String termDomain, String termLanguage, int clickedFromPage) {
+		CategoryList category = new CategoryList(termDomain, termLanguage);
+		return addCategoryList(category, clickedFromPage);
 	}
 
 	public int addDomainList(String language) {
@@ -115,6 +116,21 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 		return -1;
 	}
 
+	public int addCategoryList(CategoryList categoryList, int clickedFromPage) {
+		if (categoryList != null) {
+			Logs.thesaurus("Adding categoryList " + categoryList.getDescriptor() + " to explorer");
+			if (!isTermInList(categoryList)) {
+				removeTerms(clickedFromPage);
+				App.timelineElements.add(categoryList);
+				count = -1;
+				notifyChangeInPosition(App.timelineElements.size());
+				notifyDataSetChanged();
+			}
+			return getPositionForElement(categoryList);
+		}
+		return -1;
+	}
+
 	private int getPositionForElement(TimelineElement targetElement) {
 		int i = 0;
 		for (TimelineElement timelineElement : App.timelineElements) {
@@ -142,7 +158,6 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 			}
 		}
 	}
-
 
 	public void goHome() {
 		switch (getCount()) {
@@ -174,14 +189,13 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 	}
 
 	public TimelineElement getTerm(String elementDescriptor, String elementDomain,
-								   String elementLanguage, int elementKind) {
+	                               String elementLanguage, int elementKind) {
 		for (TimelineElement element : App.timelineElements) {
 			//Logs.cache(element.toString());
 			if (element.getDescriptor().equals(elementDescriptor) &&
-				element.getDomainDescriptor().equals(elementDomain) && element.getLanguage()
-																			  .equals(
-					elementLanguage) &&
-				element.getElementKind() == elementKind) return element;
+			    element.getDomainDescriptor().equals(elementDomain) && element.getLanguage()
+			                                                                  .equals(elementLanguage) &&
+			    element.getElementKind() == elementKind) return element;
 		}
 		return null;
 	}
@@ -190,24 +204,10 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 		return App.timelineElements.get(position);
 	}
 
-
 	@Override
 	public Fragment getItem(int position) {
-		TimelineElementFragment timelineElementFragment = null;
-		switch (getTerm(position).getElementKind()) {
-			case TimelineElement.KIND_TERM:
-				timelineElementFragment = TimelineElementFragment.newInstance(
-						App.timelineElements.get(position));
-				break;
-			case TimelineElement.KIND_CATEGORY:
-				timelineElementFragment = TimelineElementFragment.newInstance(
-						App.timelineElements.get(position));
-				break;
-			case TimelineElement.KIND_DOMAIN_CONTAINER:
-				timelineElementFragment = TimelineElementFragment.newInstance(
-						App.timelineElements.get(position));
-				break;
-		}
+		TimelineElementFragment timelineElementFragment = TimelineElementFragment.newInstance(
+				App.timelineElements.get(position));
 
 		if (timelineElementFragment != null) timelineElementFragment.setPageListener(this,
 				position);
@@ -225,12 +225,6 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 	}
 
 	@Override
-	public int getItemPosition(Object object) {
-		return PagerAdapter.POSITION_NONE;
-	}
-
-
-	@Override
 	public long getItemId(int position) {
 		// give an ID different from position when position has been changed
 		return baseId + position;
@@ -240,7 +234,6 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 		// shift the ID returned by getItemId outside the range of all previous fragments
 		baseId += getCount() + n;
 	}
-
 
 	@Override
 	public int getCount() {
@@ -254,6 +247,15 @@ public class TermExplorerAdapter extends FragmentPagerAdapter implements TermFra
 		return count;
 	}
 
+	@Override
+	public int getItemPosition(Object object) {
+		return PagerAdapter.POSITION_NONE;
+	}
+
+	@Override
+	public float getPageWidth(int position) {
+		return pageWidth;
+	}
 
 	@Override
 	public void onPageClicked(int position) {

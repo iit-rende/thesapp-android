@@ -17,20 +17,19 @@ import java.util.List;
 
 import it.cnr.iit.thesapp.App;
 import it.cnr.iit.thesapp.R;
+import it.cnr.iit.thesapp.model.Category;
 import it.cnr.iit.thesapp.model.CategoryList;
-import it.cnr.iit.thesapp.model.Domain;
-import it.cnr.iit.thesapp.model.DomainSearch;
 import it.cnr.iit.thesapp.model.TimelineElement;
 import it.cnr.iit.thesapp.utils.Logs;
-import it.cnr.iit.thesapp.utils.PrefUtils;
-import it.cnr.iit.thesapp.views.DomainListItem;
+import it.cnr.iit.thesapp.views.CategoryListItem;
 import it.cnr.iit.thesapp.views.ErrorView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class DomainListFragment extends TimelineElementFragment implements DomainListItem
-																				   .DomainClickListener {
+public class CategoryListFragment extends TimelineElementFragment implements CategoryListItem
+		.CategoryClickListener {
+
 	private RobotoTextView termTitle;
 	private RobotoTextView termDescription;
 	private ScrollView     scrollView;
@@ -38,14 +37,14 @@ public class DomainListFragment extends TimelineElementFragment implements Domai
 	private View           titleContainer;
 	private LinearLayout   domainContainer;
 
-	public DomainListFragment() {
+	public CategoryListFragment() {
 		// Required empty public constructor
 	}
 
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
+	                         Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_domain_list, container, false);
 	}
@@ -101,44 +100,49 @@ public class DomainListFragment extends TimelineElementFragment implements Domai
 
 	public void fetchElement() {
 		setUiLoading(true);
-		tryGetDomainsFromCache();
-		Logs.retrofit(
-				"Fetching domains: " + termDescriptor + " in " + termDomain + " (" + termLanguage +
-				")");
-		App.getApi().getService().domains(termLanguage, new Callback<DomainSearch>() {
-			@Override
-			public void success(DomainSearch domainSearch, Response response) {
-				if (response.getStatus() == 200 && domainSearch != null) {
-					Logs.retrofit("Domains fetched: " + domainSearch.getDomains().size());
-					prepareDomainListElement(domainSearch);
-					setUiLoading(false);
-				} else {
-					Logs.retrofit("Error fetching domainSearch: " + response.getStatus() + " - " +
-								  response.getReason());
-					showError(response);
-				}
-			}
+		Logs.retrofit("Fetching categories: " + termDescriptor + " in " + termDomain + " (" +
+		              termLanguage +
+		              ")");
+		App.getApi().getService().categoryList(termDomain, termLanguage,
+				new Callback<CategoryList>() {
+					@Override
+					public void success(CategoryList domainSearch, Response response) {
+						if (response.getStatus() == 200 && domainSearch != null) {
+							Logs.retrofit(
+									"CategoryList fetched: " + domainSearch.getCategories().size
+											());
+							prepareCategoryListElement(domainSearch);
+							setUiLoading(false);
+						} else {
+							Logs.retrofit(
+									"Error fetching CategoryList: " + response.getStatus() + " -" +
+									" " +
+									response.getReason());
+							showError(response);
+						}
+					}
 
-			@Override
-			public void failure(RetrofitError error) {
-				error.printStackTrace();
-				showError(error);
-			}
-		});
+					@Override
+					public void failure(RetrofitError error) {
+						error.printStackTrace();
+						showError(error);
+					}
+				});
 	}
 
 	public void reloadUi(TimelineElement element) {
 		setUiLoading(false);
-		if (element instanceof DomainSearch) {
-			DomainSearch domainSearch = (DomainSearch) element;
-			domainSearch.fillMissingInfo();
+		if (element instanceof CategoryList) {
+			CategoryList categoryList = (CategoryList) element;
+			categoryList.fillMissingInfo();
 
-			Logs.retrofit("Loading UI for " + domainSearch);
-			termTitle.setText(getString(R.string.domain_list_title));
-			termSubtitle.setText(getString(R.string.domain_list_subtitle));
+			Logs.retrofit("Loading UI for " + categoryList);
+			termTitle.setText(getString(R.string.category_list_title));
+			termSubtitle.setText(getString(R.string.category_list_subtitle,
+					categoryList.getDomainDescriptor()));
 
 			domainContainer.removeAllViews();
-			addTermsContainer(domainSearch.getDomains());
+			addTermsContainer(categoryList.getCategories());
 		}
 	}
 
@@ -146,40 +150,28 @@ public class DomainListFragment extends TimelineElementFragment implements Domai
 		scrollView.fullScroll(View.FOCUS_UP);
 	}
 
-	private void tryGetDomainsFromCache() {
-		final List<Domain> domains = PrefUtils.loadDomains(getActivity());
-		if (domains != null) {
-			DomainSearch domainSearch = new DomainSearch(Domain.getDefault(getActivity()),
-					termLanguage);
-			domainSearch.setDomains(domains);
-			prepareDomainListElement(domainSearch);
-		}
+	private void prepareCategoryListElement(CategoryList categoryList) {
+		categoryList.fillMissingInfo();
+		reloadUi(categoryList);
+		persistElement(categoryList);
 	}
 
-	private void prepareDomainListElement(DomainSearch domainSearch) {
-		domainSearch.fillMissingInfo();
-		PrefUtils.saveDomains(getActivity(), domainSearch.getDomains());
-		reloadUi(domainSearch);
-		persistElement(domainSearch);
-	}
+	private void addTermsContainer(List<Category> categories) {
+		if (categories != null && categories.size() > 0) {
+			for (Category category : categories) {
+				CategoryListItem container = new CategoryListItem(getActivity());
 
-	private void addTermsContainer(List<Domain> domains) {
-		if (domains != null && domains.size() > 0) {
-			for (Domain domain : domains) {
-				DomainListItem container = new DomainListItem(getActivity());
-
-				container.setDomain(domain);
-				container.setDomainClickListener(this);
+				container.setCategory(category);
+				container.setCategoryClickListener(this);
 				domainContainer.addView(container);
 			}
 		}
 	}
 
 	@Override
-	public void onDomainClicked(Domain domain) {
-		CategoryList categoryList = new CategoryList(domain);
-		if (mListener != null) mListener.onElementClicked(categoryList.getDescriptor(),
-				categoryList.getDomainDescriptor(), domain.getLanguage(),
-				categoryList.getElementKind(), page);
+	public void onCategoryClicked(Category category) {
+		if (mListener != null) mListener.onElementClicked(category.getDescriptor(),
+				category.getDomainDescriptor(), category.getLanguage(), category.getElementKind(),
+				page);
 	}
 }

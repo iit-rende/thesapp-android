@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import it.cnr.iit.thesapp.App;
 import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.model.Domain;
 import it.cnr.iit.thesapp.model.TimelineElement;
@@ -60,21 +61,14 @@ public abstract class TimelineElementFragment extends Fragment {
 				DomainListFragment domainListFragment = new DomainListFragment();
 				domainListFragment.setArguments(args);
 				return domainListFragment;
+			case TimelineElement.KIND_CATEGORY_LIST:
+				Logs.ui("Creating DomainListFragment");
+				CategoryListFragment categoryListFragment = new CategoryListFragment();
+				categoryListFragment.setArguments(args);
+				return categoryListFragment;
 		}
 		return null;
 	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		if (getArguments() != null) {
-			termDescriptor = getArguments().getString(ARG_WORD_DESCRIPTOR);
-			termDomain = getArguments().getString(ARG_WORD_DOMAIN);
-			termLanguage = getArguments().getString(ARG_WORD_LANGUAGE);
-			termKind = getArguments().getInt(ARG_WORD_ELEMENT_KIND);
-		}
-	}
-
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -88,15 +82,26 @@ public abstract class TimelineElementFragment extends Fragment {
 	}
 
 	@Override
-	public void onDetach() {
-		super.onDetach();
-		mListener = null;
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (getArguments() != null) {
+			termDescriptor = getArguments().getString(ARG_WORD_DESCRIPTOR);
+			termDomain = getArguments().getString(ARG_WORD_DOMAIN);
+			termLanguage = getArguments().getString(ARG_WORD_LANGUAGE);
+			termKind = getArguments().getInt(ARG_WORD_ELEMENT_KIND);
+		}
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
 		loadElement();
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		mListener = null;
 	}
 
 	public void loadElement() {
@@ -163,9 +168,26 @@ public abstract class TimelineElementFragment extends Fragment {
 		errorView.setVisibility(View.GONE);
 	}
 
-	public void persistTerm(TimelineElement term) {
-		term.setCompletelyFetched(true);
-		if (mListener != null) mListener.onElementFetched(term);
+	public void persistElement(TimelineElement element) {
+		element.setCompletelyFetched(true);
+		final int positionForElement = getPositionForElement(element);
+		if (positionForElement >= 0) {
+			Logs.cache("Element persisted at position: " + positionForElement);
+			App.timelineElements.get(positionForElement).copy(element);
+		}
+	}
+
+	private int getPositionForElement(TimelineElement targetElement) {
+		int i = 0;
+		for (TimelineElement timelineElement : App.timelineElements) {
+			if (timelineElement.equals(targetElement)) {
+				Logs.cache("Position found for : " + targetElement);
+				return i;
+			}
+			i++;
+		}
+		Logs.cache("Can't find position for : " + targetElement);
+		return -1;
 	}
 
 	public abstract void reloadUi(TimelineElement element);

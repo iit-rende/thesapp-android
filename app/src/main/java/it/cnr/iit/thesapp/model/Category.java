@@ -6,6 +6,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.cnr.iit.thesapp.utils.Logs;
+
 public class Category extends TimelineElement {
 	@SerializedName("terms")
 	@Expose
@@ -38,6 +40,7 @@ public class Category extends TimelineElement {
 	@Override
 	public void copy(TimelineElement element) {
 		if (element instanceof Category) {
+			Logs.cache("Copying category: " + element);
 			Category category = (Category) element;
 			setDescriptor(category.getDescriptor());
 			setDomain(category.getDomain());
@@ -56,6 +59,15 @@ public class Category extends TimelineElement {
 			//term.setLanguage(getLanguage());
 			term.setDomain(getDomain());
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "Category{" +
+		       "descriptor='" + getDescriptor() + '\'' +
+		       ", domainDescriptor='" + getDomainDescriptor() + '\'' +
+		       ", language='" + getLanguage() + '\'' +
+		       '}';
 	}
 
 	private String toStringComplete() {

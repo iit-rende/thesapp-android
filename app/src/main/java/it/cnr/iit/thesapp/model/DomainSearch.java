@@ -8,6 +8,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.cnr.iit.thesapp.utils.Logs;
+
 public class DomainSearch extends TimelineElement {
 
 	public static final String DEFAULT_DESCRIPTOR = "DOMAIN_SEARCH";
@@ -45,6 +47,7 @@ public class DomainSearch extends TimelineElement {
 	@Override
 	public void copy(TimelineElement element) {
 		if (element instanceof DomainSearch) {
+			Logs.cache("Copying domainSearch: " + element);
 			DomainSearch domain = (DomainSearch) element;
 			setDescriptor(domain.getDescriptor());
 			setDomains(domain.getDomains());
@@ -61,5 +64,14 @@ public class DomainSearch extends TimelineElement {
 		if (getDomains() != null) for (Domain domain : getDomains()) {
 			domain.setLanguage(getLanguage());
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "DomainSearch{" +
+		       "descriptor='" + getDescriptor() + '\'' +
+		       ", domainDescriptor='" + getDomainDescriptor() + '\'' +
+		       ", language='" + getLanguage() + '\'' +
+		       '}';
 	}
 }
