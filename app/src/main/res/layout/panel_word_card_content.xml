@@ -4,6 +4,9 @@
 	android:layout_height="wrap_content"
 	android:orientation="vertical">
 
+	<include
+		layout="@layout/panel_tree_view_container"
+		/>
 
 	<include
 		layout="@layout/panel_word_description"

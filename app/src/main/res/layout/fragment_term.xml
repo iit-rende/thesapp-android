@@ -78,10 +78,8 @@
 						android:layout_height="@dimen/element_card_title_padding_top"/>
 				</LinearLayout>
 
-				<include
-					layout="@layout/panel_tree_view_container"/>
-				<include
 
+				<include
 					android:id="@+id/term_content"
 					layout="@layout/panel_word_card_content"/>
 			</LinearLayout>

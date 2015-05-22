@@ -1,7 +1,6 @@
 package it.cnr.iit.thesapp.adapters;
 
 import android.content.Context;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -31,7 +30,6 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 	private final Context context;
 	private HashMap<Long, Fragment> mItems = new HashMap<>();
 	private int                     count  = -1;
-	private int baseId;
 
 	public TimelineAdapter(Context context, FragmentManager fm, ViewPager pager) {
 		super(fm);
@@ -169,25 +167,21 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 			case 2:
 				return;
 			default:
-				deleteHistory();
-				pager.setCurrentItem(1, true);
-
+				if (App.timelineElements.get(1).getElementKind() ==
+				    TimelineElement.KIND_CATEGORY_LIST) {
+					deleteHistory(1);
+					pager.setCurrentItem(1, true);
+				} else {
+					deleteHistory(0);
+					pager.setCurrentItem(0, true);
+				}
 				break;
 		}
 	}
 
-	private void delayedDeleteHistory() {
-		final Handler handler = new Handler();
-		handler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				deleteHistory();
-			}
-		}, 300);
-	}
 
-	private void deleteHistory() {
-		removeTerms(1);
+	private void deleteHistory(int keep) {
+		removeTerms(keep);
 		//notifyChangeInPosition(getCount());
 		count = -1;
 		notifyDataSetChanged();
@@ -261,33 +255,15 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 
 	@Override
 	public int getItemPosition(Object object) {
-	    /*
-         * Purpose of this method is to check whether an item in the adapter
-         * still exists in the dataset and where it should show.
-         * For each entry in dataset, request its Fragment.
-         *
-         * If the Fragment is found, return its (new) position. There's
-         * no need to return POSITION_UNCHANGED; ViewPager handles it.
-         *
-         * If the Fragment passed to this method is not found, remove all
-         * references and let the ViewPager remove it from display by
-         * by returning POSITION_NONE;
-         */
 		Fragment f = (Fragment) object;
 
 		for (int i = 0; i < getCount(); i++) {
-
-			Fragment item = (Fragment) getItem(i);
+			Fragment item = getItem(i);
 			if (item.equals(f)) {
-				// item still exists in dataset; return position
 				return i;
 			}
 		}
 
-		// if we arrive here, the data-item for which the Fragment was created
-		// does not exist anymore.
-
-		// Also, cleanup: remove reference to Fragment from mItems
 		for (Map.Entry<Long, Fragment> entry : mItems.entrySet()) {
 			if (entry.getValue().equals(f)) {
 				mItems.remove(entry.getKey());
@@ -295,7 +271,6 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 			}
 		}
 
-		// Let ViewPager remove the Fragment by returning POSITION_NONE.
 		return POSITION_NONE;
 	}
 
