@@ -76,6 +76,7 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.github.clemp6r.futuroid:futuroid:1.0.0'
     compile('com.crashlytics.sdk.android:crashlytics:2.2.4@aar') {
         transitive = true;
     }

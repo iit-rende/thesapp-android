@@ -12,10 +12,15 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.devspark.robototextview.widget.RobotoTextView;
+import com.github.clemp6r.futuroid.Async;
+import com.github.clemp6r.futuroid.Future;
+import com.github.clemp6r.futuroid.SuccessCallback;
 
 import org.apmem.tools.layouts.FlowLayout;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.fragments.TimelineElementFragment;
@@ -55,61 +60,50 @@ public class TermsContainer extends LinearLayout {
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	public void setTerms(List<Term> terms, @DrawableRes int drawableId, @ColorRes int colorId,
-						 final TimelineElementFragment.TimelineElementFragmentCallback callback,
-						 final int page) {
+	                     final TimelineElementFragment.TimelineElementFragmentCallback callback,
+	                     final int page) {
 		int margin = getResources().getDimensionPixelSize(R.dimen.padding_small) / 2;
 
 		if (terms != null) {
-			for (final Term term : terms) {
-				RobotoTextView tv = createTextView(colorId, drawableId, margin);
-				tv.setText(term.getDescriptor());
+			new TextViewService().prepareTermTextViews(terms, colorId, drawableId, margin,
+					callback,
+					page).addSuccessCallback(
 
-				tv.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						if (callback != null) {
-							Logs.ui("Term clicked: " + term.toString());
-							callback.onElementClicked(term.getDescriptor(),
-									term.getDomainDescriptor(), term.getLanguage(),
-									term.getElementKind(), page);
+					new SuccessCallback<List<RobotoTextView>>() {
+						@Override
+						public void onSuccess(List<RobotoTextView> result) {
+							for (RobotoTextView robotoTextView : result) {
+								container.addView(robotoTextView);
+							}
 						}
-					}
-				});
-				container.addView(tv);
-			}
+					});
 		}
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	public void setCategories(List<Category> categories, @DrawableRes int drawableId,
-							  @ColorRes int colorId,
-							  final TimelineElementFragment.TimelineElementFragmentCallback callback,
-							  final int page) {
+	                          @ColorRes int colorId,
+	                          final TimelineElementFragment.TimelineElementFragmentCallback
+			                              callback, final int page) {
 		int margin = getResources().getDimensionPixelSize(R.dimen.padding_small) / 2;
 
 		if (categories != null) {
-			for (final Category category : categories) {
-				RobotoTextView tv = createTextView(colorId, drawableId, margin);
-				tv.setText(category.getDescriptor());
+			new TextViewService().prepareCategoryTextViews(categories, colorId, drawableId, margin,
+					callback, page).addSuccessCallback(
 
-				tv.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						if (callback != null) {
-							Logs.ui("Category clicked: " + category.toString());
-							callback.onElementClicked(category.getDescriptor(),
-									category.getDomainDescriptor(), category.getLanguage(),
-									category.getElementKind(), page);
+					new SuccessCallback<List<RobotoTextView>>() {
+						@Override
+						public void onSuccess(List<RobotoTextView> result) {
+							for (RobotoTextView robotoTextView : result) {
+								container.addView(robotoTextView);
+							}
 						}
-					}
-				});
-				container.addView(tv);
-			}
+					});
 		}
 	}
 
 	public RobotoTextView createTextView(@ColorRes int colorId, @ColorRes int drawableId,
-										 int margin) {
+	                                     int margin) {
 		RobotoTextView tv = new RobotoTextView(getContext());
 		tv.setTextColor(getResources().getColorStateList(colorId));
 		tv.setTypeface(null, Typeface.BOLD);
@@ -121,5 +115,72 @@ public class TermsContainer extends LinearLayout {
 		params.setMargins(margin, margin, margin, margin);
 		tv.setLayoutParams(params);
 		return tv;
+	}
+
+	public class TextViewService {
+
+		public Future<List<RobotoTextView>> prepareCategoryTextViews(
+				final List<Category> categories, @ColorRes final int colorId,
+				@ColorRes final int drawableId, final int margin,
+				final TimelineElementFragment.TimelineElementFragmentCallback callback,
+				final int page) {
+			return Async.submit(new Callable<List<RobotoTextView>>() {
+				@Override
+				public List<RobotoTextView> call() {
+					List<RobotoTextView> tvs = new ArrayList<RobotoTextView>();
+					for (final Category category : categories) {
+						RobotoTextView tv = createTextView(colorId, drawableId, margin);
+						tv.setText(category.getDescriptor());
+
+						tv.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								if (callback != null) {
+									Logs.ui("Category clicked: " + category.toString());
+									callback.onElementClicked(category.getDescriptor(),
+											category.getDomainDescriptor(), category.getLanguage(),
+											category.getElementKind(), page);
+								}
+							}
+						});
+						tvs.add(tv);
+					}
+					return tvs;
+				}
+			});
+		}
+
+		public Future<List<RobotoTextView>> prepareTermTextViews(final List<Term> terms,
+		                                                         @ColorRes final int colorId,
+		                                                         @ColorRes final int drawableId,
+		                                                         final int margin,
+		                                                         final TimelineElementFragment
+				                                                         .TimelineElementFragmentCallback callback,
+		                                                         final int page) {
+			return Async.submit(new Callable<List<RobotoTextView>>() {
+				@Override
+				public List<RobotoTextView> call() {
+					List<RobotoTextView> tvs = new ArrayList<RobotoTextView>();
+					for (final Term term : terms) {
+						RobotoTextView tv = createTextView(colorId, drawableId, margin);
+						tv.setText(term.getDescriptor());
+
+						tv.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								if (callback != null) {
+									Logs.ui("Term clicked: " + term.toString());
+									callback.onElementClicked(term.getDescriptor(),
+											term.getDomainDescriptor(), term.getLanguage(),
+											term.getElementKind(), page);
+								}
+							}
+						});
+						tvs.add(tv);
+					}
+					return tvs;
+				}
+			});
+		}
 	}
 }
