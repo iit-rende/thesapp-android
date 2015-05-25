@@ -67,12 +67,11 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 								                                viewGroup, false);
 				return new TermResultHolder(termHolder);
 			case FACET_HOLDER:
-				View facetHolder = LayoutInflater.
-						                                 from(viewGroup.getContext()).
-						                                 inflate(R.layout
-										                                 .item_term_search_suggested_categories,
-
-								                                 viewGroup, false);
+				SearchFacetsContainer facetHolder = new SearchFacetsContainer(
+						viewGroup.getContext());
+				ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+						ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+				facetHolder.setLayoutParams(params);
 				return new FacetsHolder(facetHolder);
 		}
 		return null;
@@ -86,7 +85,7 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 			holder.setFacets(facets);
 		} else {
 			TermResultHolder holder = (TermResultHolder) viewHolder;
-			Term term = items.get(position);
+			Term term = getTerm(position);
 			holder.onBindViewHolder(term);
 		}
 	}
@@ -105,7 +104,9 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 	public int getItemCount() {
 		if (count >= 0) return count;
 		if (items != null) {
-			count = items.size() + 1;
+			final int size = items.size();
+			if (size > 0) count = size + 1;
+			else count = 0;
 			return count;
 		} else {
 			count = 0;
@@ -144,10 +145,13 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 				final FilterResults filterResults = new FilterResults();
 				if (constraint != null && constraint.length() > 0) {
 					try {
+						String c = null;
+						if (category != null) c = category.getDescriptor();
 						Logs.retrofit("Searching for " + constraint.toString() + " in " +
-						              domain.getDescriptor() + " (" + language + ")");
+						              domain.getDescriptor() + " (" + language +
+						              ") with category " + c);
 						TermSearch search = App.getApi().getService().query(constraint.toString(),
-								domain.getDescriptor(), category.getDescriptor(), language);
+								domain.getDescriptor(), c, language);
 
 						if (search != null) {
 							Logs.retrofit("Suggestion received for " + search.getQuery() + ": " +
@@ -176,11 +180,15 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 			@Override
 			protected void publishResults(final CharSequence contraint,
 			                              final FilterResults results) {
-				Logs.ui("Result published for " + contraint);
-				setTerms(((TermSearch) results.values).getSuggestions());
-				setSearchedTerm(((TermSearch) results.values).getQuery());
-				setFacets(((TermSearch) results.values).getFacets());
-				if (mCallbacks != null) mCallbacks.onFilterComplete(results.count);
+				if (results != null) {
+					Logs.ui("Result published for " + contraint);
+					setTerms(((TermSearch) results.values).getSuggestions());
+					setSearchedTerm(((TermSearch) results.values).getQuery());
+					setFacets(((TermSearch) results.values).getFacets());
+					if (mCallbacks != null) mCallbacks.onFilterComplete(results.count);
+				} else {
+					if (mCallbacks != null) mCallbacks.onFilterComplete(0);
+				}
 			}
 
 			@Override
@@ -230,17 +238,25 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 
 		public interface ClickListener {
 
-			void onClick(View v, int position, boolean isLongClick, int viewClickedKind);
+			void onClick(View v, int position, boolean isLongClick);
 		}
 	}
 
-	public final static class FacetsHolder extends SearchItemHolder {
+	public class FacetsHolder extends SearchItemHolder {
 
 		public SearchFacetsContainer facetsContainer;
 
 		public FacetsHolder(View itemView) {
 			super(itemView);
 			facetsContainer = (SearchFacetsContainer) itemView;
+			facetsContainer.setSearchFacetListener(new SearchFacetsContainer.SearchFacetListener
+					() {
+				@Override
+				public void onCategoryClicked(FacetCategory category) {
+					setCategory(category);
+					if (clickListener != null) clickListener.onCategoryClicked(category);
+				}
+			});
 		}
 
 		public void setFacets(FacetContainer facets) {
@@ -248,13 +264,18 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		}
 	}
 
-	public class TermResultHolder extends SearchItemHolder {
 
-		public RobotoTextView termDescriptor;
+	public class TermResultHolder extends SearchItemHolder implements View.OnClickListener,
+			View.OnLongClickListener {
+
+		public  RobotoTextView termDescriptor;
+		private ClickListener  termClickListener;
 
 		public TermResultHolder(View itemView) {
 			super(itemView);
 			termDescriptor = (RobotoTextView) itemView.findViewById(R.id.word);
+			itemView.setOnClickListener(this);
+			itemView.setOnLongClickListener(this);
 		}
 
 		public void onBindViewHolder(Term term) {
@@ -268,7 +289,7 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 			}
 			setClickListener(new ClickListener() {
 				@Override
-				public void onClick(View v, int pos, boolean isLongClick, int clickedViewKind) {
+				public void onClick(View v, int pos, boolean isLongClick) {
 					if (!isLongClick) {
 						Logs.ui("Term " + pos + " clicked!");
 						if (clickListener != null) clickListener.onTermClicked(getTerm(pos));
@@ -278,6 +299,21 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 					}
 				}
 			});
+		}
+
+		public void setClickListener(ClickListener clickListener) {
+			this.termClickListener = clickListener;
+		}
+
+		@Override
+		public void onClick(View v) {
+			termClickListener.onClick(v, getPosition(), false);
+		}
+
+		@Override
+		public boolean onLongClick(View v) {
+			termClickListener.onClick(v, getPosition(), true);
+			return true;
 		}
 
 		private String highlightSearchedTerm(String termSearched, String textToHighlight) {

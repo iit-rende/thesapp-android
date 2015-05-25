@@ -3,6 +3,7 @@ package it.cnr.iit.thesapp.views;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -21,6 +22,7 @@ import it.cnr.iit.thesapp.utils.Logs;
 import it.cnr.iit.thesapp.utils.PrefUtils;
 
 public class SearchBox extends FrameLayout {
+
 	//Adapters
 	private TermSearchRecAdapter mTermSearchAdapter;
 	private DomainSpinnerAdapter mDomainSpinnerAdapter;
@@ -91,6 +93,10 @@ public class SearchBox extends FrameLayout {
 
 	private void performSearch(CharSequence filter) {
 		mTermSearchAdapter.getFilter().filter(filter);
+	}
+
+	public void reperformSearch() {
+		if (!TextUtils.isEmpty(searchTextView.getText())) performSearch(searchTextView.getText());
 	}
 
 
@@ -165,6 +171,7 @@ public class SearchBox extends FrameLayout {
 	}
 
 	public interface SearchBoxListener {
+
 		void onTermSelected(String descriptor, String domain, String language);
 
 		void onDomainSelected(Domain domain);

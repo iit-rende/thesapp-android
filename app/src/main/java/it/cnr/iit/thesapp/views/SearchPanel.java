@@ -14,6 +14,7 @@ import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.adapters.DomainSpinnerAdapter;
 import it.cnr.iit.thesapp.adapters.TermSearchRecAdapter;
 import it.cnr.iit.thesapp.model.Domain;
+import it.cnr.iit.thesapp.model.FacetCategory;
 import it.cnr.iit.thesapp.model.Term;
 
 public class SearchPanel extends FrameLayout implements TermSearchRecAdapter.TermClickListener {
@@ -77,6 +78,11 @@ public class SearchPanel extends FrameLayout implements TermSearchRecAdapter.Ter
 	@Override
 	public void onTermLongClicked(Term monster) {
 
+	}
+
+	@Override
+	public void onCategoryClicked(FacetCategory category) {
+		searchBox.reperformSearch();
 	}
 
 	public void setSearchListener(SearchBox.SearchBoxListener searchListener) {

@@ -8,21 +8,21 @@ public class Logs {
 
 	private static final boolean DEBUG = BuildConfig.DEBUG;
 
-	private static final boolean DOCUMENT   = false && DEBUG;
-	private static final boolean NAV_DRAWER = false && DEBUG;
-	private static final boolean UI         = false && DEBUG;
-	private static final boolean RETROFIT = true && DEBUG;
-	private static final boolean IMAGE      = false && DEBUG;
+	private static final boolean DOCUMENT   = true && DEBUG;
+	private static final boolean NAV_DRAWER = true && DEBUG;
+	private static final boolean UI         = true && DEBUG;
+	private static final boolean RETROFIT   = true && DEBUG;
+	private static final boolean IMAGE      = true && DEBUG;
 	private static final boolean CACHE      = true && DEBUG;
+	private static final boolean THESAURUS  = true && DEBUG;
 
-	private static final String  T_DOCUMENT   = "DOCUMENT";
-	private static final String  T_NAV_DRAWER = "NAV_DRAWER";
-	private static final String  T_UI         = "UI_CALL";
-	private static final String  T_RETROFIT   = "RETROFIT";
-	private static final String  T_IMAGE      = "IMAGE";
-	private static final String  T_CACHE      = "CACHE";
-	private static final boolean THESAURUS = false && DEBUG;
-	private static final String  T_THESAURUS  = "THESAURUS";
+	private static final String T_DOCUMENT   = "DOCUMENT";
+	private static final String T_NAV_DRAWER = "NAV_DRAWER";
+	private static final String T_UI         = "UI_CALL";
+	private static final String T_RETROFIT   = "RETROFIT";
+	private static final String T_IMAGE      = "IMAGE";
+	private static final String T_CACHE      = "CACHE";
+	private static final String T_THESAURUS  = "THESAURUS";
 
 
 	public static void document(String message) {
