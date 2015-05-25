@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 			@Override
 			public void onClosed() { }
 		});
+		slidingLayer.setSlidingEnabled(false);
 
 		loadDomains();
 		fetchDomains();
