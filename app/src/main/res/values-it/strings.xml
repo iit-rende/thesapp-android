@@ -26,4 +26,9 @@
 	<string name="default_language">it</string>
 	<string name="hierarchy_tree_header">Albero della gerarchia</string>
 	<string name="title_activity_settings">Impostazioni</string>
+	<string name="filter_by_all_categories">Usa tutte le categorie</string>
+	<string name="filter_by_all_category_with_selected">Clicca per usare tutte le categorie</string>
+	<string name="filter_by_category">Filtra per categoria</string>
+	<string name="category_list_subtitle">dominio: %1$s</string>
+	<string name="category_list_title">Scegli una categoria</string>
 </resources>
