@@ -17,24 +17,29 @@ import it.cnr.iit.thesapp.App;
 import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.model.Domain;
 import it.cnr.iit.thesapp.model.FacetCategory;
+import it.cnr.iit.thesapp.model.FacetContainer;
 import it.cnr.iit.thesapp.model.Term;
 import it.cnr.iit.thesapp.model.TermSearch;
 import it.cnr.iit.thesapp.utils.Logs;
+import it.cnr.iit.thesapp.views.SearchFacetsContainer;
 
-public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdapter.TermResultHolder> implements
+public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdapter
+		.SearchItemHolder> implements
 		Filterable {
 
+	private static final int FACET_HOLDER = 1;
+	private static final int TERM_HOLDER  = 2;
 	private final String highlightColor;
 	int count = -1;
 	private TermClickListener clickListener;
 
-	private List<Term>          items;
-	private Domain              domain;
-	private String              language;
-	private FilterCallbacks     mCallbacks;
-	private FacetCategory       category;
-	private String              searchedTerm;
-	private List<FacetCategory> suggestedCategories;
+	private List<Term>      items;
+	private Domain          domain;
+	private String          language;
+	private FilterCallbacks mCallbacks;
+	private FacetCategory   category;
+	private String          searchedTerm;
+	private FacetContainer  facets;
 
 	public TermSearchRecAdapter(List<Term> modelData, TermClickListener clickListener,
 	                            Context context) {
@@ -52,39 +57,48 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		notifyDataSetChanged();
 	}
 
-
 	@Override
-	public TermResultHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-		View itemView = LayoutInflater.
-				                              from(viewGroup.getContext()).
-				inflate(R.layout.item_term_search, viewGroup, false);
-		return new TermResultHolder(itemView, viewType);
+	public SearchItemHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+		switch (viewType) {
+			case TERM_HOLDER:
+				View termHolder = LayoutInflater.
+						                                from(viewGroup.getContext()).
+						                                inflate(R.layout.item_term_search,
+								                                viewGroup, false);
+				return new TermResultHolder(termHolder);
+			case FACET_HOLDER:
+				View facetHolder = LayoutInflater.
+						                                 from(viewGroup.getContext()).
+						                                 inflate(R.layout
+										                                 .item_term_search_suggested_categories,
+
+								                                 viewGroup, false);
+				return new FacetsHolder(facetHolder);
+		}
+		return null;
 	}
 
+	@Override
+	public void onBindViewHolder(final SearchItemHolder viewHolder, int position) {
+
+		if (position == 0) {
+			FacetsHolder holder = (FacetsHolder) viewHolder;
+			holder.setFacets(facets);
+		} else {
+			TermResultHolder holder = (TermResultHolder) viewHolder;
+			Term term = items.get(position);
+			holder.onBindViewHolder(term);
+		}
+	}
 
 	@Override
-	public void onBindViewHolder(final TermResultHolder viewHolder, int position) {
-		Term term = items.get(position);
-		if (!term.isSemantic()) {
-			String line = highlightSearchedTerm(searchedTerm, term.getDescriptor());
-			Logs.ui("Syntactic term: " + line);
-			viewHolder.termDescriptor.setText(Html.fromHtml(line));
-		} else {
-			Logs.ui("Semantic term: " + term.getDescriptor());
-			viewHolder.termDescriptor.setText(term.getDescriptor());
+	public int getItemViewType(int position) {
+		switch (position) {
+			case 0:
+				return FACET_HOLDER;
+			default:
+				return TERM_HOLDER;
 		}
-		viewHolder.setClickListener(new TermResultHolder.ClickListener() {
-			@Override
-			public void onClick(View v, int pos, boolean isLongClick) {
-				if (!isLongClick) {
-					Logs.ui("Term " + pos + " clicked!");
-					if (clickListener != null) clickListener.onTermClicked(getTerm(pos));
-				} else {
-					Logs.ui("Term " + pos + " long clicked!");
-					if (clickListener != null) clickListener.onTermClicked(getTerm(pos));
-				}
-			}
-		});
 	}
 
 	@Override
@@ -165,7 +179,7 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 				Logs.ui("Result published for " + contraint);
 				setTerms(((TermSearch) results.values).getSuggestions());
 				setSearchedTerm(((TermSearch) results.values).getQuery());
-				setSuggestedCategories(((TermSearch) results.values).getFacets().getCategories());
+				setFacets(((TermSearch) results.values).getFacets());
 				if (mCallbacks != null) mCallbacks.onFilterComplete(results.count);
 			}
 
@@ -176,17 +190,14 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		};
 	}
 
-	private String highlightSearchedTerm(String termSearched, String textToHighlight) {
-		return textToHighlight.replaceAll("(?i)(" + termSearched + ")",
-				"<font color=" + highlightColor + ">$1</font>");
-	}
 
 	public void setSearchedTerm(String searchedTerm) {
 		this.searchedTerm = searchedTerm;
 	}
 
-	public void setSuggestedCategories(List<FacetCategory> suggestedCategories) {
-		this.suggestedCategories = suggestedCategories;
+	public void setFacets(FacetContainer suggestedCategories) {
+		this.facets = suggestedCategories;
+		notifyItemChanged(0);
 	}
 
 	public interface TermClickListener {
@@ -194,6 +205,8 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		public void onTermClicked(Term monster);
 
 		public void onTermLongClicked(Term monster);
+
+		public void onCategoryClicked(FacetCategory category);
 	}
 
 	public interface FilterCallbacks {
@@ -201,43 +214,75 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		void onFilterComplete(int count);
 	}
 
-	public final static class TermResultHolder extends RecyclerView.ViewHolder implements View
-			.OnClickListener,
-			View.OnLongClickListener {
 
+	public static class SearchItemHolder extends RecyclerView.ViewHolder {
 
-		public  RobotoTextView termDescriptor;
-		private ClickListener  clickListener;
+		private ClickListener clickListener;
 
-		public TermResultHolder(View itemView) {
+		public SearchItemHolder(View itemView) {
 			super(itemView);
-		}
-
-		public TermResultHolder(View itemView, int viewType) {
-			super(itemView);
-			termDescriptor = (RobotoTextView) itemView.findViewById(R.id.word);
-			itemView.setOnClickListener(this);
-			itemView.setOnLongClickListener(this);
 		}
 
 		public void setClickListener(ClickListener clickListener) {
 			this.clickListener = clickListener;
 		}
 
-		@Override
-		public void onClick(View v) {
-			clickListener.onClick(v, getPosition(), false);
-		}
-
-		@Override
-		public boolean onLongClick(View v) {
-			clickListener.onClick(v, getPosition(), true);
-			return true;
-		}
 
 		public interface ClickListener {
 
-			void onClick(View v, int position, boolean isLongClick);
+			void onClick(View v, int position, boolean isLongClick, int viewClickedKind);
+		}
+	}
+
+	public final static class FacetsHolder extends SearchItemHolder {
+
+		public SearchFacetsContainer facetsContainer;
+
+		public FacetsHolder(View itemView) {
+			super(itemView);
+			facetsContainer = (SearchFacetsContainer) itemView;
+		}
+
+		public void setFacets(FacetContainer facets) {
+			facetsContainer.setFacets(facets);
+		}
+	}
+
+	public class TermResultHolder extends SearchItemHolder {
+
+		public RobotoTextView termDescriptor;
+
+		public TermResultHolder(View itemView) {
+			super(itemView);
+			termDescriptor = (RobotoTextView) itemView.findViewById(R.id.word);
+		}
+
+		public void onBindViewHolder(Term term) {
+			if (!term.isSemantic()) {
+				String line = highlightSearchedTerm(searchedTerm, term.getDescriptor());
+				Logs.ui("Syntactic term: " + line);
+				termDescriptor.setText(Html.fromHtml(line));
+			} else {
+				Logs.ui("Semantic term: " + term.getDescriptor());
+				termDescriptor.setText(term.getDescriptor());
+			}
+			setClickListener(new ClickListener() {
+				@Override
+				public void onClick(View v, int pos, boolean isLongClick, int clickedViewKind) {
+					if (!isLongClick) {
+						Logs.ui("Term " + pos + " clicked!");
+						if (clickListener != null) clickListener.onTermClicked(getTerm(pos));
+					} else {
+						Logs.ui("Term " + pos + " long clicked!");
+						if (clickListener != null) clickListener.onTermClicked(getTerm(pos));
+					}
+				}
+			});
+		}
+
+		private String highlightSearchedTerm(String termSearched, String textToHighlight) {
+			return textToHighlight.replaceAll("(?i)(" + termSearched + ")",
+					"<font color=" + highlightColor + ">$1</font>");
 		}
 	}
 }

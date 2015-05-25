@@ -28,4 +28,5 @@
 	<string name="category_list_title">Scegli una categoria</string>
 	<string name="category_list_subtitle">dominio: %1$s</string>
 	<string name="filter_by_category">Filtra per categoria</string>
+	<string name="filter_by_all_categories">Usa tutte le categorie</string>
 </resources>
