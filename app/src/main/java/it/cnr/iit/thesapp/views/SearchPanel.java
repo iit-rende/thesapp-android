@@ -85,6 +85,11 @@ public class SearchPanel extends FrameLayout implements TermSearchRecAdapter.Ter
 		searchBox.reperformSearch();
 	}
 
+	@Override
+	public void onFacetContainerOpened() {
+		hideKeyboard();
+	}
+
 	public void setSearchListener(SearchBox.SearchBoxListener searchListener) {
 		this.mListener = searchListener;
 	}

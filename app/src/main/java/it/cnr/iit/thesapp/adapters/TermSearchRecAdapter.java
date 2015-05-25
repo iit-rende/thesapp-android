@@ -210,11 +210,12 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 
 	public interface TermClickListener {
 
-		public void onTermClicked(Term monster);
+		void onTermClicked(Term monster);
 
-		public void onTermLongClicked(Term monster);
+		void onTermLongClicked(Term monster);
 
-		public void onCategoryClicked(FacetCategory category);
+		void onCategoryClicked(FacetCategory category);
+		void onFacetContainerOpened();
 	}
 
 	public interface FilterCallbacks {
@@ -255,6 +256,11 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 				public void onCategoryClicked(FacetCategory category) {
 					setCategory(category);
 					if (clickListener != null) clickListener.onCategoryClicked(category);
+				}
+
+				@Override
+				public void onContainerOpened() {
+					if (clickListener != null) clickListener.onFacetContainerOpened();
 				}
 			});
 		}

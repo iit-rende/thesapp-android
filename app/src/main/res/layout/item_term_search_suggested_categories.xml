@@ -16,7 +16,7 @@
 
 	</LinearLayout>
 
-	<com.devspark.robototextview.widget.RobotoCompoundButton
+	<com.devspark.robototextview.widget.RobotoTextView
 		android:id="@+id/facet_action"
 		style="@style/list_action"
 		android:layout_width="match_parent"

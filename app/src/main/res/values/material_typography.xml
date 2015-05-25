@@ -95,7 +95,7 @@
 		<item name="android:textColor">@color/white</item>
 		<item name="android:textSize">14sp</item>
 		<item name="android:textAllCaps">true</item>
-		<item name="typeface">roboto_black</item>
+		<item name="typeface">roboto_condensed_italic</item>
 	</style>
 
 	<style name="caption">
