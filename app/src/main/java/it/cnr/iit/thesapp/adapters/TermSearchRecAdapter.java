@@ -21,21 +21,22 @@ import it.cnr.iit.thesapp.model.Term;
 import it.cnr.iit.thesapp.model.TermSearch;
 import it.cnr.iit.thesapp.utils.Logs;
 
-public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdapter
-		.TermResultHolder> implements Filterable {
+public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdapter.TermResultHolder> implements
+		Filterable {
 
 	private final String highlightColor;
 	int count = -1;
-	private MonsterClickListener clickListener;
+	private TermClickListener clickListener;
 
-	private List<Term>      items;
-	private Domain          domain;
-	private String          language;
-	private FilterCallbacks mCallbacks;
-	private FacetCategory category;
-	private String        searchedTerm;
+	private List<Term>          items;
+	private Domain              domain;
+	private String              language;
+	private FilterCallbacks     mCallbacks;
+	private FacetCategory       category;
+	private String              searchedTerm;
+	private List<FacetCategory> suggestedCategories;
 
-	public TermSearchRecAdapter(List<Term> modelData, MonsterClickListener clickListener,
+	public TermSearchRecAdapter(List<Term> modelData, TermClickListener clickListener,
 	                            Context context) {
 		this.items = modelData;
 		this.clickListener = clickListener;
@@ -56,7 +57,7 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 	public TermResultHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 		View itemView = LayoutInflater.
 				                              from(viewGroup.getContext()).
-				                              inflate(R.layout.item_word_search, viewGroup, false);
+				inflate(R.layout.item_term_search, viewGroup, false);
 		return new TermResultHolder(itemView, viewType);
 	}
 
@@ -90,7 +91,7 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 	public int getItemCount() {
 		if (count >= 0) return count;
 		if (items != null) {
-			count = items.size();
+			count = items.size() + 1;
 			return count;
 		} else {
 			count = 0;
@@ -99,8 +100,9 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 	}
 
 	public Term getTerm(int position) {
-		return items.get(position);
+		return items.get(position - 1);
 	}
+
 
 	public void setDomain(Domain domain) {
 		Logs.ui("Setting domain for search: " + domain.getDescriptor());
@@ -163,7 +165,7 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 				Logs.ui("Result published for " + contraint);
 				setTerms(((TermSearch) results.values).getSuggestions());
 				setSearchedTerm(((TermSearch) results.values).getQuery());
-				//setSuggestedCategories(((TermSearch) results.values).getSuggestions());//TODO
+				setSuggestedCategories(((TermSearch) results.values).getFacets().getCategories());
 				if (mCallbacks != null) mCallbacks.onFilterComplete(results.count);
 			}
 
@@ -183,7 +185,11 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		this.searchedTerm = searchedTerm;
 	}
 
-	public interface MonsterClickListener {
+	public void setSuggestedCategories(List<FacetCategory> suggestedCategories) {
+		this.suggestedCategories = suggestedCategories;
+	}
+
+	public interface TermClickListener {
 
 		public void onTermClicked(Term monster);
 
@@ -195,7 +201,8 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		void onFilterComplete(int count);
 	}
 
-	public final static class TermResultHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+	public final static class TermResultHolder extends RecyclerView.ViewHolder implements View
+			.OnClickListener,
 			View.OnLongClickListener {
 
 

@@ -16,7 +16,7 @@ import it.cnr.iit.thesapp.adapters.TermSearchRecAdapter;
 import it.cnr.iit.thesapp.model.Domain;
 import it.cnr.iit.thesapp.model.Term;
 
-public class SearchPanel extends FrameLayout implements TermSearchRecAdapter.MonsterClickListener {
+public class SearchPanel extends FrameLayout implements TermSearchRecAdapter.TermClickListener {
 	private TermSearchRecAdapter        mAdapter;
 	private SearchBox                   searchBox;
 	private SearchBox.SearchBoxListener mListener;

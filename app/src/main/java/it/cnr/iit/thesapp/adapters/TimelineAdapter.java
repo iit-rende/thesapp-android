@@ -47,9 +47,10 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 		return addTerm(term, clickedFromPage);
 	}
 
-	public int addCategory(String termDescriptor, String termDomain, String termLanguage,
+	public int addCategory(String categoryDescriptor, String categoryDomain,
+	                       String categoryLanguage,
 	                       int clickedFromPage) {
-		Category category = new Category(termDescriptor, termDomain, termLanguage);
+		Category category = new Category(categoryDescriptor, categoryDomain, categoryLanguage);
 		return addCategory(category, clickedFromPage);
 	}
 

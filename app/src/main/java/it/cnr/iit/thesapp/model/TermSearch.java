@@ -14,9 +14,15 @@ public class TermSearch {
 	@SerializedName("domain")
 	@Expose
 	private String domain;
+	@SerializedName("count")
+	@Expose
+	private int count;
 	@SerializedName("suggestions")
 	@Expose
 	private List<Term> suggestions = new ArrayList<Term>();
+	@SerializedName("facets")
+	@Expose
+	private FacetContainer facets;
 
 	/**
 	 * @return The query
@@ -52,5 +58,21 @@ public class TermSearch {
 
 	public void setDomain(String domain) {
 		this.domain = domain;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
+	public FacetContainer getFacets() {
+		return facets;
+	}
+
+	public void setFacets(FacetContainer facets) {
+		this.facets = facets;
 	}
 }
