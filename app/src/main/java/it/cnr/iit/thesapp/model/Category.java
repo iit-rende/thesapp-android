@@ -4,6 +4,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import it.cnr.iit.thesapp.utils.Logs;
@@ -60,6 +62,15 @@ public class Category extends TimelineElement {
 			//term.setLanguage(getLanguage());
 			term.setDomain(getDomain());
 		}
+		Collections.sort(terms, new Comparator<Term>() {
+			public int compare(Term term1, Term term2) {
+				if (term1.getDescriptor() != null && term2.getDescriptor() != null) {
+					return term1.getDescriptor().compareTo(term2.getDescriptor());
+				}
+
+				return 0;
+			}
+		});
 	}
 
 	@Override

@@ -209,17 +209,13 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 	}
 
 	public interface TermClickListener {
-
 		void onTermClicked(Term monster);
-
 		void onTermLongClicked(Term monster);
-
 		void onCategoryClicked(FacetCategory category);
 		void onFacetContainerOpened();
 	}
 
 	public interface FilterCallbacks {
-
 		void onFilterComplete(int count);
 	}
 

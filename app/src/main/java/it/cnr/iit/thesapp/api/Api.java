@@ -36,7 +36,6 @@ public class Api {
 
 	public static long getSearchInterval(Response response) {
 		for (retrofit.client.Header header : response.getHeaders()) {
-			//Logs.retrofit(header.getName() + ": " + header.getValue());
 			if (header.getName().equals("X-Search-Interval")) {
 				return Long.parseLong(header.getValue());
 			}

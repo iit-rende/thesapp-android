@@ -2,7 +2,10 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:orientation="horizontal">
+	android:divider="@drawable/vertical_divider"
+	android:dividerPadding="16dip"
+	android:orientation="horizontal"
+	android:showDividers="middle">
 
 
 	<include
@@ -15,7 +18,10 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_weight="1"
-		android:orientation="vertical">
+		android:divider="@drawable/vertical_divider"
+		android:dividerPadding="16dip"
+		android:orientation="vertical"
+		android:showDividers="middle">
 
 		<include
 			layout="@layout/panel_word_description"

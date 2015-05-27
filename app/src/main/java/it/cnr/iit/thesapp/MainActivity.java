@@ -37,7 +37,8 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class MainActivity extends AppCompatActivity implements TimelineElementFragment.TimelineElementFragmentCallback {
+public class MainActivity extends AppCompatActivity implements TimelineElementFragment
+		.TimelineElementFragmentCallback {
 
 
 	private TimelineAdapter timelineAdapter;
@@ -269,8 +270,8 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 	}
 
 	@Override
-	public TimelineElement getElement(String termDescriptor, String termDomain, String
-			termLanguage, int elementKind) {
+	public TimelineElement getElement(String termDescriptor, String termDomain, String termLanguage,
+	                                  int elementKind) {
 		return timelineAdapter.getTerm(termDescriptor, termDomain, termLanguage, elementKind);
 	}
 
@@ -279,7 +280,6 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 	                             int elementKind, int clickedFromPage) {
 		onElementSelected(termDescriptor, termDomain, termLanguage, elementKind, clickedFromPage);
 	}
-
 
 
 	@Override
@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 	public void setToolbarColor(Integer toolbarColor) {
 		this.toolbarColor = toolbarColor;
 		toolbar.setBackgroundColor(toolbarColor);
-		searchPanel.setFakeToolbarColor(toolbarColor);
+		if (searchPanel != null) searchPanel.setFakeToolbarColor(toolbarColor);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			//getWindow().setStatusBarColor(toolbarColor);
 			getWindow().setStatusBarColor(Color.TRANSPARENT);

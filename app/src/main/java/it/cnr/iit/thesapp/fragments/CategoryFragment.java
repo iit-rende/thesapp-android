@@ -24,7 +24,7 @@ import it.cnr.iit.thesapp.model.Term;
 import it.cnr.iit.thesapp.model.TimelineElement;
 import it.cnr.iit.thesapp.utils.Logs;
 import it.cnr.iit.thesapp.views.ErrorView;
-import it.cnr.iit.thesapp.views.TermsContainer;
+import it.cnr.iit.thesapp.views.TermsContainerWithAlphabet;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -150,7 +150,7 @@ public class CategoryFragment extends TimelineElementFragment {
 	private void addTermsContainer(List<Term> terms, String containerTitle,
 								   @DrawableRes int drawableId, @ColorRes int colorId) {
 		if (terms != null && terms.size() > 0) {
-			TermsContainer container = new TermsContainer(getActivity());
+			TermsContainerWithAlphabet container = new TermsContainerWithAlphabet(getActivity());
 			container.setTitle(containerTitle);
 			container.setTerms(terms, drawableId, colorId, mListener, page);
 			hierarchyContainer.addView(container);

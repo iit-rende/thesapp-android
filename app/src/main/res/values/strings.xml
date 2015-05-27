@@ -10,7 +10,7 @@
 	<string name="error_not_found">Term not found</string>
 	<string name="error_connection_problem">No connection</string>
 	<string name="loading_domains">Downloading domains…</string>
-	<string name="category_terms">Terms in category</string>
+	<string name="category_terms">Terms</string>
 	<string name="action_open_search_panel">Search</string>
 	<string name="translations_terms">Translations</string>
 	<string name="domain_list_title">Choose a domain</string>
@@ -23,7 +23,7 @@
 	<string name="default_language">en</string>
 	<string name="error_generic">There is a problem</string>
 	<string name="error_server_problems">There are server issues</string>
-	<string name="hierarchy_tree_header">Hierarchy Tree</string>
+	<string name="hierarchy_tree_header">Navigate the Thesaurus</string>
 	<string name="title_activity_settings">Settings</string>
 	<string name="category_list_title">Choose a category</string>
 	<string name="category_list_subtitle">domain: %1$s</string>

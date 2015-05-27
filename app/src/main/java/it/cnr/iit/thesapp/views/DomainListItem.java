@@ -1,6 +1,7 @@
 package it.cnr.iit.thesapp.views;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -11,6 +12,7 @@ import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.model.Domain;
 
 public class DomainListItem extends FrameLayout {
+
 	private Domain              domain;
 	private RobotoTextView      domainName;
 	private DomainClickListener mListener;
@@ -51,10 +53,13 @@ public class DomainListItem extends FrameLayout {
 
 	public void setDomain(Domain domain) {
 		this.domain = domain;
-		domainName.setText(domain.getDescriptor());
+		if (TextUtils.isEmpty(domain.getLocalization())) domainName.setText(domain.getDescriptor
+				());
+		else domainName.setText((domain.getLocalization()));
 	}
 
 	public interface DomainClickListener {
+
 		void onDomainClicked(Domain domain);
 	}
 }
