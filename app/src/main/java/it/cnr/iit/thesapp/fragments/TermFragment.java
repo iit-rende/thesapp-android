@@ -32,6 +32,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class TermFragment extends TimelineElementFragment {
+
 	private RobotoTextView termTitle;
 	private RobotoTextView termDescription;
 	private ScrollView     scrollView;
@@ -46,7 +47,7 @@ public class TermFragment extends TimelineElementFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
+	                         Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_term, container, false);
 	}
 
@@ -128,7 +129,7 @@ public class TermFragment extends TimelineElementFragment {
 							setUiLoading(false);
 						} else {
 							Logs.retrofit("Error fetching term: " + response.getStatus() + " - " +
-										  response.getReason());
+							              response.getReason());
 							showError(response);
 						}
 					}
@@ -179,13 +180,13 @@ public class TermFragment extends TimelineElementFragment {
 			addTermsContainer(term.getLocalizations(), getString(R.string.translations_terms),
 					R.drawable.label_background_localization,
 					R.color.localization_label_text_selector);
-			addTermsContainer(term.getRelatedTerms(), getString(R.string.related_terms),
-					R.drawable.label_background_related, R.color.related_label_text_selector);
-
 			addTermsContainer(term.getBroaderTerms(), getString(R.string.broader_terms),
 					R.drawable.label_background_broader, R.color.broader_label_text_selector);
 			addTermsContainer(term.getNarrowerTerms(), getString(R.string.narrower_terms),
 					R.drawable.label_background_narrower, R.color.narrower_label_text_selector);
+			addTermsContainer(term.getRelatedTerms(), getString(R.string.related_terms),
+					R.drawable.label_background_related, R.color.related_label_text_selector);
+
 			setWindowToolbar(term.getDomain());
 		}
 	}
@@ -195,7 +196,7 @@ public class TermFragment extends TimelineElementFragment {
 	}
 
 	private void addTermsContainer(List<Term> terms, String containerTitle,
-								   @DrawableRes int drawableId, @ColorRes int colorId) {
+	                               @DrawableRes int drawableId, @ColorRes int colorId) {
 		if (terms != null && terms.size() > 0) {
 			TermsContainer container = new TermsContainer(getActivity());
 			container.setTitle(containerTitle);
@@ -205,7 +206,7 @@ public class TermFragment extends TimelineElementFragment {
 	}
 
 	private void addCategoryContainer(List<Category> categories, String containerTitle,
-									  @DrawableRes int drawableId, @ColorRes int colorId) {
+	                                  @DrawableRes int drawableId, @ColorRes int colorId) {
 		if (categories != null && categories.size() > 0) {
 			TermsContainer container = new TermsContainer(getActivity());
 			container.setTitle(containerTitle);

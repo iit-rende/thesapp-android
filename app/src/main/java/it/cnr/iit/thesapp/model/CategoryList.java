@@ -3,6 +3,8 @@ package it.cnr.iit.thesapp.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import it.cnr.iit.thesapp.utils.Logs;
@@ -53,8 +55,19 @@ public class CategoryList extends TimelineElement {
 	public void fillMissingInfo() {
 		setCompletelyFetched(true);
 		setDomainDescriptor(getDomain().getDescriptor());
-		if (categories != null) for (Category category : categories) {
-			category.setDomain(getDomain());
+		if (categories != null) {
+			for (Category category : categories) {
+				category.setDomain(getDomain());
+			}
+			Collections.sort(categories, new Comparator<Category>() {
+				public int compare(Category category1, Category category2) {
+					if (category1.getDescriptor() != null && category2.getDescriptor() != null) {
+						return category1.getDescriptor().compareTo(category2.getDescriptor());
+					}
+
+					return 0;
+				}
+			});
 		}
 	}
 

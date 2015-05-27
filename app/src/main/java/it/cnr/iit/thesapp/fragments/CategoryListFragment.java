@@ -82,6 +82,7 @@ public class CategoryListFragment extends TimelineElementFragment implements Cat
 
 		termTitle = (RobotoTextView) view.findViewById(R.id.term_title);
 		termSubtitle = (RobotoTextView) view.findViewById(R.id.term_subtitle);
+		termSubtitle.setVisibility(View.GONE);
 
 		scrollView = (ScrollView) view.findViewById(R.id.scrollView);
 		scrollView.setVerticalScrollBarEnabled(false);

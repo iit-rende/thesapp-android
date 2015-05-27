@@ -58,19 +58,22 @@ public class Category extends TimelineElement {
 	public void fillMissingInfo() {
 		setCompletelyFetched(true);
 		setDomainDescriptor(getDomain().getDescriptor());
-		if (terms != null) for (Term term : terms) {
-			//term.setLanguage(getLanguage());
-			term.setDomain(getDomain());
-		}
-		Collections.sort(terms, new Comparator<Term>() {
-			public int compare(Term term1, Term term2) {
-				if (term1.getDescriptor() != null && term2.getDescriptor() != null) {
-					return term1.getDescriptor().compareTo(term2.getDescriptor());
-				}
-
-				return 0;
+		if (terms != null) {
+			for (Term term : terms) {
+				//term.setLanguage(getLanguage());
+				term.setDomain(getDomain());
 			}
-		});
+
+			Collections.sort(terms, new Comparator<Term>() {
+				public int compare(Term term1, Term term2) {
+					if (term1.getDescriptor() != null && term2.getDescriptor() != null) {
+						return term1.getDescriptor().compareTo(term2.getDescriptor());
+					}
+
+					return 0;
+				}
+			});
+		}
 	}
 
 	@Override

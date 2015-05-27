@@ -4,6 +4,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import it.cnr.iit.thesapp.utils.Logs;
@@ -76,28 +78,62 @@ public class Term extends TimelineElement {
 	public void fillMissingInfo() {
 		setCompletelyFetched(true);
 		setDomainDescriptor(getDomain().getDescriptor());
-		if (categories != null) for (Category term : categories) {
-			term.setLanguage(getLanguage());
-			term.setDomain(getDomain());
+		Comparator<Term> comparator = new Comparator<Term>() {
+			public int compare(Term term1, Term term2) {
+				if (term1.getDescriptor() != null && term2.getDescriptor() != null) {
+					return term1.getDescriptor().compareTo(term2.getDescriptor());
+				}
+
+				return 0;
+			}
+		};
+		if (categories != null) {
+			for (Category term : categories) {
+				term.setLanguage(getLanguage());
+				term.setDomain(getDomain());
+			}
+			Collections.sort(categories, new Comparator<Category>() {
+				public int compare(Category category1, Category category2) {
+					if (category1.getDescriptor() != null && category2.getDescriptor() != null) {
+						return category1.getDescriptor().compareTo(category2.getDescriptor());
+					}
+					return 0;
+				}
+			});
 		}
-		if (localizations != null) for (Term term : localizations) {
-			term.setDomain(getDomain());
+		if (localizations != null) {
+			for (Term term : localizations) {
+				term.setDomain(getDomain());
+			}
+			Collections.sort(localizations, comparator);
 		}
-		if (relatedTerms != null) for (Term term : relatedTerms) {
-			term.setLanguage(getLanguage());
-			term.setDomain(getDomain());
+		if (relatedTerms != null) {
+			for (Term term : relatedTerms) {
+				term.setLanguage(getLanguage());
+				term.setDomain(getDomain());
+				Collections.sort(relatedTerms, comparator);
+			}
 		}
-		if (narrowerTerms != null) for (Term term : narrowerTerms) {
-			term.setLanguage(getLanguage());
-			term.setDomain(getDomain());
+		if (narrowerTerms != null) {
+			for (Term term : narrowerTerms) {
+				term.setLanguage(getLanguage());
+				term.setDomain(getDomain());
+				Collections.sort(narrowerTerms, comparator);
+			}
 		}
-		if (broaderTerms != null) for (Term term : broaderTerms) {
-			term.setLanguage(getLanguage());
-			term.setDomain(getDomain());
+		if (broaderTerms != null) {
+			for (Term term : broaderTerms) {
+				term.setLanguage(getLanguage());
+				term.setDomain(getDomain());
+				Collections.sort(broaderTerms, comparator);
+			}
 		}
-		if (useFor != null) for (Term term : useFor) {
-			term.setLanguage(getLanguage());
-			term.setDomain(getDomain());
+		if (useFor != null) {
+			for (Term term : useFor) {
+				term.setLanguage(getLanguage());
+				term.setDomain(getDomain());
+				Collections.sort(useFor, comparator);
+			}
 		}
 		if (hierarchy != null) for (Term term : hierarchy) {
 			term.setLanguage(getLanguage());

@@ -1,6 +1,7 @@
 package it.cnr.iit.thesapp.adapters;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.model.Domain;
 
 public class DomainSpinnerAdapter extends ArrayAdapter<Domain> implements SpinnerAdapter {
+
 	private final LayoutInflater inflater;
 	private       List<Domain>   domains;
 	private int count = -1;
@@ -47,10 +49,19 @@ public class DomainSpinnerAdapter extends ArrayAdapter<Domain> implements Spinne
 	}
 
 	@Override
+	public Domain getItem(int position) {
+		return domains.get(position);
+	}
+
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		RobotoTextView label = (RobotoTextView) inflater.inflate(R.layout.item_domain, parent,
 				false);
-		label.setText(domains.get(position).getDescriptor());
+		if (!TextUtils.isEmpty(domains.get(position).getLocalization())) {
+			label.setText(domains.get(position).getLocalization());
+		} else {
+			label.setText(domains.get(position).getDescriptor());
+		}
 		return label;
 	}
 
@@ -58,7 +69,11 @@ public class DomainSpinnerAdapter extends ArrayAdapter<Domain> implements Spinne
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
 		RobotoTextView label = (RobotoTextView) inflater.inflate(R.layout.item_domain, parent,
 				false);
-		label.setText(domains.get(position).getDescriptor());
+		if (!TextUtils.isEmpty(domains.get(position).getLocalization())) {
+			label.setText(domains.get(position).getLocalization());
+		} else {
+			label.setText(domains.get(position).getDescriptor());
+		}
 		return label;
 	}
 
@@ -69,10 +84,5 @@ public class DomainSpinnerAdapter extends ArrayAdapter<Domain> implements Spinne
 			}
 		}
 		return -1;
-	}
-
-	@Override
-	public Domain getItem(int position) {
-		return domains.get(position);
 	}
 }
