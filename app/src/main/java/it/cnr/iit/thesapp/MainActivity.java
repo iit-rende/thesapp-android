@@ -17,6 +17,7 @@ import android.util.Log;
 import android.util.Property;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.wunderlist.slidinglayer.SlidingLayer;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 		toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
+
 		setSupportActionBar(toolbar);
 		createPager();
 
@@ -155,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 			public void onPageScrollStateChanged(int state) {}
 		});
 
-		if (timelineAdapter.getCount() > 1) pager.setCurrentItem(1);
+		if (timelineAdapter.getCount() > 1) pager.setCurrentItem(1, true);
 	}
 
 	@Override
@@ -270,8 +272,8 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 	}
 
 	@Override
-	public TimelineElement getElement(String termDescriptor, String termDomain, String termLanguage,
-	                                  int elementKind) {
+	public TimelineElement getElement(String termDescriptor, String termDomain, String
+			termLanguage, int elementKind) {
 		return timelineAdapter.getTerm(termDescriptor, termDomain, termLanguage, elementKind);
 	}
 
@@ -289,6 +291,17 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 
 	@Override
 	public void setToolbarDomain(Domain domain, int page) {
+		if (page == 0) {
+			toolbar.setNavigationIcon(null);
+		} else {
+			toolbar.setNavigationIcon(R.drawable.ic_navigation_arrow_back);
+			toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					onUpPressed();
+				}
+			});
+		}
 		if (domain != null && pager.getCurrentItem() == page) {
 
 			ObjectAnimator anim = ObjectAnimator.ofInt(this, uiColorProperty, Color.parseColor(
@@ -299,6 +312,9 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 			String domainName = " - " + domain.getDescriptor();
 			if (domain.getDescriptor().equals(Domain.DEFAULT_DOMAIN_DESCRIPTOR)) domainName = "";
 			toolbar.setTitle(getString(R.string.app_name) + domainName);
+		} else {
+			Logs.ui("Toolbar title not changed, domain: " + domain + ", pagerPage: " +
+			        pager.getCurrentItem() + ", page:" + page);
 		}
 	}
 

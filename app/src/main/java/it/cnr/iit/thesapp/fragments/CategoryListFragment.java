@@ -144,6 +144,8 @@ public class CategoryListFragment extends TimelineElementFragment implements Cat
 
 			domainContainer.removeAllViews();
 			addTermsContainer(categoryList.getCategories());
+
+			setWindowToolbar(categoryList.getDomain());
 		}
 	}
 

@@ -31,7 +31,8 @@
 				android:layout_height="@dimen/card_toolbar_height"
 				android:background="@color/element_card_header_color"
 				android:minHeight="@dimen/card_toolbar_height"
-				android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+				android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+				android:visibility="gone"/>
 
 			<LinearLayout
 				android:id="@+id/card_content"
