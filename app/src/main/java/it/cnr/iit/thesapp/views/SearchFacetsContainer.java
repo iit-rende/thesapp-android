@@ -53,9 +53,9 @@ public class SearchFacetsContainer extends FrameLayout implements FacetCategoryL
 		this.categoryContainer = (LinearLayout) findViewById(R.id.categories_container);
 		this.actionButton = (RobotoButton) findViewById(R.id.facet_action);
 		filterDrawable = getContext().getResources().getDrawable(R.drawable.ic_filter_list);
-		unfilterDrawable = getContext().getResources().getDrawable(R.drawable.ic_close_white_24dp);
+		unfilterDrawable = getContext().getResources().getDrawable(R.drawable.ic_close);
 		closePanelDrawable = getContext().getResources().getDrawable(
-				R.drawable.ic_keyboard_arrow_up_white_24dp);
+				R.drawable.ic_keyboard_arrow_up);
 	}
 
 	public void setFacets(FacetContainer facetContainer, FacetCategory selectedCategory) {
