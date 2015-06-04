@@ -12,12 +12,14 @@ import java.util.List;
 
 import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.adapters.DomainSpinnerAdapter;
+import it.cnr.iit.thesapp.adapters.SimpleSectionedRecyclerViewAdapter;
 import it.cnr.iit.thesapp.adapters.TermSearchRecAdapter;
 import it.cnr.iit.thesapp.model.Domain;
 import it.cnr.iit.thesapp.model.FacetCategory;
 import it.cnr.iit.thesapp.model.Term;
 
 public class SearchPanel extends FrameLayout implements TermSearchRecAdapter.TermClickListener {
+
 	private TermSearchRecAdapter        mAdapter;
 	private SearchBox                   searchBox;
 	private SearchBox.SearchBoxListener mListener;
@@ -56,6 +58,10 @@ public class SearchPanel extends FrameLayout implements TermSearchRecAdapter.Ter
 		searchBox = (SearchBox) findViewById(R.id.search_box);
 
 		mAdapter = new TermSearchRecAdapter(null, this, getContext());
+		SimpleSectionedRecyclerViewAdapter mSectionedAdapter =
+				new SimpleSectionedRecyclerViewAdapter(getContext(), R.layout.section,
+						R.id.section_text, mAdapter);
+		mAdapter.setSectionAdapter(mSectionedAdapter);
 		searchBox.setTermSearchAdapter(mAdapter);
 
 		DomainSpinnerAdapter domainSpinnerAdapter = new DomainSpinnerAdapter(getContext(), null);
@@ -64,7 +70,8 @@ public class SearchPanel extends FrameLayout implements TermSearchRecAdapter.Ter
 		RecyclerView mList = (RecyclerView) findViewById(R.id.search_list);
 		LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
 		mList.setLayoutManager(mLayoutManager);
-		mList.setAdapter(mAdapter);
+		//mList.setAdapter(mAdapter);
+		mList.setAdapter(mSectionedAdapter);
 	}
 
 

@@ -1,6 +1,7 @@
 package it.cnr.iit.thesapp.views;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -9,7 +10,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.devspark.robototextview.style.RobotoTypefaceSpan;
 import com.devspark.robototextview.util.RobotoTypefaceManager;
@@ -29,6 +29,9 @@ public class SearchFacetsContainer extends FrameLayout implements FacetCategoryL
 	private boolean        showingFacets;
 	private FacetContainer facets;
 	private SearchFacetListener mListener;
+	private Drawable       filterDrawable;
+	private Drawable       unfilterDrawable;
+	private Drawable       closePanelDrawable;
 
 	public SearchFacetsContainer(Context context) {
 		super(context);
@@ -49,9 +52,14 @@ public class SearchFacetsContainer extends FrameLayout implements FacetCategoryL
 		inflate(getContext(), R.layout.item_term_search_suggested_categories, this);
 		this.categoryContainer = (LinearLayout) findViewById(R.id.categories_container);
 		this.actionButton = (RobotoTextView) findViewById(R.id.facet_action);
+		filterDrawable = getContext().getResources().getDrawable(
+				R.drawable.ic_filter_list_white_24dp);
+		unfilterDrawable = getContext().getResources().getDrawable(R.drawable.ic_close_white_24dp);
+		closePanelDrawable = getContext().getResources().getDrawable(
+				R.drawable.ic_keyboard_arrow_up_white_24dp);
 	}
 
-	public void setFacets(FacetContainer facetContainer) {
+	public void setFacets(FacetContainer facetContainer, FacetCategory selectedCategory) {
 		this.facets = facetContainer;
 		close();
 		categoryContainer.removeAllViews();
@@ -61,8 +69,20 @@ public class SearchFacetsContainer extends FrameLayout implements FacetCategoryL
 			line.setCategoryClickListener(this);
 			categoryContainer.addView(line);
 		}
-		if (facetContainer.getCategories().size() == 1) {
-			setActionText2(facetContainer.getCategories().get(0));
+		if (facetContainer.getCategories().size() == 0 && selectedCategory != null) {
+			setActionText(selectedCategory);
+			actionButton.setCompoundDrawables(null, null, unfilterDrawable, null);
+
+			actionButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					if (mListener != null) mListener.onCategoryClicked(null);
+				}
+			});
+		} else if (facetContainer.getCategories().size() == 1) {
+			setActionText(facetContainer.getCategories().get(0));
+			actionButton.setCompoundDrawables(null, null, unfilterDrawable, null);
+
 			actionButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -80,20 +100,7 @@ public class SearchFacetsContainer extends FrameLayout implements FacetCategoryL
 	}
 
 	private void setActionText(FacetCategory category) {
-		String cat = category.getDescriptor();
-		String sub = getContext().getString(R.string.filter_by_all_category_with_selected);
-		final String source = cat + "\n" + sub;
-
-		RobotoTypefaceSpan robotoTypefaceSpan = new RobotoTypefaceSpan(getContext(),
-				RobotoTypefaceManager.Typeface.ROBOTO_BLACK);
-		Spannable spannable = new SpannableString(source);
-		spannable.setSpan(robotoTypefaceSpan, 0, cat.length() - 1,
-				Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-		spannable.setSpan(new RelativeSizeSpan(1.5f), 0, cat.length() - 1,
-				Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-		Logs.ui("Span: " + spannable.getSpanStart(robotoTypefaceSpan) + "-->" +
-		        spannable.getSpanEnd(robotoTypefaceSpan));
-		actionButton.setText(spannable, TextView.BufferType.SPANNABLE);
+		actionButton.setText(category.getDescriptor());
 	}
 
 	private void setActionText2(FacetCategory category) {
@@ -129,6 +136,7 @@ public class SearchFacetsContainer extends FrameLayout implements FacetCategoryL
 	private void open() {
 		showingFacets = true;
 		actionButton.setText(getContext().getString(R.string.filter_by_all_categories));
+		actionButton.setCompoundDrawables(null, null, closePanelDrawable, null);
 		categoryContainer.setVisibility(VISIBLE);
 		if (mListener != null) mListener.onContainerOpened();
 	}
@@ -136,6 +144,8 @@ public class SearchFacetsContainer extends FrameLayout implements FacetCategoryL
 	private void close() {
 		showingFacets = false;
 		actionButton.setText(getContext().getString(R.string.filter_by_category));
+		actionButton.setCompoundDrawables(null, null, filterDrawable, null);
+
 		categoryContainer.setVisibility(GONE);
 	}
 

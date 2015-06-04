@@ -11,6 +11,8 @@ import android.widget.Filterable;
 
 import com.devspark.robototextview.widget.RobotoTextView;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import it.cnr.iit.thesapp.App;
@@ -27,19 +29,23 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		.SearchItemHolder> implements
 		Filterable {
 
-	private static final int FACET_HOLDER = 1;
-	private static final int TERM_HOLDER  = 2;
-	private final String highlightColor;
+	private static final int FACET_HOLDER      = 1;
+	private static final int TERM_HOLDER       = 2;
+	private static final int FILTER_ITEM_DELTA = 1;
+	private final String  highlightColor;
+	private final Context context;
 	int count = -1;
 	private TermClickListener clickListener;
 
-	private List<Term>      items;
-	private Domain          domain;
-	private String          language;
-	private FilterCallbacks mCallbacks;
-	private FacetCategory   category;
-	private String          searchedTerm;
-	private FacetContainer  facets;
+	private List<Term>                         items;
+	private Domain                             domain;
+	private String                             language;
+	private FilterCallbacks                    mCallbacks;
+	private FacetCategory                      category;
+	private String                             searchedTerm;
+	private FacetContainer                     facets;
+	private SimpleSectionedRecyclerViewAdapter sectionAdapter;
+	private int sectionHeaderPosition = -1;
 
 	public TermSearchRecAdapter(List<Term> modelData, TermClickListener clickListener,
 	                            Context context) {
@@ -49,12 +55,48 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		this.category = new FacetCategory();
 		this.highlightColor = String.format("#%06X", (0xFFFFFF & context.getResources().getColor(
 				R.color.accent)));
+		this.context = context;
 	}
 
 	public void setTerms(List<Term> items) {
+		Collections.sort(items, new Comparator<Term>() {
+			@Override
+			public int compare(Term t1, Term t2) {
+				return (t1.isSemantic() == t2.isSemantic() ? 0 : (t1.isSemantic() ? 1 : -1));
+			}
+		});
 		this.items = items;
 		count = -1;
+		setSections();
 		notifyDataSetChanged();
+	}
+
+	private void setSections() {
+		int i = FILTER_ITEM_DELTA;
+		boolean found = false;
+		for (Term item : items) {
+			if (item.isSemantic()) {
+				found = true;
+				break;
+			} else i++;
+		}
+
+		SimpleSectionedRecyclerViewAdapter.Section[] sections;
+		if (found) {
+			sections =
+					new SimpleSectionedRecyclerViewAdapter.Section[]{new
+							SimpleSectionedRecyclerViewAdapter.Section(
+							i, context.getString(R.string.semating_search_header))};
+			sectionHeaderPosition = i;
+		} else {
+			sections = new SimpleSectionedRecyclerViewAdapter.Section[0];
+			sectionHeaderPosition = -1;
+		}
+		sectionAdapter.setSections(sections);
+	}
+
+	public void setSectionAdapter(SimpleSectionedRecyclerViewAdapter adapter) {
+		this.sectionAdapter = adapter;
 	}
 
 	@Override
@@ -79,13 +121,13 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 
 	@Override
 	public void onBindViewHolder(final SearchItemHolder viewHolder, int position) {
-
+		Logs.ui("Binding view for position: " + position);
 		if (position == 0) {
 			FacetsHolder holder = (FacetsHolder) viewHolder;
-			holder.setFacets(facets);
+			holder.setFacets(facets, category);
 		} else {
 			TermResultHolder holder = (TermResultHolder) viewHolder;
-			Term term = getTerm(position);
+			Term term = getTerm(position, false);
 			holder.onBindViewHolder(term);
 		}
 	}
@@ -105,7 +147,7 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		if (count >= 0) return count;
 		if (items != null) {
 			final int size = items.size();
-			if (size > 0) count = size + 1;
+			if (size >= 0) count = size + FILTER_ITEM_DELTA;
 			else count = 0;
 			return count;
 		} else {
@@ -114,8 +156,14 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		}
 	}
 
-	public Term getTerm(int position) {
-		return items.get(position - 1);
+	public Term getTerm(int position, boolean withPositionDelta) {
+		int sectionDelta;
+		if (sectionHeaderPosition >= 0 && withPositionDelta)
+			sectionDelta = position > sectionHeaderPosition ? 1 : 0;
+		else sectionDelta = 0;
+		final int i = position - FILTER_ITEM_DELTA - sectionDelta;
+		Logs.ui("Getting item for position " + position + ", returning item at " + i);
+		return items.get(i);
 	}
 
 
@@ -209,6 +257,7 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 	}
 
 	public interface TermClickListener {
+
 		void onTermClicked(Term monster);
 		void onTermLongClicked(Term monster);
 		void onCategoryClicked(FacetCategory category);
@@ -216,6 +265,7 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 	}
 
 	public interface FilterCallbacks {
+
 		void onFilterComplete(int count);
 	}
 
@@ -261,8 +311,8 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 			});
 		}
 
-		public void setFacets(FacetContainer facets) {
-			facetsContainer.setFacets(facets);
+		public void setFacets(FacetContainer facets, FacetCategory selectedCategory) {
+			facetsContainer.setFacets(facets, selectedCategory);
 		}
 	}
 
@@ -294,10 +344,10 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 				public void onClick(View v, int pos, boolean isLongClick) {
 					if (!isLongClick) {
 						Logs.ui("Term " + pos + " clicked!");
-						if (clickListener != null) clickListener.onTermClicked(getTerm(pos));
+						if (clickListener != null) clickListener.onTermClicked(getTerm(pos, true));
 					} else {
 						Logs.ui("Term " + pos + " long clicked!");
-						if (clickListener != null) clickListener.onTermClicked(getTerm(pos));
+						if (clickListener != null) clickListener.onTermClicked(getTerm(pos, true));
 					}
 				}
 			});

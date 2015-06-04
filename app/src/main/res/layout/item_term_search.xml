@@ -12,7 +12,7 @@
 		android:layout_height="wrap_content"
 		android:gravity="center_vertical"
 		android:minHeight="48dp"
-		android:padding="8dp"
+		android:padding="16dp"
 		tools:text="Termine cercato"/>
 
 </LinearLayout>
