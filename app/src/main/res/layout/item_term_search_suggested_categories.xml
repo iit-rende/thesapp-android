@@ -16,11 +16,12 @@
 
 	</LinearLayout>
 
-	<com.devspark.robototextview.widget.RobotoTextView
+	<com.devspark.robototextview.widget.RobotoButton
 		android:id="@+id/facet_action"
 		style="@style/list_action"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:background="?android:attr/selectableItemBackground"
 		android:gravity="center_vertical"
 		android:minHeight="48dp"
 		android:padding="16dp"

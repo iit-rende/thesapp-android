@@ -59,7 +59,8 @@ public class SearchPanel extends FrameLayout implements TermSearchRecAdapter.Ter
 
 		mAdapter = new TermSearchRecAdapter(null, this, getContext());
 		SimpleSectionedRecyclerViewAdapter mSectionedAdapter =
-				new SimpleSectionedRecyclerViewAdapter(getContext(), R.layout.section,
+				new SimpleSectionedRecyclerViewAdapter(getContext(),
+						R.layout.item_search_section_header,
 						R.id.section_text, mAdapter);
 		mAdapter.setSectionAdapter(mSectionedAdapter);
 		searchBox.setTermSearchAdapter(mAdapter);
