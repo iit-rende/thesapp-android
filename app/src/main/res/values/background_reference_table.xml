@@ -7,4 +7,7 @@
 	<drawable name="label_background_narrower">@drawable/narrower_label_selector</drawable>
 	<drawable name="label_background_term">@drawable/term_label_selector</drawable>
 	<drawable name="label_background_hierarchy">@drawable/hierarchy_label_selector</drawable>
+	<drawable name="label_background_hierarchy_not_clickable">
+		@drawable/hierarchy_label_selector_not_clickable
+	</drawable>
 </resources>

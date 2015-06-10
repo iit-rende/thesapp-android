@@ -165,14 +165,9 @@ public class TermFragment extends TimelineElementFragment {
 			}
 			//setUiColor(Color.parseColor(term.getDomain().getColor()));
 
-			if (term.getHierarchy() != null && term.getHierarchy().size() > 0) {
-				termTreeView.setVisibility(View.VISIBLE);
-				treeViewHeader.setVisibility(View.VISIBLE);
-				termTreeView.setHierarchy(term);
-			} else {
-				termTreeView.setVisibility(View.GONE);
-				treeViewHeader.setVisibility(View.GONE);
-			}
+			termTreeView.setVisibility(View.VISIBLE);
+			treeViewHeader.setVisibility(View.VISIBLE);
+			termTreeView.setHierarchy(term);
 
 			infoContainer.removeAllViews();
 			addCategoryContainer(term.getCategories(), getString(R.string.categories_terms),

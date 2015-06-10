@@ -20,6 +20,7 @@
 	<color name="element_card_localization_label">@color/md_red_500</color>
 	<color name="element_card_term_label">@color/md_blue_500</color>
 	<color name="element_card_hierarchy_label">@color/md_blue_500</color>
+	<color name="element_card_hierarchy_label_not_clickable">@color/md_grey_500</color>
 
 	<color name="element_card_category_label_highlight">@color/element_card_category_label</color>
 	<color name="element_card_related_label_highlight">@color/element_card_related_label</color>

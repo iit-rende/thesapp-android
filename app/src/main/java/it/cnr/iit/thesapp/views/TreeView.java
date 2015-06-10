@@ -1,6 +1,7 @@
 package it.cnr.iit.thesapp.views;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -13,6 +14,7 @@ import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.model.Term;
 
 public class TreeView extends LinearLayout {
+
 	private TreeViewCallbacks mCallbacks;
 
 	public TreeView(Context context) {
@@ -40,22 +42,36 @@ public class TreeView extends LinearLayout {
 		int margin = getResources().getDimensionPixelSize(R.dimen.padding_small) / 2;
 
 		for (Term parent : term.getHierarchy()) {
-			addView(createTextView(parent, i, margin));
+			addView(createTextView(parent, i, margin, true));
 			i++;
+		}
+
+		//Adding the term as non clickable
+		addView(createTextView(term, i, margin, false));
+		i++;
+
+		//Adding the narrower terms
+		for (Term narrower : term.getNarrowerTerms()) {
+			addView(createTextView(narrower, i, margin, true));
 		}
 	}
 
-	private RobotoTextView createTextView(final Term term, int position, int margin) {
+	private RobotoTextView createTextView(final Term term, int position, int margin,
+	                                      boolean clickable) {
 		int padding = getResources().getDimensionPixelSize(R.dimen.tree_view_base_padding);
 
 		RobotoTextView tv = new RobotoTextView(getContext());
 		tv.setText(term.getDescriptor());
 
-		tv.setTextColor(getResources().getColorStateList(R.color.hierarchy_label_text_selector));
-		tv.setTypeface(null, Typeface.BOLD);
+		final ColorStateList colorStateList = clickable ? getResources().getColorStateList(
+				R.color.hierarchy_label_text_selector) : getResources().getColorStateList(
+				R.color.hierarchy_label_text_selector_not_clickable);
+		tv.setTextColor(colorStateList);
+		tv.setTypeface(null, clickable ? Typeface.BOLD : Typeface.ITALIC);
 		tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(
 				R.dimen.element_card_label_text_size));
-		tv.setBackgroundResource(R.drawable.label_background_hierarchy);
+		tv.setBackgroundResource(clickable ? R.drawable.label_background_hierarchy :
+		                         R.drawable.label_background_hierarchy_not_clickable);
 		tv.setPadding(padding, padding, padding, padding);
 
 		final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -63,7 +79,7 @@ public class TreeView extends LinearLayout {
 		params.setMargins(margin * position * 4, margin, margin, margin);
 		tv.setLayoutParams(params);
 
-		tv.setOnClickListener(new OnClickListener() {
+		if (clickable) tv.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				onTermClicked(term);
@@ -82,6 +98,7 @@ public class TreeView extends LinearLayout {
 	}
 
 	public interface TreeViewCallbacks {
+
 		void onTermClicked(Term term);
 	}
 }
