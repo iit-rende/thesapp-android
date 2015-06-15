@@ -1,6 +1,7 @@
 package it.cnr.iit.thesapp;
 
 import android.app.Application;
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.crashlytics.android.Crashlytics;
@@ -18,8 +19,13 @@ import it.cnr.iit.thesapp.model.TimelineElement;
 import it.cnr.iit.thesapp.utils.PrefUtils;
 
 public class App extends Application {
+
 	public static  List<TimelineElement> timelineElements;
 	private static Api                   api;
+
+	public static App getApp(Context context) {
+		return ((App) context.getApplicationContext());
+	}
 
 	public static Api getApi() {
 		if (api == null) api = new Api();

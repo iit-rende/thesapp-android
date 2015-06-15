@@ -32,7 +32,7 @@ android {
 
     signingConfigs {
         releaseConfig {
-            storeFile file("thesapp_keystore.jks");
+            storeFile file("thesapp_test_keystore.jks");
             storePassword("elioscamerino");
             keyAlias "elios";
             keyPassword "elioscamerino";

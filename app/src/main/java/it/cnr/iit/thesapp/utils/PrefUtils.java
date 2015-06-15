@@ -21,8 +21,7 @@ public class PrefUtils {
 
 	public static void saveDomain(Context context, String domain) {
 		PreferenceManager.getDefaultSharedPreferences(context).edit().putString(PREF_DOMAIN,
-				domain)
-						 .apply();
+				domain).commit();
 	}
 
 	public static String loadDomain(Context context) {

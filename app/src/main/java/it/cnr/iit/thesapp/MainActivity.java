@@ -30,6 +30,7 @@ import it.cnr.iit.thesapp.model.Domain;
 import it.cnr.iit.thesapp.model.DomainSearch;
 import it.cnr.iit.thesapp.model.TimelineElement;
 import it.cnr.iit.thesapp.utils.Logs;
+import it.cnr.iit.thesapp.utils.NotificationUtils;
 import it.cnr.iit.thesapp.utils.PrefUtils;
 import it.cnr.iit.thesapp.views.SearchBox;
 import it.cnr.iit.thesapp.views.SearchPanel;
@@ -67,7 +68,14 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
+		if (getIntent() != null && getIntent().getExtras() != null) {
+			String openWithDomain = getIntent().getExtras().getString(
+					NotificationUtils.OPEN_WITH_DOMAIN, null);
+			if (!TextUtils.isEmpty(openWithDomain)) {
+				PrefUtils.saveDomain(this, openWithDomain);
+				App.getApp(this).createTimeLine();
+			}
+		}
 		toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
 
 		setSupportActionBar(toolbar);
@@ -272,8 +280,8 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 	}
 
 	@Override
-	public TimelineElement getElement(String termDescriptor, String termDomain, String
-			termLanguage, int elementKind) {
+	public TimelineElement getElement(String termDescriptor, String termDomain, String termLanguage,
+	                                  int elementKind) {
 		return timelineAdapter.getTerm(termDescriptor, termDomain, termLanguage, elementKind);
 	}
 
