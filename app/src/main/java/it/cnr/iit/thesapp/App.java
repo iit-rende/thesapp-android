@@ -10,6 +10,7 @@ import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 import it.cnr.iit.thesapp.api.Api;
+import it.cnr.iit.thesapp.api.gcm.GcmRegisterService;
 import it.cnr.iit.thesapp.model.CategoryList;
 import it.cnr.iit.thesapp.model.Domain;
 import it.cnr.iit.thesapp.model.DomainSearch;
@@ -32,6 +33,7 @@ public class App extends Application {
 		final Fabric fabric = new Fabric.Builder(this).kits(crashlytics).debuggable(false).build();
 		Fabric.with(fabric);
 		createTimeLine();
+		GcmRegisterService.startRegistration(this);
 	}
 
 	public void createTimeLine() {
