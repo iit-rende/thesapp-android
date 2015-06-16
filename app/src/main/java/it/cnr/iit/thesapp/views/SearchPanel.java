@@ -138,4 +138,9 @@ public class SearchPanel extends FrameLayout implements TermSearchRecAdapter.Ter
 	public void setLanguage(String language) {
 		searchBox.setLanguage(language);
 	}
+
+	public void setDomain(Domain domain) {
+		searchBox.setDomain(domain);
+		mAdapter.setDomain(domain);
+	}
 }

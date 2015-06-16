@@ -41,6 +41,8 @@ public class TermFragment extends TimelineElementFragment {
 	private LinearLayout   infoContainer;
 	private TreeView       termTreeView;
 	private RobotoTextView treeViewHeader;
+	private boolean        withTree;
+	private RobotoTextView termDescriptionLabel;
 
 	public TermFragment() {}
 
@@ -85,10 +87,12 @@ public class TermFragment extends TimelineElementFragment {
 		termTitle = (RobotoTextView) view.findViewById(R.id.term_title);
 		termSubtitle = (RobotoTextView) view.findViewById(R.id.term_subtitle);
 		termDescription = (RobotoTextView) view.findViewById(R.id.term_description);
+		termDescriptionLabel = (RobotoTextView) view.findViewById(R.id.term_description_label);
 
 		treeViewHeader = (RobotoTextView) view.findViewById(R.id.tree_view_header);
 		termTreeView = (TreeView) view.findViewById(R.id.tree_view);
-		termTreeView.setCallbacks(new TreeView.TreeViewCallbacks() {
+		withTree = treeViewHeader != null;
+		if (withTree) termTreeView.setCallbacks(new TreeView.TreeViewCallbacks() {
 			@Override
 			public void onTermClicked(Term term) {
 				if (mListener != null) mListener.onElementClicked(term.getDescriptor(),
@@ -159,27 +163,39 @@ public class TermFragment extends TimelineElementFragment {
 			}
 			if (!TextUtils.isEmpty(term.getScopeNote())) {
 				termDescription.setVisibility(View.VISIBLE);
+				termDescriptionLabel.setVisibility(View.VISIBLE);
 				termDescription.setText(term.getScopeNote());
 			} else {
 				termDescription.setVisibility(View.GONE);
+				termDescriptionLabel.setVisibility(View.GONE);
 			}
 			//setUiColor(Color.parseColor(term.getDomain().getColor()));
 
-			termTreeView.setVisibility(View.VISIBLE);
-			treeViewHeader.setVisibility(View.VISIBLE);
-			termTreeView.setHierarchy(term);
+			if (withTree) {
+				termTreeView.setVisibility(View.VISIBLE);
+				treeViewHeader.setVisibility(View.VISIBLE);
+				termTreeView.setHierarchy(term);
+			}
 
 			infoContainer.removeAllViews();
-			addCategoryContainer(term.getCategories(), getString(R.string.categories_terms),
+			addCategoryContainer(term.getCategories(), getResources().getQuantityString(
+							R.plurals.categories_terms, term.getCategories().size()),
 					R.drawable.label_background_category, R.color.category_label_text_selector);
-			addTermsContainer(term.getLocalizations(), getString(R.string.translations_terms),
+			addTermsContainer(term.getLocalizations(), getResources().getQuantityString(
+							(R.string.translations_terms), term.getLocalizations().size()),
 					R.drawable.label_background_localization,
 					R.color.localization_label_text_selector);
-			addTermsContainer(term.getBroaderTerms(), getString(R.string.broader_terms),
+			addTermsContainer(term.getUseFor(), getResources().getQuantityString(
+							(R.string.synonyms_terms), term.getUseFor().size()),
+					R.drawable.label_background_synonym, R.color.synonym_label_text_selector);
+			addTermsContainer(term.getBroaderTerms(), getResources().getQuantityString(
+							(R.string.broader_terms), term.getBroaderTerms().size()),
 					R.drawable.label_background_broader, R.color.broader_label_text_selector);
-			addTermsContainer(term.getNarrowerTerms(), getString(R.string.narrower_terms),
+			addTermsContainer(term.getNarrowerTerms(), getResources().getQuantityString(
+							(R.string.narrower_terms), term.getNarrowerTerms().size()),
 					R.drawable.label_background_narrower, R.color.narrower_label_text_selector);
-			addTermsContainer(term.getRelatedTerms(), getString(R.string.related_terms),
+			addTermsContainer(term.getRelatedTerms(), getResources().getQuantityString(
+							(R.string.related_terms), term.getRelatedTerms().size()),
 					R.drawable.label_background_related, R.color.related_label_text_selector);
 
 			setWindowToolbar(term.getDomain());

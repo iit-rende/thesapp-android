@@ -3,12 +3,10 @@ package it.cnr.iit.thesapp;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -62,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 		}
 	};
 	private SlidingLayer slidingLayer;
+	private String       mLanguage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 				App.getApp(this).createTimeLine();
 			}
 		}
+		if (savedInstanceState == null) mLanguage = PrefUtils.loadLanguage(this);
+		else mLanguage = savedInstanceState.getString("language");
+
 		toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
 
 		setSupportActionBar(toolbar);
@@ -120,29 +122,22 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 			public void onClosed() { }
 		});
 		slidingLayer.setSlidingEnabled(false);
+		slidingLayer.setChangeStateOnTap(true);
 
 		loadDomains();
 		fetchDomains();
-
-		PreferenceManager.getDefaultSharedPreferences(this)
-		                 .registerOnSharedPreferenceChangeListener(
-				                 new SharedPreferences.OnSharedPreferenceChangeListener() {
-					                 @Override
-					                 public void onSharedPreferenceChanged(
-							                 SharedPreferences sharedPreferences, String key) {
-						                 if (key.equals(PrefUtils.PREF_LANGUAGE)) {
-							                 onLanguageChanged();
-						                 }
-					                 }
-				                 });
 	}
 
 
-	private void onLanguageChanged() {
-		Logs.thesaurus("Language changed");
-		searchPanel.setLanguage(PrefUtils.loadLanguage(this));
+	private void checkLanguageChange() {
+		if (!mLanguage.equalsIgnoreCase(PrefUtils.loadLanguage(this))) {
+			mLanguage = PrefUtils.loadLanguage(this);
+			Logs.thesaurus("Language changed to " + mLanguage);
+			searchPanel.setLanguage(mLanguage);
+			App.getApp(this).createTimeLine();
+			timelineAdapter.notifyDataSetChanged();
+		}
 	}
-
 
 	private void createPager() {
 		pager = null;
@@ -202,6 +197,18 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 
 		if (slidingLayer.isOpened()) slidingLayer.closeLayer(true);
 		else super.onBackPressed();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		checkLanguageChange();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString("language", mLanguage);
 	}
 
 	private void loadDomains() {
@@ -316,6 +323,10 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 					onUpPressed();
 				}
 			});
+		}
+		if (domain != null) {
+			PrefUtils.saveDomain(this, domain.getDescriptor());
+			searchPanel.setDomain(domain);
 		}
 		if (domain != null && pager.getCurrentItem() == page) {
 

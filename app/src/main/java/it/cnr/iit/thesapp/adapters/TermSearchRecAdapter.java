@@ -175,7 +175,6 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		this.domain = domain;
 		highlightColor = domain.getColor();
 		highlightColorDark = ColorUtils.darkerColor(Color.parseColor(domain.getColor()));
-		notifyItemChanged(0);
 	}
 
 	public void setLanguage(String language) {

@@ -170,6 +170,15 @@ public class SearchBox extends FrameLayout {
 		imm.hideSoftInputFromWindow(searchTextView.getWindowToken(), 0);
 	}
 
+	public void setDomain(Domain domain) {
+		selectedDomain = domain;
+		if (mDomainSpinnerAdapter != null && selectedDomain != null) {
+			int wantedPosition = mDomainSpinnerAdapter.getPositionFromDescriptor(
+					selectedDomain.getDescriptor());
+			if (wantedPosition >= 0) domainSpinner.setSelection(wantedPosition);
+		}
+	}
+
 	public interface SearchBoxListener {
 
 		void onTermSelected(String descriptor, String domain, String language);
