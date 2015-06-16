@@ -32,6 +32,8 @@ public class SearchFacetsContainer extends FrameLayout implements FacetCategoryL
 	private Drawable       filterDrawable;
 	private Drawable       unfilterDrawable;
 	private Drawable       closePanelDrawable;
+	private int            color;
+	private View           background;
 
 	public SearchFacetsContainer(Context context) {
 		super(context);
@@ -52,6 +54,7 @@ public class SearchFacetsContainer extends FrameLayout implements FacetCategoryL
 		inflate(getContext(), R.layout.item_term_search_suggested_categories, this);
 		this.categoryContainer = (LinearLayout) findViewById(R.id.categories_container);
 		this.actionButton = (RobotoButton) findViewById(R.id.facet_action);
+		this.background = findViewById(R.id.background);
 		filterDrawable = getContext().getResources().getDrawable(R.drawable.ic_filter_list);
 		unfilterDrawable = getContext().getResources().getDrawable(R.drawable.ic_close);
 		closePanelDrawable = getContext().getResources().getDrawable(
@@ -158,6 +161,11 @@ public class SearchFacetsContainer extends FrameLayout implements FacetCategoryL
 
 	public void setSearchFacetListener(SearchFacetListener listener) {
 		this.mListener = listener;
+	}
+
+	public void setColor(int color) {
+		this.color = color;
+		background.setBackgroundColor(color);
 	}
 
 	public interface SearchFacetListener {

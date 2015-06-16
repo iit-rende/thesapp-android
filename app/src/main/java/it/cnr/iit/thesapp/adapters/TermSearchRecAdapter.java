@@ -1,6 +1,7 @@
 package it.cnr.iit.thesapp.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import it.cnr.iit.thesapp.model.FacetCategory;
 import it.cnr.iit.thesapp.model.FacetContainer;
 import it.cnr.iit.thesapp.model.Term;
 import it.cnr.iit.thesapp.model.TermSearch;
+import it.cnr.iit.thesapp.utils.ColorUtils;
 import it.cnr.iit.thesapp.utils.Logs;
 import it.cnr.iit.thesapp.views.SearchFacetsContainer;
 
@@ -32,11 +34,11 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 	private static final int FACET_HOLDER      = 1;
 	private static final int TERM_HOLDER       = 2;
 	private static final int FILTER_ITEM_DELTA = 1;
-	private final String  highlightColor;
 	private final Context context;
 	int count = -1;
+	private int               highlightColorDark;
+	private String            highlightColor;
 	private TermClickListener clickListener;
-
 	private List<Term>                         items;
 	private Domain                             domain;
 	private String                             language;
@@ -55,6 +57,7 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		this.category = new FacetCategory();
 		this.highlightColor = String.format("#%06X", (0xFFFFFF & context.getResources().getColor(
 				R.color.accent)));
+		this.highlightColorDark = context.getResources().getColor(R.color.primaryDark);
 		this.context = context;
 	}
 
@@ -170,6 +173,9 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 	public void setDomain(Domain domain) {
 		Logs.ui("Setting domain for search: " + domain.getDescriptor());
 		this.domain = domain;
+		highlightColor = domain.getColor();
+		highlightColorDark = ColorUtils.darkerColor(Color.parseColor(domain.getColor()));
+		notifyItemChanged(0);
 	}
 
 	public void setLanguage(String language) {
@@ -296,6 +302,7 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		public FacetsHolder(View itemView) {
 			super(itemView);
 			facetsContainer = (SearchFacetsContainer) itemView;
+			facetsContainer.setColor(highlightColorDark);
 			facetsContainer.setSearchFacetListener(new SearchFacetsContainer.SearchFacetListener
 					() {
 				@Override

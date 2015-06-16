@@ -3,7 +3,7 @@
 	<color name="primary">@color/md_light_blue_500</color>
 	<color name="primaryDark">@color/md_light_blue_700</color>
 	<color name="background">@color/white</color>
-	<color name="accent">@color/md_deep_orange_500</color>
+	<color name="accent">@color/md_deep_orange_A200</color>
 	<color name="controlHighlight">@color/md_deep_orange_A400</color>
 
 	<color name="white">#ffffffff</color>
