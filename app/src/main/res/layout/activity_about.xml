@@ -1,0 +1,116 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<android.support.v7.widget.Toolbar
+		android:id="@+id/activity_toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/primary"
+		android:minHeight="@dimen/toolbar_height"
+		android:paddingTop="@dimen/status_bar_height"
+		android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<it.cnr.iit.thesapp.views.BoundedLinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:orientation="vertical"
+			app:bounded_width="400dp"
+			tools:context="it.cnr.iit.thesapp.AboutActivity">
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:padding="16dp"
+				android:text="@string/about_main_text"/>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:minHeight="72dp">
+
+
+				<ImageView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical"
+					android:layout_weight="1"
+
+					android:padding="8dp"
+					android:src="@drawable/logo_cnr"/>
+
+				<com.devspark.robototextview.widget.RobotoTextView
+					style="@style/title"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical"
+					android:layout_weight="1"
+					android:gravity="center_vertical"
+
+					android:padding="16dp"
+					android:text="@string/about_cnr"/>
+			</LinearLayout>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:minHeight="72dp">
+
+
+				<ImageView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical"
+					android:layout_weight="1"
+					android:padding="8dp"
+					android:src="@drawable/logo_iit"/>
+
+				<com.devspark.robototextview.widget.RobotoTextView
+					style="@style/title"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical"
+					android:layout_weight="1"
+					android:gravity="center_vertical"
+
+					android:padding="16dp"
+					android:text="@string/about_itt"/>
+			</LinearLayout>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:minHeight="72dp">
+
+
+				<ImageView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical"
+					android:layout_weight="1"
+					android:padding="8dp"
+					android:src="@drawable/logo_labdoc"/>
+
+				<com.devspark.robototextview.widget.RobotoTextView
+					style="@style/title"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical"
+
+					android:layout_weight="1"
+					android:gravity="center_vertical"
+					android:padding="16dp"
+					android:text="@string/about_labdoc"/>
+			</LinearLayout>
+		</it.cnr.iit.thesapp.views.BoundedLinearLayout>
+	</ScrollView>
+</LinearLayout>

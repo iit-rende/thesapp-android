@@ -1,43 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    package="it.cnr.iit.thesapp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+	package="it.cnr.iit.thesapp"
+	xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
 	<uses-permission android:name="android.permission.WAKE_LOCK"/>
 
 	<permission
 		android:name="${applicationId}.permission.C2D_MESSAGE"
 		android:protectionLevel="signature"/>
+
 	<uses-permission android:name="${applicationId}.permission.C2D_MESSAGE"/>
-    <application
-        android:name=".App"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme">
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="it.cnr.iit.thesapp.MainActivity"/>
-        </activity>
+	<application
+		android:name=".App"
+		android:allowBackup="true"
+		android:icon="@mipmap/ic_launcher"
+		android:label="@string/app_name"
+		android:theme="@style/AppTheme">
+		<activity
+			android:name=".MainActivity"
+			android:label="@string/app_name"
+			android:launchMode="singleTop">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="8e6edf2b73b32c64198c99837994efe460b5b4b5"/>
+				<category android:name="android.intent.category.LAUNCHER"/>
+			</intent-filter>
+		</activity>
+		<activity
+			android:name=".SettingsActivity"
+			android:label="@string/title_activity_settings"
+			android:parentActivityName=".MainActivity">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="it.cnr.iit.thesapp.MainActivity"/>
+		</activity>
+
+		<meta-data
+			android:name="io.fabric.ApiKey"
+			android:value="8e6edf2b73b32c64198c99837994efe460b5b4b5"/>
 
 		<receiver
 			android:name="com.google.android.gms.gcm.GcmReceiver"
@@ -73,6 +76,15 @@
 				<action android:name="com.google.android.gms.iid.InstanceID"/>
 			</intent-filter>
 		</service>
-    </application>
+
+		<activity
+			android:name=".AboutActivity"
+			android:label="@string/title_activity_about"
+			android:parentActivityName=".MainActivity">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="it.cnr.iit.thesapp.MainActivity"/>
+		</activity>
+	</application>
 
 </manifest>

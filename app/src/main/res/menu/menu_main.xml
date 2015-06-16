@@ -19,4 +19,11 @@
 		android:orderInCategory="1"
 		android:title="@string/action_delete_history"
 		app:showAsAction="ifRoom"/>
+
+	<item
+		android:id="@+id/action_show_about"
+		android:icon="@drawable/ic_action_action_history"
+		android:orderInCategory="1"
+		android:title="@string/action_show_about"
+		app:showAsAction="never"/>
 </menu>

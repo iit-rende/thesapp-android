@@ -20,7 +20,9 @@
 		style="@style/body_2"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:padding="16dp"
+		android:paddingBottom="8dp"
+		android:paddingLeft="16dp"
+		android:paddingRight="16dp"
 		tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vel urna mollis, finibus orci et, semper arcu. Cras dui justo, volutpat a rutrum sed, lacinia sollicitudin risus. Ut rutrum arcu et felis ullamcorper commodo. Praesent semper erat vel justo egestas interdum. Sed quis tellus interdum, sollicitudin sem sed, varius turpis. Vestibulum auctor ligula ut eros aliquam, eget mollis metus auctor. Morbi at erat a leo auctor volutpat. Aliquam erat volutpat. Ut odio justo, laoreet sodales tempus id, bibendum at dolor. "/>
 
 </LinearLayout>

@@ -182,20 +182,20 @@ public class TermFragment extends TimelineElementFragment {
 							R.plurals.categories_terms, term.getCategories().size()),
 					R.drawable.label_background_category, R.color.category_label_text_selector);
 			addTermsContainer(term.getLocalizations(), getResources().getQuantityString(
-							(R.string.translations_terms), term.getLocalizations().size()),
+							(R.plurals.translations_terms), term.getLocalizations().size()),
 					R.drawable.label_background_localization,
 					R.color.localization_label_text_selector);
 			addTermsContainer(term.getUseFor(), getResources().getQuantityString(
-							(R.string.synonyms_terms), term.getUseFor().size()),
+							(R.plurals.synonyms_terms), term.getUseFor().size()),
 					R.drawable.label_background_synonym, R.color.synonym_label_text_selector);
 			addTermsContainer(term.getBroaderTerms(), getResources().getQuantityString(
-							(R.string.broader_terms), term.getBroaderTerms().size()),
+							(R.plurals.broader_terms), term.getBroaderTerms().size()),
 					R.drawable.label_background_broader, R.color.broader_label_text_selector);
 			addTermsContainer(term.getNarrowerTerms(), getResources().getQuantityString(
-							(R.string.narrower_terms), term.getNarrowerTerms().size()),
+							(R.plurals.narrower_terms), term.getNarrowerTerms().size()),
 					R.drawable.label_background_narrower, R.color.narrower_label_text_selector);
 			addTermsContainer(term.getRelatedTerms(), getResources().getQuantityString(
-							(R.string.related_terms), term.getRelatedTerms().size()),
+							(R.plurals.related_terms), term.getRelatedTerms().size()),
 					R.drawable.label_background_related, R.color.related_label_text_selector);
 
 			setWindowToolbar(term.getDomain());

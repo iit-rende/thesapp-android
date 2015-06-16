@@ -187,6 +187,10 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 			case R.id.action_delete_history:
 				Logs.ui("Deleting history");
 				timelineAdapter.goHome();
+				return true;
+			case R.id.action_show_about:
+				AboutActivity.show(this);
+				return true;
 			default:
 				return false;
 		}

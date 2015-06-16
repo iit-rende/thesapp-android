@@ -31,4 +31,29 @@
 	<string name="filter_by_category">Filtra per categoria</string>
 	<string name="category_list_subtitle">dominio: %1$s</string>
 	<string name="category_list_title">Scegli una categoria</string>
+
+	<plurals name="translations_terms">
+		<item quantity="one">Traduzione</item>
+		<item quantity="other">Traduzioni</item>
+	</plurals>
+	<plurals name="synonyms_terms">
+		<item quantity="one">Sinonimo</item>
+		<item quantity="other">Sinonimi</item>
+	</plurals>
+	<plurals name="related_terms">
+		<item quantity="one">Termine correlato</item>
+		<item quantity="other">Termini correlati</item>
+	</plurals>
+	<plurals name="categories_terms">
+		<item quantity="one">Categoria</item>
+		<item quantity="other">Categorie</item>
+	</plurals>
+	<plurals name="broader_terms">
+		<item quantity="one">Termine più generico</item>
+		<item quantity="other">Termini più generici</item>
+	</plurals>
+	<plurals name="narrower_terms">
+		<item quantity="one">Termine più specifico</item>
+		<item quantity="other">Termini più specifici</item>
+	</plurals>
 </resources>
