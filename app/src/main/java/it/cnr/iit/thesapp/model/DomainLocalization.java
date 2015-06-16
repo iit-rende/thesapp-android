@@ -11,6 +11,12 @@ public class DomainLocalization {
 	@SerializedName("descriptor")
 	@Expose
 	private String descriptor;
+	@SerializedName("description")
+	@Expose
+	private String description;
+	@SerializedName("termCount")
+	@Expose
+	private int    termCount;
 
 	/**
 	 * @return The language
@@ -38,5 +44,21 @@ public class DomainLocalization {
 	 */
 	public void setDescriptor(String descriptor) {
 		this.descriptor = descriptor;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public int getTermCount() {
+		return termCount;
+	}
+
+	public void setTermCount(int termCount) {
+		this.termCount = termCount;
 	}
 }

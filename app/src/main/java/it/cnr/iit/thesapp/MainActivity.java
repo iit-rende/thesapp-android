@@ -225,7 +225,14 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 		if (loading) {
 			dialog.show();
 		} else {
-			if (dialog != null) dialog.cancel();
+			try {
+				if ((dialog != null) && dialog.isShowing()) {
+					dialog.dismiss();
+				}
+			} catch (final IllegalArgumentException e) {
+				// Handle or log or ignore
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -280,8 +287,8 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 	}
 
 	@Override
-	public TimelineElement getElement(String termDescriptor, String termDomain, String termLanguage,
-	                                  int elementKind) {
+	public TimelineElement getElement(String termDescriptor, String termDomain, String
+			termLanguage, int elementKind) {
 		return timelineAdapter.getTerm(termDescriptor, termDomain, termLanguage, elementKind);
 	}
 

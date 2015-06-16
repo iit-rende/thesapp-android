@@ -10,12 +10,16 @@ import com.devspark.robototextview.widget.RobotoTextView;
 
 import it.cnr.iit.thesapp.R;
 import it.cnr.iit.thesapp.model.Domain;
+import it.cnr.iit.thesapp.model.DomainLocalization;
+import it.cnr.iit.thesapp.utils.PrefUtils;
 
 public class DomainListItem extends FrameLayout {
 
 	private Domain              domain;
 	private RobotoTextView      domainName;
 	private DomainClickListener mListener;
+	private RobotoTextView domainDescription;
+	private RobotoTextView domainTermCount;
 
 	public DomainListItem(Context context) {
 		super(context);
@@ -35,6 +39,8 @@ public class DomainListItem extends FrameLayout {
 	public void init() {
 		inflate(getContext(), R.layout.panel_domain_list_item, this);
 		domainName = (RobotoTextView) findViewById(R.id.domain_name);
+		domainDescription = (RobotoTextView) findViewById(R.id.domain_description);
+		domainTermCount = (RobotoTextView) findViewById(R.id.domain_term_count);
 		setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -53,9 +59,24 @@ public class DomainListItem extends FrameLayout {
 
 	public void setDomain(Domain domain) {
 		this.domain = domain;
-		if (TextUtils.isEmpty(domain.getLocalization())) domainName.setText(domain.getDescriptor
-				());
-		else domainName.setText((domain.getLocalization()));
+
+		DomainLocalization loc = null;
+		String language = PrefUtils.loadLanguage(getContext());
+		for (DomainLocalization domainLocalization : domain.getLocalizations()) {
+			if (language.equalsIgnoreCase(domainLocalization.getLanguage()))
+				loc = domainLocalization;
+		}
+		if (loc == null && domain.getLocalizations() != null &&
+		    domain.getLocalizations().size() > 0) loc = domain.getLocalizations().get(0);
+		if (loc != null) {
+			domainName.setText(loc.getDescriptor());
+			domainDescription.setText(loc.getDescription());
+			domainTermCount.setText("" + loc.getTermCount());
+		} else {
+			if (TextUtils.isEmpty(domain.getLocalization())) domainName.setText(
+					domain.getDescriptor());
+			else domainName.setText((domain.getLocalization()));
+		}
 	}
 
 	public interface DomainClickListener {
