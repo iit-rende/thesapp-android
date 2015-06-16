@@ -32,8 +32,8 @@ public class CategoryListItem extends FrameLayout {
 	}
 
 	public void init() {
-		inflate(getContext(), R.layout.panel_domain_list_item, this);
-		categoryName = (RobotoTextView) findViewById(R.id.domain_name);
+		inflate(getContext(), R.layout.panel_category_list_item, this);
+		categoryName = (RobotoTextView) findViewById(R.id.category_name);
 		setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
