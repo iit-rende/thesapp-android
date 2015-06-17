@@ -29,8 +29,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class DomainListFragment extends TimelineElementFragment implements DomainListItem
-																				   .DomainClickListener {
+public class DomainListFragment extends TimelineElementFragment implements DomainListItem.DomainClickListener {
+
 	private RobotoTextView termTitle;
 	private RobotoTextView termDescription;
 	private ScrollView     scrollView;
@@ -45,7 +45,7 @@ public class DomainListFragment extends TimelineElementFragment implements Domai
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
+	                         Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_domain_list, container, false);
 	}
@@ -114,7 +114,7 @@ public class DomainListFragment extends TimelineElementFragment implements Domai
 					setUiLoading(false);
 				} else {
 					Logs.retrofit("Error fetching domainSearch: " + response.getStatus() + " - " +
-								  response.getReason());
+					              response.getReason());
 					showError(response);
 				}
 			}
@@ -157,6 +157,7 @@ public class DomainListFragment extends TimelineElementFragment implements Domai
 	}
 
 	private void prepareDomainListElement(DomainSearch domainSearch) {
+		domainSearch.setLanguage(PrefUtils.loadLanguage(getActivity()));
 		domainSearch.fillMissingInfo();
 		PrefUtils.saveDomains(getActivity(), domainSearch.getDomains());
 		reloadUi(domainSearch);

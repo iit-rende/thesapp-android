@@ -21,6 +21,7 @@ import it.cnr.iit.thesapp.model.Category;
 import it.cnr.iit.thesapp.model.CategoryList;
 import it.cnr.iit.thesapp.model.TimelineElement;
 import it.cnr.iit.thesapp.utils.Logs;
+import it.cnr.iit.thesapp.utils.PrefUtils;
 import it.cnr.iit.thesapp.views.CategoryListItem;
 import it.cnr.iit.thesapp.views.ErrorView;
 import retrofit.Callback;
@@ -35,7 +36,7 @@ public class CategoryListFragment extends TimelineElementFragment implements Cat
 	private ScrollView     scrollView;
 	private RobotoTextView termSubtitle;
 	private View           titleContainer;
-	private LinearLayout   domainContainer;
+	private LinearLayout categoryContainer;
 
 	public CategoryListFragment() {
 		// Required empty public constructor
@@ -78,7 +79,7 @@ public class CategoryListFragment extends TimelineElementFragment implements Cat
 		}
 		titleContainer = view.findViewById(R.id.title_container);
 		cardContent = view.findViewById(R.id.card_content);
-		domainContainer = (LinearLayout) view.findViewById(R.id.domain_list_container);
+		categoryContainer = (LinearLayout) view.findViewById(R.id.domain_list_container);
 
 		termTitle = (RobotoTextView) view.findViewById(R.id.term_title);
 		termSubtitle = (RobotoTextView) view.findViewById(R.id.term_subtitle);
@@ -142,8 +143,8 @@ public class CategoryListFragment extends TimelineElementFragment implements Cat
 			termSubtitle.setText(getString(R.string.category_list_subtitle,
 					categoryList.getDomainDescriptor()));
 
-			domainContainer.removeAllViews();
-			addTermsContainer(categoryList.getCategories());
+			categoryContainer.removeAllViews();
+			addCategoriesToContainer(categoryList.getCategories());
 
 			setWindowToolbar(categoryList.getDomain());
 		}
@@ -154,19 +155,20 @@ public class CategoryListFragment extends TimelineElementFragment implements Cat
 	}
 
 	private void prepareCategoryListElement(CategoryList categoryList) {
+		categoryList.setLanguage(PrefUtils.loadLanguage(getActivity()));
 		categoryList.fillMissingInfo();
 		reloadUi(categoryList);
 		persistElement(categoryList);
 	}
 
-	private void addTermsContainer(List<Category> categories) {
+	private void addCategoriesToContainer(List<Category> categories) {
 		if (categories != null && categories.size() > 0) {
 			for (Category category : categories) {
 				CategoryListItem container = new CategoryListItem(getActivity());
 
 				container.setCategory(category);
 				container.setCategoryClickListener(this);
-				domainContainer.addView(container);
+				categoryContainer.addView(container);
 			}
 		}
 	}

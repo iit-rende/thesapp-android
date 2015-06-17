@@ -48,8 +48,7 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 	}
 
 	public int addCategory(String categoryDescriptor, String categoryDomain,
-	                       String categoryLanguage,
-	                       int clickedFromPage) {
+	                       String categoryLanguage, int clickedFromPage) {
 		Category category = new Category(categoryDescriptor, categoryDomain, categoryLanguage);
 		return addCategory(category, clickedFromPage);
 	}
@@ -180,7 +179,6 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 		}
 	}
 
-
 	private void deleteHistory(int keep) {
 		removeTerms(keep);
 		//notifyChangeInPosition(getCount());
@@ -253,7 +251,6 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 		return count;
 	}
 
-
 	@Override
 	public int getItemPosition(Object object) {
 		Fragment f = (Fragment) object;
@@ -273,6 +270,12 @@ public class TimelineAdapter extends FragmentPagerAdapter implements TermFragmen
 		}
 
 		return POSITION_NONE;
+	}
+
+	@Override
+	public void notifyDataSetChanged() {
+		count = -1;
+		super.notifyDataSetChanged();
 	}
 
 	@Override

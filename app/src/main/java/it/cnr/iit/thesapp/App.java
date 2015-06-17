@@ -16,6 +16,7 @@ import it.cnr.iit.thesapp.model.CategoryList;
 import it.cnr.iit.thesapp.model.Domain;
 import it.cnr.iit.thesapp.model.DomainSearch;
 import it.cnr.iit.thesapp.model.TimelineElement;
+import it.cnr.iit.thesapp.utils.Logs;
 import it.cnr.iit.thesapp.utils.PrefUtils;
 
 public class App extends Application {
@@ -43,14 +44,15 @@ public class App extends Application {
 	}
 
 	public void createTimeLine() {
+		if (timelineElements != null) timelineElements.clear();
 		timelineElements = new ArrayList<>();
-		DomainSearch domainSearch = new DomainSearch(Domain.getDefault(this),
-				PrefUtils.loadLanguage(this));
+		final String language = PrefUtils.loadLanguage(this);
+		Logs.thesaurus("Language used to build timeline: " + language);
+		DomainSearch domainSearch = new DomainSearch(Domain.getDefault(this), language);
 		timelineElements.add(domainSearch);
 
 		if (!TextUtils.isEmpty(PrefUtils.loadDomain(this))) {
-			CategoryList categoryList = new CategoryList(PrefUtils.loadDomain(this),
-					PrefUtils.loadLanguage(this));
+			CategoryList categoryList = new CategoryList(PrefUtils.loadDomain(this), language);
 			timelineElements.add(categoryList);
 		}
 	}

@@ -157,10 +157,12 @@ public class DelayedAutoCompleteTextView extends EditText {
 
 
 	public interface OnSearchListener {
+
 		void performSearch(CharSequence filter);
 	}
 
 	public class DelayHandler extends Handler {
+
 		public DelayHandler() {
 		}
 

@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -61,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 	};
 	private SlidingLayer slidingLayer;
 	private String       mLanguage;
+	private int mSelectedPage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,10 +78,12 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 		if (savedInstanceState == null) mLanguage = PrefUtils.loadLanguage(this);
 		else mLanguage = savedInstanceState.getString("language");
 
+		if (savedInstanceState == null) mSelectedPage = App.timelineElements.size() > 1 ? 1 : 0;
+		else mSelectedPage = savedInstanceState.getInt("page");
+
 		toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
 
 		setSupportActionBar(toolbar);
-		createPager();
 
 		searchPanel = (SearchPanel) findViewById(R.id.search_panel);
 		searchPanel.setSearchListener(new SearchBox.SearchBoxListener() {
@@ -128,10 +130,12 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 		fetchDomains();
 	}
 
-
 	private void checkLanguageChange() {
-		if (!mLanguage.equalsIgnoreCase(PrefUtils.loadLanguage(this))) {
-			mLanguage = PrefUtils.loadLanguage(this);
+		final String savedLanguage = PrefUtils.loadLanguage(this);
+		Logs.thesaurus("Saved Language: " + savedLanguage);
+		Logs.thesaurus("Memory Language: " + mLanguage);
+		if (!mLanguage.equalsIgnoreCase(savedLanguage)) {
+			mLanguage = savedLanguage;
 			Logs.thesaurus("Language changed to " + mLanguage);
 			searchPanel.setLanguage(mLanguage);
 			App.getApp(this).createTimeLine();
@@ -140,13 +144,11 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 	}
 
 	private void createPager() {
-		pager = null;
-		timelineAdapter = null;
 		pager = (ViewPager) findViewById(R.id.pager);
 		timelineAdapter = new TimelineAdapter(this, getSupportFragmentManager(), pager);
 		pager.setOffscreenPageLimit(3);
 		pager.setAdapter(timelineAdapter);
-		pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+		pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			@Override
 			public void onPageScrolled(int position, float positionOffset,
 			                           int positionOffsetPixels) {}
@@ -160,13 +162,11 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 			public void onPageScrollStateChanged(int state) {}
 		});
 
-		if (timelineAdapter.getCount() > 1) pager.setCurrentItem(1, true);
+		if (timelineAdapter.getCount() > mSelectedPage) pager.setCurrentItem(mSelectedPage, true);
+
+		setToolbarDomain(App.timelineElements.get(mSelectedPage).getDomain(), mSelectedPage);
 	}
 
-	@Override
-	public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-		super.onSaveInstanceState(outState, outPersistentState);
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -207,12 +207,14 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 	protected void onResume() {
 		super.onResume();
 		checkLanguageChange();
+		createPager();
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putString("language", mLanguage);
+		outState.putInt("page", pager.getCurrentItem());
 	}
 
 	private void loadDomains() {
@@ -333,7 +335,6 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 			searchPanel.setDomain(domain);
 		}
 		if (domain != null && pager.getCurrentItem() == page) {
-
 			ObjectAnimator anim = ObjectAnimator.ofInt(this, uiColorProperty, Color.parseColor(
 					domain.getColor()));
 			anim.setEvaluator(new ArgbEvaluator());

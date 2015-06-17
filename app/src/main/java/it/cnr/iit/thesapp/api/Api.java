@@ -28,8 +28,7 @@ public class Api {
 
 	public Api() {
 
-		RestAdapter restAdapter =
-				new RestAdapter.Builder()//.setLogLevel(RestAdapter.LogLevel.BASIC)
+		RestAdapter restAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL)
 						.setClient(new InterceptingOkClient()).setEndpoint(ENDPOINT).build();
 		service = restAdapter.create(ThesAppService.class);
 	}

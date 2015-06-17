@@ -31,9 +31,10 @@
 	</color>
 	<color name="element_card_term_label_highlight">@color/element_card_term_label</color>
 	<color name="element_card_synonym_label_highlight">@color/element_card_term_label</color>
-	<color name="element_card_hierarchy_label_highlight">@color/element_card_term_label</color>
+	<color name="element_card_hierarchy_label_highlight">@color/md_brown_900</color>
 	<color name="term_hierarchy_text_pressed">@color/md_grey_300</color>
 	<color name="category_label_header">@color/black_54</color>
+	<color name="element_card_hierarchy_label_not_clickable_highlight">@color/md_grey_900</color>
 
 
 </resources>

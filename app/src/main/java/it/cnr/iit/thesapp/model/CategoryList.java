@@ -58,6 +58,7 @@ public class CategoryList extends TimelineElement {
 		if (categories != null) {
 			for (Category category : categories) {
 				category.setDomain(getDomain());
+				category.setLanguage(getLanguage());
 			}
 			Collections.sort(categories, new Comparator<Category>() {
 				public int compare(Category category1, Category category2) {
