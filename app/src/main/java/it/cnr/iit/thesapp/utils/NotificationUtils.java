@@ -39,8 +39,13 @@ public class NotificationUtils {
 		builder.setAutoCancel(true);
 		builder.setDefaults(NotificationCompat.DEFAULT_ALL);
 
-		if (localization != null) builder.setStyle(new NotificationCompat.BigTextStyle().bigText(
-				localization.getText()));
+		if (localization != null) {
+			final NotificationCompat.BigTextStyle bigTextStyle =
+					new NotificationCompat.BigTextStyle().bigText(localization.getText())
+					                                     .setBigContentTitle(gcmData.getDomain())
+					                                     .setSummaryText(localization.getText());
+			builder.setStyle(bigTextStyle);
+		}
 
 		NotificationManager mNotifyMgr = (NotificationManager) context.getSystemService(
 				Context.NOTIFICATION_SERVICE);
