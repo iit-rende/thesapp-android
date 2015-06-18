@@ -1,6 +1,5 @@
 package it.cnr.iit.thesapp.utils;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -38,7 +37,7 @@ public class NotificationUtils {
 		builder.setContentIntent(resultPendingIntent);
 		builder.setSmallIcon(R.mipmap.ic_launcher);
 		builder.setAutoCancel(true);
-		builder.setDefaults(Notification.DEFAULT_ALL);
+		builder.setDefaults(NotificationCompat.DEFAULT_ALL);
 
 		if (localization != null) builder.setStyle(new NotificationCompat.BigTextStyle().bigText(
 				localization.getText()));
