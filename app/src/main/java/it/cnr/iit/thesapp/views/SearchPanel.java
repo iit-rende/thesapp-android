@@ -3,7 +3,6 @@ package it.cnr.iit.thesapp.views;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -68,7 +67,7 @@ public class SearchPanel extends FrameLayout implements TermSearchRecAdapter.Ter
 		DomainSpinnerAdapter domainSpinnerAdapter = new DomainSpinnerAdapter(getContext(), null);
 		searchBox.setDomainSpinnerAdapter(domainSpinnerAdapter);
 
-		RecyclerView mList = (RecyclerView) findViewById(R.id.search_list);
+		CustomRecyclerView mList = (CustomRecyclerView) findViewById(R.id.search_list);
 		LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
 		mList.setLayoutManager(mLayoutManager);
 		//mList.setAdapter(mAdapter);

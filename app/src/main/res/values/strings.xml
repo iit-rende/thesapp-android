@@ -32,7 +32,7 @@
 	<string name="filter_by_all_categories">Use all categories</string>
 	<string name="filter_by_all_category_with_selected">Click to use all categories</string>
 	<string name="semating_search_header">You might be interested in</string>
-	<string name="term_description_label">Description</string>
+	<string name="term_description_label">Definition</string>
 
 
 	<plurals name="translations_terms">

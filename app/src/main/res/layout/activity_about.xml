@@ -24,47 +24,20 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_horizontal"
 			android:orientation="vertical"
-			app:bounded_width="400dp"
+			app:bounded_width="@dimen/about_box_width"
 			tools:context="it.cnr.iit.thesapp.AboutActivity">
 
 			<TextView
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:padding="16dp"
-				android:text="@string/about_main_text"/>
+				android:text="@string/about_main_text"
+				android:textSize="@dimen/about_text_size"/>
 
 			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:minHeight="72dp">
-
-
-				<ImageView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_vertical"
-					android:layout_weight="1"
-
-					android:padding="8dp"
-					android:src="@drawable/logo_cnr"/>
-
-				<com.devspark.robototextview.widget.RobotoTextView
-					style="@style/title"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_vertical"
-					android:layout_weight="1"
-					android:gravity="center_vertical"
-
-					android:padding="16dp"
-					android:text="@string/about_cnr"/>
-			</LinearLayout>
-
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:minHeight="72dp">
-
 
 				<ImageView
 					android:layout_width="match_parent"
@@ -72,45 +45,27 @@
 					android:layout_gravity="center_vertical"
 					android:layout_weight="1"
 					android:padding="8dp"
+					android:scaleType="fitCenter"
 					android:src="@drawable/logo_iit"/>
 
-				<com.devspark.robototextview.widget.RobotoTextView
-					style="@style/title"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_vertical"
-					android:layout_weight="1"
-					android:gravity="center_vertical"
-
-					android:padding="16dp"
-					android:text="@string/about_itt"/>
-			</LinearLayout>
-
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:minHeight="72dp">
-
-
 				<ImageView
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_vertical"
 					android:layout_weight="1"
 					android:padding="8dp"
-					android:src="@drawable/logo_labdoc"/>
-
-				<com.devspark.robototextview.widget.RobotoTextView
-					style="@style/title"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_vertical"
-
-					android:layout_weight="1"
-					android:gravity="center_vertical"
-					android:padding="16dp"
-					android:text="@string/about_labdoc"/>
+					android:scaleType="fitCenter"
+					android:src="@drawable/logo_cnr"/>
 			</LinearLayout>
+
+
+			<ImageView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:padding="8dp"
+				android:scaleType="fitCenter"
+				android:src="@drawable/logo_labdoc"/>
 		</it.cnr.iit.thesapp.views.BoundedLinearLayout>
 	</ScrollView>
 </LinearLayout>

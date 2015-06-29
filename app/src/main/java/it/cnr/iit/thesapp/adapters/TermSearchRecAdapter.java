@@ -232,13 +232,15 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 
 			@SuppressWarnings("unchecked")
 			@Override
-			protected void publishResults(final CharSequence contraint,
+			protected void publishResults(final CharSequence constraint,
 			                              final FilterResults results) {
-				if (results != null) {
-					Logs.ui("Result published for " + contraint);
-					setTerms(((TermSearch) results.values).getSuggestions());
-					setSearchedTerm(((TermSearch) results.values).getQuery());
-					setFacets(((TermSearch) results.values).getFacets());
+				if (results != null && results.values != null &&
+				    results.values instanceof TermSearch) {
+					Logs.ui("Result published for " + constraint);
+					final TermSearch termSearch = (TermSearch) results.values;
+					setTerms(termSearch.getSuggestions());
+					setSearchedTerm(termSearch.getQuery());
+					setFacets(termSearch.getFacets());
 					if (mCallbacks != null) mCallbacks.onFilterComplete(results.count);
 				} else {
 					if (mCallbacks != null) mCallbacks.onFilterComplete(0);

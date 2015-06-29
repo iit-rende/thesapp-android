@@ -59,7 +59,7 @@
 	<string name="action_show_about">About</string>
 	<string name="semating_search_header">Potrebbero interessarti</string>
 	<string name="synonyms_terms">Sinonimi</string>
-	<string name="term_description_label">Descrizione</string>
+	<string name="term_description_label">Definizione</string>
 	<string name="title_activity_about">Thesapp</string>
 	<string name="about_cnr">Consiglio Nazionale delle Ricerche</string>
 	<string name="about_itt">Istituto di Informatica e Telematica del CNR</string>

@@ -23,13 +23,14 @@ import retrofit.http.Query;
 
 public class Api {
 
-	public static final String ENDPOINT = "http://146.48.65.88";
+	public static final String ENDPOINT = "http://thesapp.iit.cnr.it/";
 	private final ThesAppService service;
 
 	public Api() {
 
 		RestAdapter restAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL)
-						.setClient(new InterceptingOkClient()).setEndpoint(ENDPOINT).build();
+		                                                   .setClient(new InterceptingOkClient())
+		                                                   .setEndpoint(ENDPOINT).build();
 		service = restAdapter.create(ThesAppService.class);
 	}
 

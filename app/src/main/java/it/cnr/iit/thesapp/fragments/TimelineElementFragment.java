@@ -128,16 +128,18 @@ public abstract class TimelineElementFragment extends Fragment {
 		cardContent.setVisibility(View.GONE);
 		errorView.setVisibility(View.VISIBLE);
 		String errorString;
-		switch (response.getStatus()) {
-			case 404:
-				errorString = getString(R.string.error_not_found);
-				break;
-			case 500:
-				errorString = getString(R.string.error_server_problems);
-				break;
-			default:
-				errorString = getString(R.string.error_generic);
-		}
+		if (getActivity() != null) {
+			switch (response.getStatus()) {
+				case 404:
+					errorString = getString(R.string.error_not_found);
+					break;
+				case 500:
+					errorString = getString(R.string.error_server_problems);
+					break;
+				default:
+					errorString = getString(R.string.error_generic);
+			}
+		} else errorString = "Clicca per riprovare";
 		errorView.setError(String.valueOf(response.getStatus()), errorString);
 	}
 
@@ -147,19 +149,20 @@ public abstract class TimelineElementFragment extends Fragment {
 		cardContent.setVisibility(View.GONE);
 		errorView.setVisibility(View.VISIBLE);
 		String errorString;
-		switch (error.getKind()) {
+		if (getActivity() != null) {
+			switch (error.getKind()) {
 
-			case NETWORK:
-				errorString = getString(R.string.error_connection_problem);
-				break;
-			case HTTP:
-				showError(error.getResponse());
-				return;
-			default:
-				errorString = getString(R.string.error_generic);
-				break;
-		}
-
+				case NETWORK:
+					errorString = getString(R.string.error_connection_problem);
+					break;
+				case HTTP:
+					showError(error.getResponse());
+					return;
+				default:
+					errorString = getString(R.string.error_generic);
+					break;
+			}
+		} else errorString = "Clicca per riprovare";
 		errorView.setError("", errorString);
 	}
 

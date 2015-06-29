@@ -11,7 +11,7 @@
 		android:background="@color/primary"/>
 
 
-	<android.support.v7.widget.RecyclerView
+	<it.cnr.iit.thesapp.views.CustomRecyclerView
 		android:id="@+id/search_list"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
