@@ -164,7 +164,8 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 
 		if (timelineAdapter.getCount() > mSelectedPage) pager.setCurrentItem(mSelectedPage, true);
 
-		setToolbarDomain(App.timelineElements.get(mSelectedPage).getDomain(), mSelectedPage);
+		if (App.timelineElements.size() > mSelectedPage) setToolbarDomain(App.timelineElements.get(
+				mSelectedPage).getDomain(), mSelectedPage);
 	}
 
 
