@@ -4,6 +4,6 @@
 	<dimen name="search_panel_width">400dp</dimen>
 	<dimen name="search_panel_width_with_shadow">408dp</dimen>
 	<dimen name="about_text_size">16sp</dimen>
-	<dimen name="about_box_width">400dp</dimen>
+	<dimen name="about_box_width">600dp</dimen>
 	<item name="pager_page_width" format="float" type="dimen">1.0</item>
 </resources>

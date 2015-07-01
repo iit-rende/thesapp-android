@@ -81,13 +81,14 @@ public class TermsContainerWithAlphabet extends LinearLayout {
 		}
 	}
 
-	public RobotoTextView createTextView(@ColorRes int colorId, @ColorRes int drawableId,
+	public RobotoTextView createTextView(@ColorRes int colorId, @DrawableRes int drawableId,
 	                                     int margin) {
 		RobotoTextView tv = new RobotoTextView(getContext());
 		tv.setTextColor(getResources().getColorStateList(colorId));
 		tv.setTypeface(null, Typeface.BOLD);
 		tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(
 				R.dimen.element_card_label_text_size));
+		if (getWidth() > 0) tv.setMaxWidth(this.getWidth() - margin * 20);
 		tv.setBackgroundResource(drawableId);
 		final FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
 				FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
@@ -120,7 +121,7 @@ public class TermsContainerWithAlphabet extends LinearLayout {
 
 		public Future<List<View>> prepareTermTextViews(final List<Term> terms,
 		                                               @ColorRes final int colorId,
-		                                               @ColorRes final int drawableId,
+		                                               @DrawableRes final int drawableId,
 		                                               final int margin,
 		                                               final TimelineElementFragment
 				                                               .TimelineElementFragmentCallback
@@ -162,7 +163,7 @@ public class TermsContainerWithAlphabet extends LinearLayout {
 
 		public Future<List<RobotoTextView>> prepareHeaderViews(final List<Term> terms,
 		                                                       @ColorRes final int colorId,
-		                                                       @ColorRes final int drawableId,
+		                                                       @DrawableRes final int drawableId,
 		                                                       final int margin,
 		                                                       final TimelineElementFragment
 				                                                       .TimelineElementFragmentCallback callback,

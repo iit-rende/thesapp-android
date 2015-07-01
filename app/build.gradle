@@ -73,7 +73,7 @@ dependencies {
     compile 'com.android.support:support-v13:22.2.0'
     compile 'com.android.support:support-v4:22.2.0'
     compile 'com.github.johnkil.android-robototextview:robototextview:2.4.0'
-    compile 'org.apmem.tools:layouts:1.8@aar'
+    compile 'org.apmem.tools:layouts:1.9@aar'
     compile 'com.wunderlist:sliding-layer:1.1.1'
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.squareup.okhttp:okhttp:2.3.0'

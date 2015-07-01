@@ -34,38 +34,7 @@
 				android:text="@string/about_main_text"
 				android:textSize="@dimen/about_text_size"/>
 
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:minHeight="72dp">
-
-				<ImageView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_vertical"
-					android:layout_weight="1"
-					android:padding="8dp"
-					android:scaleType="fitCenter"
-					android:src="@drawable/logo_iit"/>
-
-				<ImageView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_vertical"
-					android:layout_weight="1"
-					android:padding="8dp"
-					android:scaleType="fitCenter"
-					android:src="@drawable/logo_cnr"/>
-			</LinearLayout>
-
-
-			<ImageView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center_horizontal"
-				android:padding="8dp"
-				android:scaleType="fitCenter"
-				android:src="@drawable/logo_labdoc"/>
+			<include layout="@layout/panel_about_logs"/>
 		</it.cnr.iit.thesapp.views.BoundedLinearLayout>
 	</ScrollView>
 </LinearLayout>

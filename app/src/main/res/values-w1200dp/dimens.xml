@@ -2,6 +2,6 @@
 	<!--  10" devices in landscape (~1280dp). -->
 	<dimen name="activity_horizontal_margin">96dp</dimen>
 	<dimen name="about_text_size">18sp</dimen>
-	<dimen name="about_box_width">600dp</dimen>
+	<dimen name="about_box_width">800dp</dimen>
 	<item name="pager_page_width" format="float" type="dimen">0.33</item>
 </resources>

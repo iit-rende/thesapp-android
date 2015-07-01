@@ -102,13 +102,14 @@ public class TermsContainer extends LinearLayout {
 		}
 	}
 
-	public RobotoTextView createTextView(@ColorRes int colorId, @ColorRes int drawableId,
+	public RobotoTextView createTextView(@ColorRes int colorId, @DrawableRes int drawableId,
 	                                     int margin) {
 		RobotoTextView tv = new RobotoTextView(getContext());
 		tv.setTextColor(getResources().getColorStateList(colorId));
 		tv.setTypeface(null, Typeface.BOLD);
 		tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(
 				R.dimen.element_card_label_text_size));
+		if (getWidth() > 0) tv.setMaxWidth(this.getWidth() - margin * 20);
 		tv.setBackgroundResource(drawableId);
 		final FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
 				FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
@@ -121,7 +122,7 @@ public class TermsContainer extends LinearLayout {
 
 		public Future<List<RobotoTextView>> prepareCategoryTextViews(
 				final List<Category> categories, @ColorRes final int colorId,
-				@ColorRes final int drawableId, final int margin,
+				@DrawableRes final int drawableId, final int margin,
 				final TimelineElementFragment.TimelineElementFragmentCallback callback,
 				final int page) {
 			return Async.submit(new Callable<List<RobotoTextView>>() {
@@ -152,7 +153,7 @@ public class TermsContainer extends LinearLayout {
 
 		public Future<List<RobotoTextView>> prepareTermTextViews(final List<Term> terms,
 		                                                         @ColorRes final int colorId,
-		                                                         @ColorRes final int drawableId,
+		                                                         @DrawableRes final int drawableId,
 		                                                         final int margin,
 		                                                         final TimelineElementFragment
 				                                                         .TimelineElementFragmentCallback callback,

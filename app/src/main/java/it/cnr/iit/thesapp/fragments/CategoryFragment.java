@@ -1,5 +1,7 @@
 package it.cnr.iit.thesapp.fragments;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -23,6 +26,7 @@ import it.cnr.iit.thesapp.model.Category;
 import it.cnr.iit.thesapp.model.Term;
 import it.cnr.iit.thesapp.model.TimelineElement;
 import it.cnr.iit.thesapp.utils.Logs;
+import it.cnr.iit.thesapp.utils.SdkUtils;
 import it.cnr.iit.thesapp.views.ErrorView;
 import it.cnr.iit.thesapp.views.TermsContainerWithAlphabet;
 import retrofit.Callback;
@@ -30,6 +34,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class CategoryFragment extends TimelineElementFragment {
+
 	private RobotoTextView termTitle;
 	private ScrollView     scrollView;
 	private LinearLayout   hierarchyContainer;
@@ -41,7 +46,7 @@ public class CategoryFragment extends TimelineElementFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
+	                         Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_category, container, false);
 	}
@@ -94,10 +99,9 @@ public class CategoryFragment extends TimelineElementFragment {
 
 	public void fetchElement() {
 		setUiLoading(true);
-		Logs.retrofit(
-				"Fetching Category: " + termDescriptor + " in " + termDomain + " (" +
-				termLanguage +
-				")");
+		Logs.retrofit("Fetching Category: " + termDescriptor + " in " + termDomain + " (" +
+		              termLanguage +
+		              ")");
 		App.getApi().getService().category(termDescriptor, termDomain, termLanguage,
 				new Callback<Category>() {
 					@Override
@@ -147,12 +151,31 @@ public class CategoryFragment extends TimelineElementFragment {
 		scrollView.fullScroll(View.FOCUS_UP);
 	}
 
-	private void addTermsContainer(List<Term> terms, String containerTitle,
-								   @DrawableRes int drawableId, @ColorRes int colorId) {
+	private void addTermsContainer(final List<Term> terms, String containerTitle,
+	                               @DrawableRes final int drawableId, @ColorRes final int
+			                               colorId) {
 		if (terms != null && terms.size() > 0) {
-			TermsContainerWithAlphabet container = new TermsContainerWithAlphabet(getActivity());
+			final TermsContainerWithAlphabet container = new TermsContainerWithAlphabet(
+					getActivity());
 			container.setTitle(containerTitle);
-			container.setTerms(terms, drawableId, colorId, mListener, page);
+			container.getViewTreeObserver().addOnGlobalLayoutListener(
+					new ViewTreeObserver.OnGlobalLayoutListener() {
+
+						@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+						@Override
+						public void onGlobalLayout() {
+							if (SdkUtils.isPreSDK16()) {
+								container.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+							} else {
+								container.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+							}
+							container.setTerms(terms, drawableId, colorId, mListener, page);
+						}
+					});
+			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+					LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams
+					.WRAP_CONTENT);
+			container.setLayoutParams(params);
 			hierarchyContainer.addView(container);
 		}
 	}
