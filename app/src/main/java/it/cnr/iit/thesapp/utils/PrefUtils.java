@@ -20,6 +20,7 @@ public class PrefUtils {
 	private static final String DOMAINS_CACHE = "domains";
 
 	public static void saveDomain(Context context, String domain) {
+		if (!domain.equals(Domain.DEFAULT_DOMAIN_DESCRIPTOR))
 		PreferenceManager.getDefaultSharedPreferences(context).edit().putString(PREF_DOMAIN,
 				domain).commit();
 	}
@@ -39,6 +40,7 @@ public class PrefUtils {
 	}
 
 	public static void saveDomains(Context context, List<Domain> domains) {
+
 		String domainsJson = new Gson().toJson(domains);
 		PreferenceManager.getDefaultSharedPreferences(context).edit().putString(DOMAINS_CACHE,
 				domainsJson).apply();

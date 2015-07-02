@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.Filterable;
 
 import com.devspark.robototextview.widget.RobotoTextView;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -171,11 +173,26 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 
 
 	public void setDomain(Domain domain) {
-		Logs.ui("Setting domain for search: " + domain.getDescriptor());
-		this.domain = domain;
-		highlightColor = domain.getColor();
-		highlightColorDark = ColorUtils.darkerColor(Color.parseColor(domain.getColor()));
-		if (getItemCount() >= 0) notifyItemChanged(0);
+		final String oldDomain = (this.domain != null && !TextUtils.isEmpty(
+				this.domain.getDescriptor())) ? this.domain.getDescriptor() : "----a----";
+		final String newDomain = (domain != null && !TextUtils.isEmpty(domain.getDescriptor())) ?
+		                         domain.getDescriptor() : "----b----";
+
+		final boolean differentDescriptor = !oldDomain.equals(newDomain);
+		final boolean notDefaultDomain = !newDomain.equals(Domain.DEFAULT_DOMAIN_DESCRIPTOR);
+		boolean change = domain != null && differentDescriptor && notDefaultDomain;
+		if (change) {
+			Logs.ui("Setting domain for search: " + domain.getDescriptor());
+			this.domain = domain;
+			highlightColor = domain.getColor();
+			highlightColorDark = ColorUtils.darkerColor(Color.parseColor(domain.getColor()));
+
+			if (getItemCount() >= 0) notifyItemChanged(0);
+
+			count = -1;
+			this.items = new ArrayList<>();
+			notifyDataSetChanged();
+		}
 	}
 
 	public void setLanguage(String language) {
@@ -304,6 +321,10 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		public FacetsHolder(View itemView) {
 			super(itemView);
 			facetsContainer = (SearchFacetsContainer) itemView;
+		}
+
+		public void setFacets(FacetContainer facets, FacetCategory selectedCategory) {
+			facetsContainer.setFacets(facets, selectedCategory);
 			facetsContainer.setColor(highlightColorDark);
 			facetsContainer.setSearchFacetListener(new SearchFacetsContainer.SearchFacetListener
 					() {
@@ -318,10 +339,6 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 					if (clickListener != null) clickListener.onFacetContainerOpened();
 				}
 			});
-		}
-
-		public void setFacets(FacetContainer facets, FacetCategory selectedCategory) {
-			facetsContainer.setFacets(facets, selectedCategory);
 		}
 	}
 

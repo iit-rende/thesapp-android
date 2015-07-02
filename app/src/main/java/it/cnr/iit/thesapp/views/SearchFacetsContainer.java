@@ -65,41 +65,44 @@ public class SearchFacetsContainer extends FrameLayout implements FacetCategoryL
 		this.facets = facetContainer;
 		close();
 		categoryContainer.removeAllViews();
-		for (FacetCategory facetCategory : facets.getCategories()) {
-			FacetCategoryListItem line = new FacetCategoryListItem(getContext());
-			line.setCategory(facetCategory);
-			line.setCategoryClickListener(this);
-			categoryContainer.addView(line);
-		}
-		if (facetContainer.getCategories().size() == 0 && selectedCategory != null) {
-			setActionText(selectedCategory);
-			actionButton.setCompoundDrawablesWithIntrinsicBounds(null, null, unfilterDrawable,
-					null);
+		if (facets != null) {
 
-			actionButton.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					if (mListener != null) mListener.onCategoryClicked(null);
-				}
-			});
-		} else if (facetContainer.getCategories().size() == 1) {
-			setActionText(facetContainer.getCategories().get(0));
-			actionButton.setCompoundDrawablesWithIntrinsicBounds(null, null, unfilterDrawable,
-					null);
+			for (FacetCategory facetCategory : facets.getCategories()) {
+				FacetCategoryListItem line = new FacetCategoryListItem(getContext());
+				line.setCategory(facetCategory);
+				line.setCategoryClickListener(this);
+				categoryContainer.addView(line);
+			}
+			if (facetContainer.getCategories().size() == 0 && selectedCategory != null) {
+				setActionText(selectedCategory);
+				actionButton.setCompoundDrawablesWithIntrinsicBounds(null, null, unfilterDrawable,
+						null);
 
-			actionButton.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					if (mListener != null) mListener.onCategoryClicked(null);
-				}
-			});
-		} else {
-			actionButton.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					onActionClicked();
-				}
-			});
+				actionButton.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						if (mListener != null) mListener.onCategoryClicked(null);
+					}
+				});
+			} else if (facetContainer.getCategories().size() == 1) {
+				setActionText(facetContainer.getCategories().get(0));
+				actionButton.setCompoundDrawablesWithIntrinsicBounds(null, null, unfilterDrawable,
+						null);
+
+				actionButton.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						if (mListener != null) mListener.onCategoryClicked(null);
+					}
+				});
+			} else {
+				actionButton.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						onActionClicked();
+					}
+				});
+			}
 		}
 	}
 
