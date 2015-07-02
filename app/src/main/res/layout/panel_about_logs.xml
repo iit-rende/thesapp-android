@@ -6,8 +6,7 @@
 
 	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:minHeight="72dp">
+		android:layout_height="wrap_content">
 
 		<ImageView
 			android:layout_width="match_parent"
@@ -28,12 +27,28 @@
 			android:src="@drawable/logo_cnr"/>
 	</LinearLayout>
 
-
-	<ImageView
+	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_gravity="center_horizontal"
-		android:padding="8dp"
-		android:scaleType="fitCenter"
-		android:src="@drawable/logo_labdoc"/>
+		android:orientation="horizontal">
+
+		<Space
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"/>
+
+		<ImageView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:layout_weight="0.5"
+			android:padding="8dp"
+			android:scaleType="fitCenter"
+			android:src="@drawable/logo_labdoc"/>
+
+		<Space
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"/>
+	</LinearLayout>
 </merge>
