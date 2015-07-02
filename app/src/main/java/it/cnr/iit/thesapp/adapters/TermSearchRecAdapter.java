@@ -168,7 +168,8 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		else sectionDelta = 0;
 		final int i = position - FILTER_ITEM_DELTA - sectionDelta;
 		Logs.ui("Getting item for position " + position + ", returning item at " + i);
-		return items.get(i);
+		if (i < items.size()) return items.get(i);
+		else return null;
 	}
 
 
@@ -184,13 +185,15 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		if (change) {
 			Logs.ui("Setting domain for search: " + domain.getDescriptor());
 			this.domain = domain;
+
+			count = -1;
+			this.items = new ArrayList<>();
+
 			highlightColor = domain.getColor();
 			highlightColorDark = ColorUtils.darkerColor(Color.parseColor(domain.getColor()));
 
 			if (getItemCount() >= 0) notifyItemChanged(0);
 
-			count = -1;
-			this.items = new ArrayList<>();
 			notifyDataSetChanged();
 		}
 	}
@@ -357,26 +360,32 @@ public class TermSearchRecAdapter extends RecyclerView.Adapter<TermSearchRecAdap
 		}
 
 		public void onBindViewHolder(Term term) {
-			if (!term.isSemantic()) {
-				String line = highlightSearchedTerm(searchedTerm, term.getDescriptor());
-				Logs.ui("Syntactic term: " + line);
-				termDescriptor.setText(Html.fromHtml(line));
+			if (term == null) {
+				termDescriptor.setText("");
 			} else {
-				Logs.ui("Semantic term: " + term.getDescriptor());
-				termDescriptor.setText(term.getDescriptor());
-			}
-			setClickListener(new ClickListener() {
-				@Override
-				public void onClick(View v, int pos, boolean isLongClick) {
-					if (!isLongClick) {
-						Logs.ui("Term " + pos + " clicked!");
-						if (clickListener != null) clickListener.onTermClicked(getTerm(pos, true));
-					} else {
-						Logs.ui("Term " + pos + " long clicked!");
-						if (clickListener != null) clickListener.onTermClicked(getTerm(pos, true));
-					}
+				if (!term.isSemantic()) {
+					String line = highlightSearchedTerm(searchedTerm, term.getDescriptor());
+					Logs.ui("Syntactic term: " + line);
+					termDescriptor.setText(Html.fromHtml(line));
+				} else {
+					Logs.ui("Semantic term: " + term.getDescriptor());
+					termDescriptor.setText(term.getDescriptor());
 				}
-			});
+				setClickListener(new ClickListener() {
+					@Override
+					public void onClick(View v, int pos, boolean isLongClick) {
+						if (!isLongClick) {
+							Logs.ui("Term " + pos + " clicked!");
+							if (clickListener != null) clickListener.onTermClicked(getTerm(pos,
+									true));
+						} else {
+							Logs.ui("Term " + pos + " long clicked!");
+							if (clickListener != null) clickListener.onTermClicked(getTerm(pos,
+									true));
+						}
+					}
+				});
+			}
 		}
 
 		public void setClickListener(ClickListener clickListener) {

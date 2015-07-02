@@ -336,6 +336,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 			searchPanel.setDomain(domain);
 		}
 		if (domain != null && pager.getCurrentItem() == page) {
+			Logs.ui("Toolbar title changed, domain: " + domain + ", page: " + page);
 			ObjectAnimator anim = ObjectAnimator.ofInt(this, uiColorProperty, Color.parseColor(
 					domain.getColor()));
 			anim.setEvaluator(new ArgbEvaluator());
@@ -346,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 			toolbar.setTitle(getString(R.string.app_name) + domainName);
 		} else {
 			Logs.ui("Toolbar title not changed, domain: " + domain + ", pagerPage: " +
-			        pager.getCurrentItem() + ", page:" + page);
+			        pager.getCurrentItem() + ", page: " + page);
 		}
 	}
 
