@@ -21,6 +21,8 @@ import com.github.clemp6r.futuroid.SuccessCallback;
 import org.apmem.tools.layouts.FlowLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -131,6 +133,15 @@ public class TermsContainerWithAlphabet extends LinearLayout {
 			return Async.submit(new Callable<List<View>>() {
 				@Override
 				public List<View> call() {
+					Collections.sort(terms, new Comparator<Term>() {
+						@Override
+						public int compare(Term lhs, Term rhs) {
+							String s1 = lhs.getDescriptor();
+							String s2 = rhs.getDescriptor();
+							return s1.toLowerCase().compareTo(s2.toLowerCase());
+						}
+					});
+
 					List<View> tvs = new ArrayList<View>();
 					char previousChar = '\u0000';
 					for (final Term term : terms) {

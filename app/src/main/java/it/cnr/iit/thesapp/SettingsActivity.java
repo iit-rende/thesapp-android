@@ -38,7 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.preference_activity_custom);
+		setContentView(R.layout.activity_preferences);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
 
 		toolbar.setNavigationIcon(R.drawable.ic_navigation_arrow_back);

@@ -34,7 +34,7 @@
 				android:text="@string/about_main_text"
 				android:textSize="@dimen/about_text_size"/>
 
-			<include layout="@layout/panel_about_logs"/>
+			<include layout="@layout/panel_about_logos"/>
 		</it.cnr.iit.thesapp.views.BoundedLinearLayout>
 	</ScrollView>
 </LinearLayout>
