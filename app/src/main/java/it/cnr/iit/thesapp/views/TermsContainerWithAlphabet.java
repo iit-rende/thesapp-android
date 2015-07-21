@@ -138,15 +138,38 @@ public class TermsContainerWithAlphabet extends LinearLayout {
 						public int compare(Term lhs, Term rhs) {
 							String s1 = lhs.getDescriptor();
 							String s2 = rhs.getDescriptor();
-							return s1.toLowerCase().compareTo(s2.toLowerCase());
+
+							String s1Trimmed;
+							if (Character.isDigit(s1.charAt(0))) s1Trimmed = s1.substring(
+									s1.indexOf(' ') + 1);
+							else s1Trimmed = s1;
+
+							String s2Trimmed;
+							if (Character.isDigit(s2.charAt(0))) s2Trimmed = s2.substring(
+									s2.indexOf(' ') + 1);
+							else s2Trimmed = s2;
+
+							final int i = s1Trimmed.toLowerCase().compareTo(
+									s2Trimmed.toLowerCase());
+							if (i != 0) return i;
+							else return s1.toLowerCase().compareTo(s2.toLowerCase());
 						}
 					});
 
 					List<View> tvs = new ArrayList<View>();
 					char previousChar = '\u0000';
 					for (final Term term : terms) {
-						if (term.getDescriptor().toUpperCase().charAt(0) != previousChar) {
-							previousChar = term.getDescriptor().toUpperCase().charAt(0);
+						final String descr = term.getDescriptor().toUpperCase();
+						String descrTrimmed;
+						if (Character.isDigit(descr.charAt(0))) descrTrimmed = descr.substring(
+								descr.indexOf(' ') + 1);
+						else descrTrimmed = descr;
+						char c = descrTrimmed.charAt(0);
+
+						if (Character.isDigit(c)) c = '#';
+
+						if (c != previousChar) {
+							previousChar = c;
 							RobotoTextView header = createHeader();
 							header.setText(String.valueOf(previousChar));
 							tvs.add(header);

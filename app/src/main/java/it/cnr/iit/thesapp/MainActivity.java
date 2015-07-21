@@ -78,8 +78,13 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 		if (savedInstanceState == null) mLanguage = PrefUtils.loadLanguage(this);
 		else mLanguage = savedInstanceState.getString("language");
 
-		if (savedInstanceState == null) mSelectedPage = App.timelineElements.size() > 1 ? 1 : 0;
-		else mSelectedPage = savedInstanceState.getInt("page");
+		if (savedInstanceState == null) {
+			mSelectedPage = App.timelineElements.size() > 1 ? 1 : 0;
+			Logs.ui("Page NOT from savedInstanceState: " + mSelectedPage);
+		} else {
+			mSelectedPage = savedInstanceState.getInt("page");
+			Logs.ui("Page from savedInstanceState: " + mSelectedPage);
+		}
 
 		toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
 
@@ -155,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 
 			@Override
 			public void onPageSelected(int position) {
+				mSelectedPage = position;
 				setToolbarDomain(App.timelineElements.get(position).getDomain(), position);
 			}
 
@@ -162,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 			public void onPageScrollStateChanged(int state) {}
 		});
 
-		if (timelineAdapter.getCount() > mSelectedPage) pager.setCurrentItem(mSelectedPage, true);
+		if (timelineAdapter.getCount() > mSelectedPage) pager.setCurrentItem(mSelectedPage, false);
 
 		if (App.timelineElements.size() > mSelectedPage) setToolbarDomain(App.timelineElements.get(
 				mSelectedPage).getDomain(), mSelectedPage);
@@ -216,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 		super.onSaveInstanceState(outState);
 		outState.putString("language", mLanguage);
 		outState.putInt("page", pager.getCurrentItem());
+		Logs.ui("Saving page: " + pager.getCurrentItem());
 	}
 
 	private void loadDomains() {
