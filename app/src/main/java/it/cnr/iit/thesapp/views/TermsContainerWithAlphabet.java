@@ -33,9 +33,9 @@ import it.cnr.iit.thesapp.utils.Logs;
 
 public class TermsContainerWithAlphabet extends LinearLayout {
 
+	private final static boolean GROUP_TERMS_WITH_DIGITS = false;
 	private RobotoTextView title;
 	private FlowLayout     container;
-	private boolean GROUP_TERMS_WITH_DIGITS = false;
 
 	public TermsContainerWithAlphabet(Context context) {
 		super(context);
@@ -141,12 +141,12 @@ public class TermsContainerWithAlphabet extends LinearLayout {
 							String s2 = rhs.getDescriptor();
 
 							String s1Trimmed;
-							if (Character.isDigit(s1.charAt(0)) && GROUP_TERMS_WITH_DIGITS)
+							if (GROUP_TERMS_WITH_DIGITS && Character.isDigit(s1.charAt(0)))
 								s1Trimmed = s1.substring(s1.indexOf(' ') + 1);
 							else s1Trimmed = s1;
 
 							String s2Trimmed;
-							if (Character.isDigit(s2.charAt(0)) && GROUP_TERMS_WITH_DIGITS)
+							if (GROUP_TERMS_WITH_DIGITS && Character.isDigit(s2.charAt(0)))
 								s2Trimmed = s2.substring(s2.indexOf(' ') + 1);
 							else s2Trimmed = s2;
 
@@ -163,7 +163,7 @@ public class TermsContainerWithAlphabet extends LinearLayout {
 						final String descr = term.getDescriptor().toUpperCase();
 
 						String descrTrimmed;
-						if (Character.isDigit(descr.charAt(0)) && GROUP_TERMS_WITH_DIGITS)
+						if (GROUP_TERMS_WITH_DIGITS && Character.isDigit(descr.charAt(0)))
 							descrTrimmed = descr.substring(descr.indexOf(' ') + 1);
 						else descrTrimmed = descr;
 						char c = descrTrimmed.charAt(0);
