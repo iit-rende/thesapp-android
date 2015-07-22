@@ -39,7 +39,6 @@ import retrofit.client.Response;
 public class MainActivity extends AppCompatActivity implements TimelineElementFragment
 		.TimelineElementFragmentCallback {
 
-
 	private TimelineAdapter timelineAdapter;
 	private ViewPager       pager;
 	private ProgressDialog  dialog;
@@ -205,7 +204,6 @@ public class MainActivity extends AppCompatActivity implements TimelineElementFr
 
 	@Override
 	public void onBackPressed() {
-
 		if (slidingLayer.isOpened()) slidingLayer.closeLayer(true);
 		else super.onBackPressed();
 	}
