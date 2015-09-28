@@ -5,6 +5,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +37,10 @@ public class App extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Crashlytics crashlytics = new Crashlytics.Builder().disabled(BuildConfig.DEBUG).build();
-		final Fabric fabric = new Fabric.Builder(this).kits(crashlytics).debuggable(false).build();
-		Fabric.with(fabric);
+		Crashlytics crashlyticsKit = new Crashlytics.Builder().core(
+				new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build();
+		Fabric.with(this, crashlyticsKit);
+
 		createTimeLine();
 		GcmRegisterService.startRegistration(this);
 	}
