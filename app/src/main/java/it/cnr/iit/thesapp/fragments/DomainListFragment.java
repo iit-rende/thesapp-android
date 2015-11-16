@@ -29,7 +29,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class DomainListFragment extends TimelineElementFragment implements DomainListItem.DomainClickListener {
+public class DomainListFragment extends TimelineElementFragment implements DomainListItem
+		.DomainClickListener {
 
 	private RobotoTextView termTitle;
 	private RobotoTextView termDescription;
@@ -63,8 +64,8 @@ public class DomainListFragment extends TimelineElementFragment implements Domai
 		});
 
 		toolbar = (Toolbar) view.findViewById(R.id.card_toolbar);
-		toolbar.setNavigationIcon(getActivity().getResources().getDrawable(
-				R.drawable.ic_navigation_arrow_back));
+		toolbar.setNavigationIcon(getActivity().getResources()
+		                                       .getDrawable(R.drawable.ic_navigation_arrow_back));
 		toolbar.setNavigationOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -105,29 +106,34 @@ public class DomainListFragment extends TimelineElementFragment implements Domai
 		Logs.retrofit(
 				"Fetching domains: " + termDescriptor + " in " + termDomain + " (" + termLanguage +
 				")");
-		App.getApi().getService().domains(termLanguage, new Callback<DomainSearch>() {
-			@Override
-			public void success(DomainSearch domainSearch, Response response) {
-				if (response.getStatus() == 200 && domainSearch != null) {
-					Logs.retrofit("Domains fetched: " + domainSearch.getDomains().size());
-					prepareDomainListElement(domainSearch);
-					setUiLoading(false);
-				} else {
-					Logs.retrofit("Error fetching domainSearch: " + response.getStatus() + " - " +
-					              response.getReason());
-					showError(response);
-				}
-			}
+		App.getApi()
+		   .getService()
+		   .domains(termLanguage, new Callback<DomainSearch>() {
+			   @Override
+			   public void success(DomainSearch domainSearch, Response response) {
+				   if (response.getStatus() == 200 && domainSearch != null) {
+					   Logs.retrofit("Domains fetched: " + domainSearch.getDomains()
+					                                                   .size());
+					   prepareDomainListElement(domainSearch);
+					   setUiLoading(false);
+				   } else {
+					   Logs.retrofit(
+							   "Error fetching domainSearch: " + response.getStatus() + " - " +
+							   response.getReason());
+					   showError(response);
+				   }
+			   }
 
-			@Override
-			public void failure(RetrofitError error) {
-				error.printStackTrace();
-				showError(error);
-			}
-		});
+			   @Override
+			   public void failure(RetrofitError error) {
+				   error.printStackTrace();
+				   showError(error);
+			   }
+		   });
 	}
 
 	public void reloadUi(TimelineElement element) {
+		if (isDetached()) return;
 		setUiLoading(false);
 		if (element instanceof DomainSearch) {
 			DomainSearch domainSearch = (DomainSearch) element;

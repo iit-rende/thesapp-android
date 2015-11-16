@@ -4,7 +4,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 
 import it.cnr.iit.thesapp.MainActivity;
@@ -16,16 +15,18 @@ public class NotificationUtils {
 	public static final  String OPEN_WITH_DOMAIN = "Open_with_domain";
 	private static final int    NOTIFICATION_ID  = 12345;
 
-	public static void showNotificationFromGcm(Context context, @NonNull GcmData gcmData) {
+	public static void showNotificationFromGcm(Context context, GcmData gcmData) {
 		if (gcmData != null) {
 			String language = PrefUtils.loadLanguage(context);
 			GcmData.Localization localization = null;
 			for (GcmData.Localization loc : gcmData.getLocalizations()) {
-				if (loc.getLanguage().equalsIgnoreCase(language)) localization = loc;
+				if (loc.getLanguage()
+				       .equalsIgnoreCase(language)) localization = loc;
 			}
 			if (localization == null && gcmData.getLocalizations() != null &&
-			    gcmData.getLocalizations().get(0) != null)
-				localization = gcmData.getLocalizations().get(0);
+			    gcmData.getLocalizations()
+			           .get(0) != null) localization = gcmData.getLocalizations()
+			                                                  .get(0);
 			final NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 			builder.setContentTitle(gcmData.getDomain());
 			if (localization != null) builder.setContentText(localization.getText());

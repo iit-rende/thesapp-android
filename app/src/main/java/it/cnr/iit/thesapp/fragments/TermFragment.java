@@ -154,6 +154,7 @@ public class TermFragment extends TimelineElementFragment {
 
 
 	public void reloadUi(TimelineElement element) {
+		if (isDetached()) return;
 		setUiLoading(false);
 		if (element instanceof Term) {
 			Term term = (Term) element;

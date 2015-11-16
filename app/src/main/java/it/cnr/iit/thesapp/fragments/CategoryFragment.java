@@ -131,6 +131,7 @@ public class CategoryFragment extends TimelineElementFragment {
 
 
 	public void reloadUi(TimelineElement element) {
+		if (isDetached()) return;
 		setUiLoading(false);
 		if (element instanceof Category) {
 			Category category = (Category) element;
@@ -177,7 +178,8 @@ public class CategoryFragment extends TimelineElementFragment {
 				         }
 			         });
 			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-					LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+					LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams
+					.WRAP_CONTENT);
 			container.setLayoutParams(params);
 			hierarchyContainer.addView(container);
 		}

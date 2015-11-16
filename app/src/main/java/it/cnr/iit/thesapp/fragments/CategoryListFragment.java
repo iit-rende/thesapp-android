@@ -63,8 +63,8 @@ public class CategoryListFragment extends TimelineElementFragment implements Cat
 		});
 
 		toolbar = (Toolbar) view.findViewById(R.id.card_toolbar);
-		toolbar.setNavigationIcon(getActivity().getResources().getDrawable(
-				R.drawable.ic_navigation_arrow_back));
+		toolbar.setNavigationIcon(getActivity().getResources()
+		                                       .getDrawable(R.drawable.ic_navigation_arrow_back));
 		toolbar.setNavigationOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -105,34 +105,35 @@ public class CategoryListFragment extends TimelineElementFragment implements Cat
 		Logs.retrofit("Fetching categories: " + termDescriptor + " in " + termDomain + " (" +
 		              termLanguage +
 		              ")");
-		App.getApi().getService().categoryList(termDomain, termLanguage,
-				new Callback<CategoryList>() {
-					@Override
-					public void success(CategoryList domainSearch, Response response) {
-						if (response.getStatus() == 200 && domainSearch != null) {
-							Logs.retrofit(
-									"CategoryList fetched: " + domainSearch.getCategories().size
-											());
-							prepareCategoryListElement(domainSearch);
-							setUiLoading(false);
-						} else {
-							Logs.retrofit(
-									"Error fetching CategoryList: " + response.getStatus() + " -" +
-									" " +
-									response.getReason());
-							showError(response);
-						}
-					}
+		App.getApi()
+		   .getService()
+		   .categoryList(termDomain, termLanguage, new Callback<CategoryList>() {
+			   @Override
+			   public void success(CategoryList domainSearch, Response response) {
+				   if (response.getStatus() == 200 && domainSearch != null) {
+					   Logs.retrofit("CategoryList fetched: " + domainSearch.getCategories()
+					                                                        .size());
+					   prepareCategoryListElement(domainSearch);
+					   setUiLoading(false);
+				   } else {
+					   Logs.retrofit("Error fetching CategoryList: " + response.getStatus() +
+					                 " -" +
+					                 " " +
+					                 response.getReason());
+					   showError(response);
+				   }
+			   }
 
-					@Override
-					public void failure(RetrofitError error) {
-						error.printStackTrace();
-						showError(error);
-					}
-				});
+			   @Override
+			   public void failure(RetrofitError error) {
+				   error.printStackTrace();
+				   showError(error);
+			   }
+		   });
 	}
 
 	public void reloadUi(TimelineElement element) {
+		if (isDetached()) return;
 		setUiLoading(false);
 		if (element instanceof CategoryList) {
 			CategoryList categoryList = (CategoryList) element;
