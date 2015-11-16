@@ -26,6 +26,7 @@ import it.cnr.iit.thesapp.model.Category;
 import it.cnr.iit.thesapp.model.Term;
 import it.cnr.iit.thesapp.model.TimelineElement;
 import it.cnr.iit.thesapp.utils.Logs;
+import it.cnr.iit.thesapp.utils.PrefUtils;
 import it.cnr.iit.thesapp.utils.SdkUtils;
 import it.cnr.iit.thesapp.views.ErrorView;
 import it.cnr.iit.thesapp.views.TermsContainerWithAlphabet;
@@ -64,8 +65,8 @@ public class CategoryFragment extends TimelineElementFragment {
 		});
 
 		toolbar = (Toolbar) view.findViewById(R.id.card_toolbar);
-		toolbar.setNavigationIcon(getActivity().getResources().getDrawable(
-				R.drawable.ic_navigation_arrow_back));
+		toolbar.setNavigationIcon(getActivity().getResources()
+		                                       .getDrawable(R.drawable.ic_navigation_arrow_back));
 		toolbar.setNavigationOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -102,30 +103,30 @@ public class CategoryFragment extends TimelineElementFragment {
 		Logs.retrofit("Fetching Category: " + termDescriptor + " in " + termDomain + " (" +
 		              termLanguage +
 		              ")");
-		App.getApi().getService().category(termDescriptor, termDomain, termLanguage,
-				new Callback<Category>() {
-					@Override
-					public void success(Category category, Response response) {
-						if (response.getStatus() == 200 && category != null) {
-							Logs.retrofit("Category fetched: " + category);
-							category.fillMissingInfo();
-							reloadUi(category);
-							persistElement(category);
-							setUiLoading(false);
-						} else {
-							Logs.retrofit(
-									"Error fetching category: " + response.getStatus() + " - " +
-									response.getReason());
-							showError(response);
-						}
-					}
+		App.getApi()
+		   .getService()
+		   .category(termDescriptor, termDomain, termLanguage, new Callback<Category>() {
+			   @Override
+			   public void success(Category category, Response response) {
+				   if (response.getStatus() == 200 && category != null) {
+					   Logs.retrofit("Category fetched: " + category);
+					   category.fillMissingInfo();
+					   reloadUi(category);
+					   persistElement(category);
+					   setUiLoading(false);
+				   } else {
+					   Logs.retrofit("Error fetching category: " + response.getStatus() + " - " +
+					                 response.getReason());
+					   showError(response);
+				   }
+			   }
 
-					@Override
-					public void failure(RetrofitError error) {
-						error.printStackTrace();
-						showError(error);
-					}
-				});
+			   @Override
+			   public void failure(RetrofitError error) {
+				   error.printStackTrace();
+				   showError(error);
+			   }
+		   });
 	}
 
 
@@ -138,9 +139,10 @@ public class CategoryFragment extends TimelineElementFragment {
 			termTitle.setText(category.getDescriptor());
 
 			//setUiColor(Color.parseColor(category.getDomain().getColor()));
-
+			boolean useItalian = PrefUtils.IT.equals(PrefUtils.loadLanguage(getActivity()));
 			hierarchyContainer.removeAllViews();
-			addTermsContainer(category.getTerms(), getString(R.string.category_terms),
+			addTermsContainer(category.getTerms(), getString(
+							useItalian ? R.string.category_terms_it : R.string.category_terms_en),
 					R.drawable.term_label_selector, R.color.term_label_text_selector);
 
 			setWindowToolbar(category.getDomain());
@@ -158,23 +160,24 @@ public class CategoryFragment extends TimelineElementFragment {
 			final TermsContainerWithAlphabet container = new TermsContainerWithAlphabet(
 					getActivity());
 			container.setTitle(containerTitle);
-			container.getViewTreeObserver().addOnGlobalLayoutListener(
-					new ViewTreeObserver.OnGlobalLayoutListener() {
+			container.getViewTreeObserver()
+			         .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 
-						@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-						@Override
-						public void onGlobalLayout() {
-							if (SdkUtils.isPreSDK16()) {
-								container.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-							} else {
-								container.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-							}
-							container.setTerms(terms, drawableId, colorId, mListener, page);
-						}
-					});
+				         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+				         @Override
+				         public void onGlobalLayout() {
+					         if (SdkUtils.isPreSDK16()) {
+						         container.getViewTreeObserver()
+						                  .removeGlobalOnLayoutListener(this);
+					         } else {
+						         container.getViewTreeObserver()
+						                  .removeOnGlobalLayoutListener(this);
+					         }
+					         container.setTerms(terms, drawableId, colorId, mListener, page);
+				         }
+			         });
 			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-					LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams
-					.WRAP_CONTENT);
+					LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 			container.setLayoutParams(params);
 			hierarchyContainer.addView(container);
 		}

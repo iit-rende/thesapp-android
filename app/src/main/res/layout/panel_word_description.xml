@@ -13,7 +13,7 @@
 		android:paddingLeft="16dp"
 		android:paddingRight="16dp"
 		android:paddingTop="8dp"
-		android:text="@string/term_description_label"/>
+		android:text="@string/term_description_label_it"/>
 
 	<com.devspark.robototextview.widget.RobotoTextView
 		android:id="@+id/term_description"

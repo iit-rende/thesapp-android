@@ -42,7 +42,8 @@ public class Domain {
 		domain.setDescriptor(DEFAULT_DOMAIN_DESCRIPTOR);
 		domain.setLanguage(PrefUtils.loadLanguage(context));
 		domain.setLocalization(DEFAULT_DOMAIN_DESCRIPTOR);
-		domain.setColor(context.getResources().getString(R.color.primary));
+		domain.setColor(context.getResources()
+		                       .getString(R.string.primary));
 		return domain;
 	}
 

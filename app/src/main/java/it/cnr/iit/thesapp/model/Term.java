@@ -88,10 +88,6 @@ public class Term extends TimelineElement {
 			}
 		};
 		if (categories != null) {
-			for (Category term : categories) {
-				term.setLanguage(getLanguage());
-				term.setDomain(getDomain());
-			}
 			Collections.sort(categories, new Comparator<Category>() {
 				public int compare(Category category1, Category category2) {
 					if (category1.getDescriptor() != null && category2.getDescriptor() != null) {
@@ -100,39 +96,43 @@ public class Term extends TimelineElement {
 					return 0;
 				}
 			});
+			for (Category term : categories) {
+				term.setLanguage(getLanguage());
+				term.setDomain(getDomain());
+			}
 		}
 		if (localizations != null) {
+			Collections.sort(localizations, comparator);
 			for (Term term : localizations) {
 				term.setDomain(getDomain());
 			}
-			Collections.sort(localizations, comparator);
 		}
 		if (relatedTerms != null) {
+			Collections.sort(relatedTerms, comparator);
 			for (Term term : relatedTerms) {
 				term.setLanguage(getLanguage());
 				term.setDomain(getDomain());
-				Collections.sort(relatedTerms, comparator);
 			}
 		}
 		if (narrowerTerms != null) {
+			Collections.sort(narrowerTerms, comparator);
 			for (Term term : narrowerTerms) {
 				term.setLanguage(getLanguage());
 				term.setDomain(getDomain());
-				Collections.sort(narrowerTerms, comparator);
 			}
 		}
 		if (broaderTerms != null) {
+			Collections.sort(broaderTerms, comparator);
 			for (Term term : broaderTerms) {
 				term.setLanguage(getLanguage());
 				term.setDomain(getDomain());
-				Collections.sort(broaderTerms, comparator);
 			}
 		}
 		if (useFor != null) {
+			Collections.sort(useFor, comparator);
 			for (Term term : useFor) {
 				term.setLanguage(getLanguage());
 				term.setDomain(getDomain());
-				Collections.sort(useFor, comparator);
 			}
 		}
 		if (hierarchy != null) for (Term term : hierarchy) {

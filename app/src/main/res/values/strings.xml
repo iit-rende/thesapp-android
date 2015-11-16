@@ -12,7 +12,6 @@
 	<string name="error_not_found">Term not found</string>
 	<string name="error_connection_problem">No connection</string>
 	<string name="loading_domains">Downloading domains…</string>
-	<string name="category_terms">Terms</string>
 	<string name="action_open_search_panel">Search</string>
 	<string name="domain_list_title">Choose a domain</string>
 	<string name="domain_list_subtitle">or start searching</string>
@@ -32,38 +31,71 @@
 	<string name="filter_by_all_categories">Use all categories</string>
 	<string name="filter_by_all_category_with_selected">Click to use all categories</string>
 	<string name="semating_search_header">You might be interested in</string>
-	<string name="term_description_label">Definition</string>
+
+	<!-- double language labels -->
+	<string name="term_description_label_en">Definition</string>
+	<string name="term_description_label_it">Definizione</string>
+	<string name="category_terms_en">Terms</string>
+	<string name="category_terms_it">Termini</string>
 
 
-	<plurals name="translations_terms">
-		<item quantity="one">Translation</item>
-		<item quantity="other">Translations</item>
-	</plurals>
-	<plurals name="synonyms_terms">
-		<item quantity="one">Synonym</item>
-		<item quantity="other">Synonyms</item>
-	</plurals>
-	<plurals name="related_terms">
-		<item quantity="one">Related term</item>
-		<item quantity="other">Related terms</item>
-	</plurals>
-	<plurals name="categories_terms">
-		<item quantity="one">Category</item>
-		<item quantity="other">Categories</item>
-	</plurals>
-	<plurals name="broader_terms">
-		<item quantity="one">Broader term</item>
-		<item quantity="other">Broader terms</item>
-	</plurals>
-	<plurals name="narrower_terms">
-		<item quantity="one">Narrower term</item>
-		<item quantity="other">Narrower terms</item>
-	</plurals>
 	<string name="title_activity_about">Thesapp</string>
 
-	<string name="about_main_text">ThesApp è un’applicazione finalizzata alla consultazione di vocabolari controllati. Il servizio terminologico offerto consente l\'accesso alla conoscenza, attraverso l’esplorazione della terminologia specialistica strutturata mediante relazioni semantiche tra termini. Attualmente tale servizio si avvale di thesauri specialistici sviluppati nel periodo 2012 – 2015 dall’Istituto di Informatica e Telematica (IIT) del CNR e dal Labdoc (Laboratorio di Documentazione dell’Università della Calabria) nell’ambito dei progetti PON (Programma Operativo Nazionale Ricerca e Competitività 2007-2013) Smart Health 2.0 e DiCeT (LivingLab Di Cultura e Tecnologia)-INMOTO (INformation and MObility for TOurism). L’applicazione è stata sviluppata nell’ambito del progetto Interventi a Supporto del Fascicolo Sanitario Elettronico finanziato dall’Agenzia per l’Italia Digitale (AgID). Tutti i contenuti dell’app sono © 2015 Istituto di Informatica e Telematica (IIT) del Consiglio Nazionale delle Ricerche (CNR).</string>
+	<string name="about_main_text">ThesApp è un’applicazione finalizzata alla consultazione di vocabolari controllati. Il servizio terminologico offerto consente l\'accesso alla conoscenza, attraverso l’esplorazione della terminologia specialistica strutturata mediante relazioni semantiche tra termini. Attualmente tale servizio si avvale di thesauri specialistici sviluppati nel periodo 2012 – 2015 dall’Istituto di Informatica e Telematica (IIT) del CNR e dal Labdoc (Laboratorio di Documentazione dell’Università della Calabria) nell’ambito dei progetti PON (Programma Operativo Nazionale Ricerca e Competitività 2007–2013) Smart Health 2.0 e DiCeT (LivingLab Di Cultura e Tecnologia)-INMOTO (INformation and MObility for TOurism). L’applicazione è stata sviluppata nell’ambito del progetto Interventi a Supporto del Fascicolo Sanitario Elettronico finanziato dall’Agenzia per l’Italia Digitale (AgID). Tutti i contenuti dell’app sono © 2015 Istituto di Informatica e Telematica (IIT) del Consiglio Nazionale delle Ricerche (CNR).</string>
 	<string name="about_cnr">Consiglio Nazionale delle Ricerche</string>
 	<string name="about_itt">Istituto di Informatica e Telematica del CNR</string>
 	<string name="about_labdoc">Laboratorio di Documentazione dell’UNICAL</string>
 	<string name="action_show_about">About</string>
+	<string name="primary" translatable="false">#ff03a9f4</string>
+
+	<plurals name="translations_terms_it">
+		<item quantity="one">Traduzione</item>
+		<item quantity="other">Traduzioni</item>
+	</plurals>
+	<plurals name="synonyms_terms_it">
+		<item quantity="one">Sinonimo</item>
+		<item quantity="other">Sinonimi</item>
+	</plurals>
+	<plurals name="related_terms_it">
+		<item quantity="one">Termine correlato</item>
+		<item quantity="other">Termini correlati</item>
+	</plurals>
+	<plurals name="categories_terms_it">
+		<item quantity="one">Categoria</item>
+		<item quantity="other">Categorie</item>
+	</plurals>
+	<plurals name="broader_terms_it">
+		<item quantity="one">Termine più generico</item>
+		<item quantity="other">Termini più generici</item>
+	</plurals>
+	<plurals name="narrower_terms_it">
+		<item quantity="one">Termine più specifico</item>
+		<item quantity="other">Termini più specifici</item>
+	</plurals>
+
+
+	<plurals name="translations_terms_en">
+		<item quantity="one">Translation</item>
+		<item quantity="other">Translations</item>
+	</plurals>
+	<plurals name="synonyms_terms_en">
+		<item quantity="one">Synonym</item>
+		<item quantity="other">Synonyms</item>
+	</plurals>
+	<plurals name="related_terms_en">
+		<item quantity="one">Related term</item>
+		<item quantity="other">Related terms</item>
+	</plurals>
+	<plurals name="categories_terms_en">
+		<item quantity="one">Category</item>
+		<item quantity="other">Categories</item>
+	</plurals>
+	<plurals name="broader_terms_en">
+		<item quantity="one">Broader term</item>
+		<item quantity="other">Broader terms</item>
+	</plurals>
+	<plurals name="narrower_terms_en">
+		<item quantity="one">Narrower term</item>
+		<item quantity="other">Narrower terms</item>
+	</plurals>
 </resources>
