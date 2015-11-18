@@ -140,7 +140,7 @@ public class CategoryFragment extends TimelineElementFragment {
 			termTitle.setText(category.getDescriptor());
 
 			//setUiColor(Color.parseColor(category.getDomain().getColor()));
-			boolean useItalian = PrefUtils.IT.equals(PrefUtils.loadLanguage(getActivity()));
+			boolean useItalian = PrefUtils.IT.equals(element.getLanguage());
 			hierarchyContainer.removeAllViews();
 			addTermsContainer(category.getTerms(), getString(
 							useItalian ? R.string.category_terms_it : R.string.category_terms_en),

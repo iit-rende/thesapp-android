@@ -160,7 +160,7 @@ public class TermFragment extends TimelineElementFragment {
 			Term term = (Term) element;
 			term.fillMissingInfo();
 
-			boolean useItalian = PrefUtils.IT.equals(PrefUtils.loadLanguage(getActivity()));
+			boolean useItalian = PrefUtils.IT.equals(element.getLanguage());
 			Logs.retrofit("Loading UI for " + term);
 			termTitle.setText(term.getDescriptor());
 			if (term.getUsedFor() != null) {
