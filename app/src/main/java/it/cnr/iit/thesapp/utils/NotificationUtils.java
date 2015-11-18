@@ -17,7 +17,7 @@ public class NotificationUtils {
 	private static final int    NOTIFICATION_ID  = 12345;
 
 	public static void showNotificationFromGcm(Context context, @Nullable GcmData gcmData) {
-		if (gcmData != null) {
+		if (gcmData != null && gcmData.getDomain() != null) {
 			String language = PrefUtils.loadLanguage(context);
 			GcmData.Localization localization = null;
 			if (hasLocalizations(gcmData)) {
