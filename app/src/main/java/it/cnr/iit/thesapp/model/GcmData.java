@@ -1,5 +1,7 @@
 package it.cnr.iit.thesapp.model;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -18,6 +20,7 @@ public class GcmData {
 	/**
 	 * @return The domain
 	 */
+	@Nullable
 	public String getDomain() {
 		return domain;
 	}
@@ -32,6 +35,7 @@ public class GcmData {
 	/**
 	 * @return The localizations
 	 */
+	@Nullable
 	public List<Localization> getLocalizations() {
 		return localizations;
 	}

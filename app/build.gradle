@@ -25,7 +25,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 23
         final MAJOR_RELEASE = 1
-        final MINOR_RELEASE = 12
+        final MINOR_RELEASE = 13
         versionCode getVersionCodeNumber(MAJOR_RELEASE, MINOR_RELEASE)
         versionName getVersionCodeName(MAJOR_RELEASE, MINOR_RELEASE)
         multiDexEnabled true
